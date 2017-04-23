@@ -10,9 +10,22 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="volume.h" />
+    <ClInclude Include="volumeFilter.h" />
+    <ClInclude Include="volumeRender.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="volume.cpp" />
+    <ClCompile Include="volumeFiltering.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <CudaCompile Include="volumeFilter_kernel.cu" />
+    <CudaCompile Include="volumeRender_kernel.cu" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{A91FC659-D633-4320-A4A1-7E7E601C25C5}</ProjectGuid>
-    <RootNamespace>cuda</RootNamespace>
+    <ProjectGuid>{666BB357-30E4-44A5-8E2E-CCDA61BB1652}</ProjectGuid>
+    <RootNamespace>volumeFiltering</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
@@ -88,16 +101,6 @@ copy "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"</Command>
       <TargetMachinePlatform>64</TargetMachinePlatform>
     </CudaCompile>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <CudaCompile Include="kernel.cu" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="interactions.h" />
-    <ClInclude Include="kernel.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="main.cpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA 8.0.targets" />

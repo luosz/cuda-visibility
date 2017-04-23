@@ -7,6 +7,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cuda", "cuda\cuda.vcxproj",
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vis_3d", "vis_3d\vis_3d.vcxproj", "{FF9AB33B-00AE-44FA-8BCE-4C835176CE35}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "volumeRender", "volumeRender\volumeRender_vs2015.vcxproj", "{4ECFBB62-24A3-4956-A03A-30B11DB61A2E}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "volumeFiltering", "volumeFiltering\volumeFiltering.vcxproj", "{666BB357-30E4-44A5-8E2E-CCDA61BB1652}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +25,14 @@ Global
 		{FF9AB33B-00AE-44FA-8BCE-4C835176CE35}.Debug|x64.Build.0 = Debug|x64
 		{FF9AB33B-00AE-44FA-8BCE-4C835176CE35}.Release|x64.ActiveCfg = Release|x64
 		{FF9AB33B-00AE-44FA-8BCE-4C835176CE35}.Release|x64.Build.0 = Release|x64
+		{4ECFBB62-24A3-4956-A03A-30B11DB61A2E}.Debug|x64.ActiveCfg = Debug|x64
+		{4ECFBB62-24A3-4956-A03A-30B11DB61A2E}.Debug|x64.Build.0 = Debug|x64
+		{4ECFBB62-24A3-4956-A03A-30B11DB61A2E}.Release|x64.ActiveCfg = Release|x64
+		{4ECFBB62-24A3-4956-A03A-30B11DB61A2E}.Release|x64.Build.0 = Release|x64
+		{666BB357-30E4-44A5-8E2E-CCDA61BB1652}.Debug|x64.ActiveCfg = Debug|x64
+		{666BB357-30E4-44A5-8E2E-CCDA61BB1652}.Debug|x64.Build.0 = Debug|x64
+		{666BB357-30E4-44A5-8E2E-CCDA61BB1652}.Release|x64.ActiveCfg = Release|x64
+		{666BB357-30E4-44A5-8E2E-CCDA61BB1652}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
