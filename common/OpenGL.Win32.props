@@ -12,7 +12,9 @@
       <AdditionalDependencies>freeglut.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
-      <Command>xcopy /y /f "..\common\bin\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"</Command>
+      <Command>echo OpenGL.Win32.props
+xcopy /f /y "..\common\bin\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
+%(Command)</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
 </Project>

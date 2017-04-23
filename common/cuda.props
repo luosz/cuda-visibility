@@ -3,17 +3,21 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
-    <IncludePath>$(CudaToolkitDir)include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(CudaToolkitDir)lib\$(Platform);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(CudaToolkitIncludeDir);$(IncludePath)</IncludePath>
+    <LibraryPath>$(CudaToolkitLibDir);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <Link>
       <AdditionalDependencies>cudart.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <PostBuildEvent>
-      <Command>xcopy /f /y "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"
-	  %(Command)</Command>
-    </PostBuildEvent>
+    <PreLinkEvent>
+      <Command>echo cuda.props
+echo $(CudaToolkitDir)
+echo $(CudaToolkitIncludeDir)
+echo $(CudaToolkitLibDir)
+xcopy /f /y "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"
+%(Command)</Command>
+    </PreLinkEvent>
   </ItemDefinitionGroup>
   <ItemGroup />
 </Project>
