@@ -18,7 +18,7 @@
 #define NZ 128
 
 int id = 1; // 0 = sphere, 1 = torus, 2 = block
-int method = 2; // 0 = volumeRender, 1 = slice, 2 = raycast
+int method = 3; // 0 = volumeRender, 1 = slice, 2 = raycast
 const int3 volumeSize = { NX, NY, NZ }; // size of volumetric data grid
 const float4 params = { NX / 4.f, NY / 6.f, NZ / 16.f, 1.f };
 float *d_vol; // pointer to device array for storing volume data
