@@ -164,3 +164,29 @@ __device__ uchar4 rayCastShader(float *d_vol, int3 volSize,
   }
   return shade;
 }
+
+__device__ uchar4 visibilityShader(float *d_vol, int3 volSize, Ray boxRay, float threshold, int numSteps, float gain, float dist, float3 norm)
+{
+	float t0;
+	uchar4 shade = make_uchar4(96, 0, 192, 0); // background value
+	if (rayPlaneIntersect(boxRay, norm, dist, &t0)) {
+		float sliceDens = density(d_vol, volSize, paramRay(boxRay, t0));
+		shade = make_uchar4(48, clip(-10.f * (1.0f + gain) * sliceDens),
+			96, 255);
+	}
+	//return shade;
+
+	//uchar4 shade = make_uchar4(96, 0, 192, 0); // background value
+	const float dt = 1.f / numSteps;
+	const float len = length(boxRay.d) / numSteps;
+	float accum = 0.f;
+	float3 pos = boxRay.o;
+	float val = density(d_vol, volSize, pos);
+	for (float t = 0.f; t<1.f && t<t0; t += dt) {
+		if (val - threshold < 0.f) accum += (fabsf(val - threshold))*len;
+		pos = paramRay(boxRay, t);
+		val = density(d_vol, volSize, pos);
+	}
+	if (clip(accum) > 0.f) shade.y = clip(accum);
+	return shade;
+}

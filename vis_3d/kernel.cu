@@ -42,8 +42,8 @@ void renderKernel(uchar4 *d_out, float *d_vol, int w, int h,
       sliceShader(d_vol, volSize, boxRay, threshold, dist, source);
     else if (method == 2) shade =
       rayCastShader(d_vol, volSize, boxRay, threshold);
-    else shade =
-      volumeRenderShader(d_vol, volSize, boxRay, threshold, NUMSTEPS);
+    else if (method == 3) shade = visibilityShader(d_vol, volSize, boxRay, threshold, NUMSTEPS, threshold, dist, source);
+	else shade = volumeRenderShader(d_vol, volSize, boxRay, threshold, NUMSTEPS);
   }
   d_out[i] = shade;
 }

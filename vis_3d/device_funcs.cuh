@@ -19,5 +19,6 @@ __device__ uchar4 volumeRenderShader(float *d_vol, int3 volSize,
   Ray boxRay, float dist, int numSteps);
 __device__ uchar4 rayCastShader(float *d_vol, int3 volSize,
   Ray boxRay, float dist);
+__device__ uchar4 visibilityShader(float *d_vol, int3 volSize, Ray boxRay, float threshold, int numSteps, float gain, float dist, float3 norm);
 
 #endif
