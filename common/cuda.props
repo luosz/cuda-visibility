@@ -3,8 +3,9 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
-    <IncludePath>$(CudaToolkitIncludeDir);$(IncludePath)</IncludePath>
-    <LibraryPath>$(CudaToolkitLibDir);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(CudaToolkitIncludeDir);..\common\inc;$(IncludePath)</IncludePath>
+    <LibraryPath>$(CudaToolkitLibDir);..\common\lib\$(Platform);$(LibraryPath)</LibraryPath>
+    <SourcePath>..\common\src;$(SourcePath)</SourcePath>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <Link>
