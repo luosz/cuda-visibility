@@ -1,3 +1,5 @@
+/// https://stackoverflow.com/questions/38701467/3d-array-writing-and-reading-as-texture-in-cuda
+
 #include <cuda_runtime.h>
 #include <helper_functions.h>
 #include <helper_timer.h>
