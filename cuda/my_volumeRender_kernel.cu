@@ -29,6 +29,9 @@ typedef unsigned char VolumeType;
 texture<VolumeType, 3, cudaReadModeNormalizedFloat> tex;         // 3D texture
 texture<float4, 1, cudaReadModeElementType>         transferTex; // 1D transfer function texture
 
+texture<float, cudaTextureType3D, cudaReadModeElementType>  volumeTexIn;
+surface<void, 3>                                    volumeTexOut;
+
 typedef struct
 {
     float4 m[3];

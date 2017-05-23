@@ -11,10 +11,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="volumeRender.cpp" />
+    <ClCompile Include="my_volumeRender.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <CudaCompile Include="volumeRender_kernel.cu" />
+    <CudaCompile Include="my_volumeRender_kernel.cu" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{A91FC659-D633-4320-A4A1-7E7E601C25C5}</ProjectGuid>
