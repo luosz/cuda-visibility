@@ -11,11 +11,16 @@
 
 // Simple 3D volume renderer
 
+#include <helper_cuda.h>
+#include <helper_cuda.h>
 #ifndef _VOLUMERENDER_KERNEL_CU_
 #define _VOLUMERENDER_KERNEL_CU_
 
 #include <helper_cuda.h>
 #include <helper_math.h>
+
+#include <iostream>
+using namespace std;
 
 typedef unsigned int  uint;
 typedef unsigned char uchar;
@@ -31,6 +36,7 @@ texture<float4, 1, cudaReadModeElementType>         transferTex; // 1D transfer 
 
 texture<float, cudaTextureType3D, cudaReadModeElementType>  volumeTexIn;
 surface<void, 3>                                    volumeTexOut;
+cudaArray *d_visibilityArray = 0;
 
 typedef struct
 {
@@ -100,6 +106,27 @@ __device__ uint rgbaFloatToInt(float4 rgba)
     rgba.z = __saturatef(rgba.z);
     rgba.w = __saturatef(rgba.w);
     return (uint(rgba.w*255)<<24) | (uint(rgba.z*255)<<16) | (uint(rgba.y*255)<<8) | uint(rgba.x*255);
+}
+
+__global__ void
+surf_write(float *data, cudaExtent volumeSize)
+{
+	int x = blockIdx.x*blockDim.x + threadIdx.x;
+	int y = blockIdx.y*blockDim.y + threadIdx.y;
+	int z = blockIdx.z*blockDim.z + threadIdx.z;
+
+	if (x >= volumeSize.width || y >= volumeSize.height || z >= volumeSize.depth)
+	{
+		return;
+	}
+	float output = data[z*(volumeSize.width*volumeSize.height) + y*(volumeSize.width) + x];
+	// surface writes need byte offsets for x!
+	surf3Dwrite(output, volumeTexOut, x * sizeof(float), y, z);
+}
+
+__global__ void
+tex_read(float x, float y, float z) {
+	printf("x: %f, y: %f, z:%f, val: %f\n", x, y, z, tex3D(volumeTexIn, x, y, z));
 }
 
 __global__ void
@@ -265,9 +292,24 @@ void setTextureFilterMode(bool bLinearFilter)
 extern "C"
 void initCuda(void *h_volume, cudaExtent volumeSize)
 {
+	auto len = volumeSize.width * volumeSize.height * volumeSize.depth;
+	auto cube = malloc(sizeof(float) * len);
+	memset(cube, 0, sizeof(float) * len);
+	printf("%g\n", *((float*)cube+len-1));
+
     // create 3D array
     cudaChannelFormatDesc channelDesc = cudaCreateChannelDesc<VolumeType>();
     checkCudaErrors(cudaMalloc3DArray(&d_volumeArray, &channelDesc, volumeSize));
+
+	std::cout << "channelDesc\t" << channelDesc.x << "\t" << channelDesc.y << "\t" << channelDesc.z << "\t" << channelDesc.w << "\t" << channelDesc.f << std::endl;
+	std::cout << "volumeSize\t" << volumeSize.width << "\t" << volumeSize.height << "\t" << volumeSize.depth << std::endl;
+
+	auto channelDesc0 = cudaCreateChannelDesc<float>();
+	checkCudaErrors(cudaMalloc3DArray(&d_visibilityArray, &channelDesc0, volumeSize));
+	std::cout << "channelDesc\t" << channelDesc0.x << "\t" << channelDesc0.y << "\t" << channelDesc0.z << "\t" << channelDesc0.w << "\t" << channelDesc0.f << std::endl;
+
+	auto ptr = make_cudaPitchedPtr(d_visibilityArray, volumeSize.width * sizeof(VolumeType), volumeSize.width, volumeSize.height);
+	//checkCudaErrors(cudaMemset3D(ptr, 0, volumeSize));
 
     // copy data to 3D array
     cudaMemcpy3DParms copyParams = {0};
@@ -276,6 +318,17 @@ void initCuda(void *h_volume, cudaExtent volumeSize)
     copyParams.extent   = volumeSize;
     copyParams.kind     = cudaMemcpyHostToDevice;
     checkCudaErrors(cudaMemcpy3D(&copyParams));
+
+	auto copyParams2 = copyParams;
+	copyParams2.srcPtr = make_cudaPitchedPtr(cube, volumeSize.width * sizeof(float), volumeSize.width, volumeSize.height);
+	copyParams2.dstArray = d_visibilityArray;
+	checkCudaErrors(cudaMemcpy3D(&copyParams2));
+
+	volumeTexIn.filterMode = cudaFilterModeLinear;
+	checkCudaErrors(cudaBindSurfaceToArray(volumeTexOut, d_visibilityArray));
+	checkCudaErrors(cudaBindTextureToArray(volumeTexIn, d_visibilityArray));
+
+	tex_read << <1, 1 >> >(1.5, 1.5, 1.5);
 
     // set texture parameters
     tex.normalized = true;                      // access with normalized texture coordinates
@@ -317,7 +370,8 @@ extern "C"
 void freeCudaBuffers()
 {
     checkCudaErrors(cudaFreeArray(d_volumeArray));
-    checkCudaErrors(cudaFreeArray(d_transferFuncArray));
+	checkCudaErrors(cudaFreeArray(d_transferFuncArray));
+	checkCudaErrors(cudaFreeArray(d_visibilityArray));
 }
 
 

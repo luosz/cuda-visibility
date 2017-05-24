@@ -53,6 +53,9 @@
 #include <helper_functions.h>
 #include <helper_timer.h>
 
+#include <iostream>
+using namespace std;
+
 typedef unsigned int uint;
 typedef unsigned char uchar;
 
