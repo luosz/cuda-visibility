@@ -297,6 +297,10 @@ void initCuda(void *h_volume, cudaExtent volumeSize)
 	memset(cube, 0, sizeof(float) * len);
 	printf("%g\n", *((float*)cube+len-1));
 
+	float *cube2;
+	cudaMallocManaged(&cube2, sizeof(float) * len);
+	printf("%g\n", *(cube2 + 1));
+
     // create 3D array
     cudaChannelFormatDesc channelDesc = cudaCreateChannelDesc<VolumeType>();
     checkCudaErrors(cudaMalloc3DArray(&d_volumeArray, &channelDesc, volumeSize));
@@ -326,9 +330,16 @@ void initCuda(void *h_volume, cudaExtent volumeSize)
 
 	volumeTexIn.filterMode = cudaFilterModeLinear;
 	checkCudaErrors(cudaBindSurfaceToArray(volumeTexOut, d_visibilityArray));
+
+	dim3 blockSize(8, 8, 8);
+	dim3 gridSize((volumeSize.width + 7) / 8, (volumeSize.height + 7) / 8, (volumeSize.depth + 7) / 8);
+	//surf_write << <gridSize, blockSize >> >((float *)cube, volumeSize);
+
 	checkCudaErrors(cudaBindTextureToArray(volumeTexIn, d_visibilityArray));
 
-	tex_read << <1, 1 >> >(1.5, 1.5, 1.5);
+	//tex_read << <1, 1 >> >(1.5, 1.5, 1.5);
+
+	//checkCudaErrors(cudaDeviceSynchronize());
 
     // set texture parameters
     tex.normalized = true;                      // access with normalized texture coordinates
