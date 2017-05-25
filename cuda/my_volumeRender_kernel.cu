@@ -305,7 +305,7 @@ void initCuda(void *h_volume, cudaExtent volumeSize)
 	std::cout << "volumeSize\t" << volumeSize.width << "\t" << volumeSize.height << "\t" << volumeSize.depth << std::endl;
 
 	auto channelDesc0 = cudaCreateChannelDesc<float>();
-	checkCudaErrors(cudaMalloc3DArray(&d_visibilityArray, &channelDesc0, volumeSize));
+	checkCudaErrors(cudaMalloc3DArray(&d_visibilityArray, &channelDesc0, volumeSize, cudaArraySurfaceLoadStore));
 	std::cout << "channelDesc\t" << channelDesc0.x << "\t" << channelDesc0.y << "\t" << channelDesc0.z << "\t" << channelDesc0.w << "\t" << channelDesc0.f << std::endl;
 
 	auto ptr = make_cudaPitchedPtr(d_visibilityArray, volumeSize.width * sizeof(VolumeType), volumeSize.width, volumeSize.height);
