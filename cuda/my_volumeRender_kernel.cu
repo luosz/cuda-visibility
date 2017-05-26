@@ -38,6 +38,10 @@ texture<float, cudaTextureType3D, cudaReadModeElementType>  volumeTexIn;
 surface<void, 3>                                    volumeTexOut;
 cudaArray *d_visibilityArray = 0;
 
+__device__ float *visVolume = NULL;
+__device__ int *countVolume = NULL;
+//__device__ __managed__ cudaExtent sizeOfVolume;// = make_cudaExtent(32, 32, 32);
+
 typedef struct
 {
     float4 m[3];
@@ -106,6 +110,25 @@ __device__ uint rgbaFloatToInt(float4 rgba)
     rgba.z = __saturatef(rgba.z);
     rgba.w = __saturatef(rgba.w);
     return (uint(rgba.w*255)<<24) | (uint(rgba.z*255)<<16) | (uint(rgba.y*255)<<8) | uint(rgba.x*255);
+}
+
+__device__ void addVisibility(float value, float3 pos)
+{
+	int w, h, d;
+	w = h = d = 32;
+	int x = (int)((pos.x + 1) * 0.5f * w + 0.5f);
+	x = (x >= w) ? (w - 1) : x;
+	int y = (int)((pos.y + 1) * 0.5f * h + 0.5f);
+	y = (y >= h) ? (h - 1) : y;
+	int z = (int)((pos.z + 1) * 0.5f * d + 0.5f);
+	z = (z >= d) ? (d - 1) : z;
+
+	int index = z*w*h + y*w + x;
+	
+	//countVolume[index] += 1;
+	//visVolume[index] += value;
+	atomicAdd((countVolume + index), 1);
+	atomicAdd((visVolume + index), value);
 }
 
 __global__ void
@@ -266,6 +289,8 @@ d_visibility(uint *d_output, uint imageW, uint imageH,
 		// "over" operator for front-to-back blending
 		sum = sum + col*(1.0f - sum.w);
 
+		addVisibility(sum.w, pos);
+
 		// exit early if opaque
 		if (sum.w > opacityThreshold)
 			break;
@@ -297,9 +322,15 @@ void initCuda(void *h_volume, cudaExtent volumeSize)
 	memset(cube, 0, sizeof(float) * len);
 	printf("%g\n", *((float*)cube+len-1));
 
-	float *cube2;
-	cudaMallocManaged(&cube2, sizeof(float) * len);
-	printf("%g\n", *(cube2 + 1));
+	//sizeOfVolume = volumeSize;
+	//printf("%d %d %d\n", sizeOfVolume.width, sizeOfVolume.height, sizeOfVolume.depth);
+	//printf("%d %d %d\n", volumeSize.width, volumeSize.height, volumeSize.depth);
+
+	//auto len = volumeSize.width * volumeSize.height * volumeSize.depth;
+	checkCudaErrors(cudaMallocManaged(&visVolume, sizeof(float) * len));
+	checkCudaErrors(cudaMallocManaged(&countVolume, sizeof(int) * len));
+	printf("%g\n", *(visVolume + 1));
+	printf("%d\n", *(countVolume + 1));
 
     // create 3D array
     cudaChannelFormatDesc channelDesc = cudaCreateChannelDesc<VolumeType>();
@@ -383,6 +414,8 @@ void freeCudaBuffers()
     checkCudaErrors(cudaFreeArray(d_volumeArray));
 	checkCudaErrors(cudaFreeArray(d_transferFuncArray));
 	checkCudaErrors(cudaFreeArray(d_visibilityArray));
+	checkCudaErrors(cudaFree(visVolume));
+	checkCudaErrors(cudaFree(countVolume));
 }
 
 
@@ -390,8 +423,10 @@ extern "C"
 void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, uint imageH,
                    float density, float brightness, float transferOffset, float transferScale)
 {
-    d_render<<<gridSize, blockSize>>>(d_output, imageW, imageH, density,
-                                      brightness, transferOffset, transferScale);
+    //d_render<<<gridSize, blockSize>>>(d_output, imageW, imageH, density, brightness, transferOffset, transferScale);
+
+	d_visibility << <gridSize, blockSize >> >(d_output, imageW, imageH, density, brightness, transferOffset, transferScale);
+	cudaDeviceSynchronize();
 }
 
 extern "C"
