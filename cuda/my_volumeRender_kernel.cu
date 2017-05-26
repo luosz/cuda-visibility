@@ -38,9 +38,11 @@ texture<float, cudaTextureType3D, cudaReadModeElementType>  volumeTexIn;
 surface<void, 3>                                    volumeTexOut;
 cudaArray *d_visibilityArray = 0;
 
-__device__ float *visVolume = NULL;
-__device__ int *countVolume = NULL;
-//__device__ __managed__ cudaExtent sizeOfVolume;// = make_cudaExtent(32, 32, 32);
+__device__ __managed__ float *visVolume = NULL;
+__device__ __managed__ int *countVolume = NULL;
+__device__ __managed__ cudaExtent sizeOfVolume;// = make_cudaExtent(32, 32, 32);
+typedef float VisibilityType;
+texture<VisibilityType, 3, cudaReadModeNormalizedFloat> visTex;         // 3D texture
 
 typedef struct
 {
@@ -114,8 +116,8 @@ __device__ uint rgbaFloatToInt(float4 rgba)
 
 __device__ void addVisibility(float value, float3 pos)
 {
-	int w, h, d;
-	w = h = d = 32;
+	int w = sizeOfVolume.width, h = sizeOfVolume.height, d = sizeOfVolume.depth;
+	//w = h = d = 32;
 	int x = (int)((pos.x + 1) * 0.5f * w + 0.5f);
 	x = (x >= w) ? (w - 1) : x;
 	int y = (int)((pos.y + 1) * 0.5f * h + 0.5f);
@@ -129,6 +131,7 @@ __device__ void addVisibility(float value, float3 pos)
 	//visVolume[index] += value;
 	atomicAdd((countVolume + index), 1);
 	atomicAdd((visVolume + index), value);
+	//printf("atomicAdd %d \t %g \n", countVolume[index], visVolume[index]);
 }
 
 __global__ void
@@ -287,9 +290,89 @@ d_visibility(uint *d_output, uint imageW, uint imageH,
 		col.y *= col.w;
 		col.z *= col.w;
 		// "over" operator for front-to-back blending
+
+		float sumw = sum.w;
 		sum = sum + col*(1.0f - sum.w);
 
-		addVisibility(sum.w, pos);
+		addVisibility(sum.w - sumw, pos);
+
+		// exit early if opaque
+		if (sum.w > opacityThreshold)
+			break;
+
+		t += tstep;
+
+		if (t > tfar) break;
+
+		pos += step;
+	}
+
+	sum *= brightness;
+
+	// write output color
+	d_output[y*imageW + x] = rgbaFloatToInt(sum);
+}
+
+__global__ void
+d_renderVisibility(uint *d_output, uint imageW, uint imageH,
+	float density, float brightness,
+	float transferOffset, float transferScale)
+{
+	const int maxSteps = 500;
+	const float tstep = 0.01f;
+	const float opacityThreshold = 0.95f;
+	const float3 boxMin = make_float3(-1.0f, -1.0f, -1.0f);
+	const float3 boxMax = make_float3(1.0f, 1.0f, 1.0f);
+
+	uint x = blockIdx.x*blockDim.x + threadIdx.x;
+	uint y = blockIdx.y*blockDim.y + threadIdx.y;
+
+	if ((x >= imageW) || (y >= imageH)) return;
+
+	float u = (x / (float)imageW)*2.0f - 1.0f;
+	float v = (y / (float)imageH)*2.0f - 1.0f;
+
+	// calculate eye ray in world space
+	Ray eyeRay;
+	eyeRay.o = make_float3(mul(c_invViewMatrix, make_float4(0.0f, 0.0f, 0.0f, 1.0f)));
+	eyeRay.d = normalize(make_float3(u, v, -2.0f));
+	eyeRay.d = mul(c_invViewMatrix, eyeRay.d);
+
+	// find intersection with box
+	float tnear, tfar;
+	int hit = intersectBox(eyeRay, boxMin, boxMax, &tnear, &tfar);
+
+	if (!hit) return;
+
+	if (tnear < 0.0f) tnear = 0.0f;     // clamp to near plane
+
+										// march along ray from front to back, accumulating color
+	float4 sum = make_float4(0.0f);
+	float t = tnear;
+	float3 pos = eyeRay.o + eyeRay.d*tnear;
+	float3 step = eyeRay.d*tstep;
+
+	for (int i = 0; i<maxSteps; i++)
+	{
+		// read from 3D texture
+		// remap position to [0, 1] coordinates
+		float sample = tex3D(visTex, pos.x*0.5f + 0.5f, pos.y*0.5f + 0.5f, pos.z*0.5f + 0.5f);
+		//sample *= 64.0f;    // scale for 10-bit data
+
+		// lookup in transfer function texture
+		//float4 col = tex1D(transferTex, (sample - transferOffset)*transferScale);
+		float4 col = make_float4(sample, sample, sample, 1);
+		col.w *= density;
+
+		// "under" operator for back-to-front blending
+		//sum = lerp(sum, col, col.w);
+
+		// pre-multiply alpha
+		col.x *= col.w;
+		col.y *= col.w;
+		col.z *= col.w;
+		// "over" operator for front-to-back blending
+		sum = sum + col*(1.0f - sum.w);
 
 		// exit early if opaque
 		if (sum.w > opacityThreshold)
@@ -322,9 +405,9 @@ void initCuda(void *h_volume, cudaExtent volumeSize)
 	memset(cube, 0, sizeof(float) * len);
 	printf("%g\n", *((float*)cube+len-1));
 
-	//sizeOfVolume = volumeSize;
-	//printf("%d %d %d\n", sizeOfVolume.width, sizeOfVolume.height, sizeOfVolume.depth);
-	//printf("%d %d %d\n", volumeSize.width, volumeSize.height, volumeSize.depth);
+	sizeOfVolume = volumeSize;
+	printf("sizeOfVolume \t %d %d %d\n", sizeOfVolume.width, sizeOfVolume.height, sizeOfVolume.depth);
+	printf("volumeSize \t %d %d %d\n", volumeSize.width, volumeSize.height, volumeSize.depth);
 
 	//auto len = volumeSize.width * volumeSize.height * volumeSize.depth;
 	checkCudaErrors(cudaMallocManaged(&visVolume, sizeof(float) * len));
@@ -336,15 +419,7 @@ void initCuda(void *h_volume, cudaExtent volumeSize)
     cudaChannelFormatDesc channelDesc = cudaCreateChannelDesc<VolumeType>();
     checkCudaErrors(cudaMalloc3DArray(&d_volumeArray, &channelDesc, volumeSize));
 
-	std::cout << "channelDesc\t" << channelDesc.x << "\t" << channelDesc.y << "\t" << channelDesc.z << "\t" << channelDesc.w << "\t" << channelDesc.f << std::endl;
-	std::cout << "volumeSize\t" << volumeSize.width << "\t" << volumeSize.height << "\t" << volumeSize.depth << std::endl;
-
-	auto channelDesc0 = cudaCreateChannelDesc<float>();
-	checkCudaErrors(cudaMalloc3DArray(&d_visibilityArray, &channelDesc0, volumeSize, cudaArraySurfaceLoadStore));
-	std::cout << "channelDesc\t" << channelDesc0.x << "\t" << channelDesc0.y << "\t" << channelDesc0.z << "\t" << channelDesc0.w << "\t" << channelDesc0.f << std::endl;
-
-	auto ptr = make_cudaPitchedPtr(d_visibilityArray, volumeSize.width * sizeof(VolumeType), volumeSize.width, volumeSize.height);
-	//checkCudaErrors(cudaMemset3D(ptr, 0, volumeSize));
+	std::cout << "channelDesc \t" << channelDesc.x << "\t" << channelDesc.y << "\t" << channelDesc.z << "\t" << channelDesc.w << "\t" << channelDesc.f << std::endl;
 
     // copy data to 3D array
     cudaMemcpy3DParms copyParams = {0};
@@ -353,24 +428,6 @@ void initCuda(void *h_volume, cudaExtent volumeSize)
     copyParams.extent   = volumeSize;
     copyParams.kind     = cudaMemcpyHostToDevice;
     checkCudaErrors(cudaMemcpy3D(&copyParams));
-
-	auto copyParams2 = copyParams;
-	copyParams2.srcPtr = make_cudaPitchedPtr(cube, volumeSize.width * sizeof(float), volumeSize.width, volumeSize.height);
-	copyParams2.dstArray = d_visibilityArray;
-	checkCudaErrors(cudaMemcpy3D(&copyParams2));
-
-	volumeTexIn.filterMode = cudaFilterModeLinear;
-	checkCudaErrors(cudaBindSurfaceToArray(volumeTexOut, d_visibilityArray));
-
-	dim3 blockSize(8, 8, 8);
-	dim3 gridSize((volumeSize.width + 7) / 8, (volumeSize.height + 7) / 8, (volumeSize.depth + 7) / 8);
-	//surf_write << <gridSize, blockSize >> >((float *)cube, volumeSize);
-
-	checkCudaErrors(cudaBindTextureToArray(volumeTexIn, d_visibilityArray));
-
-	//tex_read << <1, 1 >> >(1.5, 1.5, 1.5);
-
-	//checkCudaErrors(cudaDeviceSynchronize());
 
     // set texture parameters
     tex.normalized = true;                      // access with normalized texture coordinates
@@ -426,6 +483,33 @@ void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, u
     //d_render<<<gridSize, blockSize>>>(d_output, imageW, imageH, density, brightness, transferOffset, transferScale);
 
 	d_visibility << <gridSize, blockSize >> >(d_output, imageW, imageH, density, brightness, transferOffset, transferScale);
+	cudaDeviceSynchronize();
+
+	auto channelDesc0 = cudaCreateChannelDesc<VisibilityType>();
+	//checkCudaErrors(cudaMalloc3DArray(&d_visibilityArray, &channelDesc0, sizeOfVolume, cudaArraySurfaceLoadStore));
+	checkCudaErrors(cudaMalloc3DArray(&d_visibilityArray, &channelDesc0, sizeOfVolume));
+	std::cout << "channelDesc0 \t" << channelDesc0.x << "\t" << channelDesc0.y << "\t" << channelDesc0.z << "\t" << channelDesc0.w << "\t" << channelDesc0.f << std::endl;
+
+	// copy data to 3D array
+	cudaMemcpy3DParms copyParams2 = { 0 };
+	copyParams2.srcPtr = make_cudaPitchedPtr(visVolume, sizeOfVolume.width * sizeof(VisibilityType), sizeOfVolume.width, sizeOfVolume.height);
+	copyParams2.dstArray = d_visibilityArray;
+	copyParams2.extent = sizeOfVolume;
+	copyParams2.kind = cudaMemcpyHostToDevice;
+	checkCudaErrors(cudaMemcpy3D(&copyParams2));
+
+	//checkCudaErrors(cudaMemcpyToArrayAsync(d_visibilityArray, 0, 0, countVolume, volumeSize.width*volumeSize.height*sizeof(int), cudaMemcpyHostToDevice));
+
+	// set texture parameters
+	visTex.normalized = true;                      // access with normalized texture coordinates
+	visTex.filterMode = cudaFilterModeLinear;      // linear interpolation
+	visTex.addressMode[0] = cudaAddressModeClamp;  // clamp texture coordinates
+	visTex.addressMode[1] = cudaAddressModeClamp;
+
+	checkCudaErrors(cudaBindTextureToArray(visTex, d_visibilityArray, channelDesc0));
+
+	d_renderVisibility << <gridSize, blockSize >> >(d_output, imageW, imageH, density, brightness, transferOffset, transferScale);
+
 	cudaDeviceSynchronize();
 }
 
