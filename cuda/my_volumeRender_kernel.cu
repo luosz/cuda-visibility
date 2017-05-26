@@ -42,7 +42,7 @@ __device__ __managed__ float *visVolume = NULL;
 __device__ __managed__ int *countVolume = NULL;
 __device__ __managed__ cudaExtent sizeOfVolume;// = make_cudaExtent(32, 32, 32);
 typedef float VisibilityType;
-texture<VisibilityType, 3, cudaReadModeNormalizedFloat> visTex;         // 3D texture
+texture<VisibilityType, 3, cudaReadModeElementType> visTex;         // 3D texture
 
 typedef struct
 {
@@ -361,7 +361,7 @@ d_renderVisibility(uint *d_output, uint imageW, uint imageH,
 
 		// lookup in transfer function texture
 		//float4 col = tex1D(transferTex, (sample - transferOffset)*transferScale);
-		float4 col = make_float4(sample, sample, sample, 1);
+		float4 col = make_float4(sample, sample, sample, sample);
 		col.w *= density;
 
 		// "under" operator for back-to-front blending
@@ -482,6 +482,10 @@ void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, u
 {
     //d_render<<<gridSize, blockSize>>>(d_output, imageW, imageH, density, brightness, transferOffset, transferScale);
 
+	auto len = sizeOfVolume.width * sizeOfVolume.height * sizeOfVolume.depth;
+	//auto cube = malloc(sizeof(float) * len);
+	memset(visVolume, 0, sizeof(VisibilityType) * len);
+
 	d_visibility << <gridSize, blockSize >> >(d_output, imageW, imageH, density, brightness, transferOffset, transferScale);
 	cudaDeviceSynchronize();
 
@@ -502,7 +506,8 @@ void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, u
 
 	// set texture parameters
 	visTex.normalized = true;                      // access with normalized texture coordinates
-	visTex.filterMode = cudaFilterModeLinear;      // linear interpolation
+	//visTex.filterMode = cudaFilterModeLinear;      // linear interpolation
+	visTex.filterMode = cudaFilterModePoint;      // linear interpolation
 	visTex.addressMode[0] = cudaAddressModeClamp;  // clamp texture coordinates
 	visTex.addressMode[1] = cudaAddressModeClamp;
 
