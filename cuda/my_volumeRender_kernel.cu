@@ -43,6 +43,7 @@ __device__ __managed__ int *countVolume = NULL;
 __device__ __managed__ cudaExtent sizeOfVolume;// = make_cudaExtent(32, 32, 32);
 typedef float VisibilityType;
 texture<VisibilityType, 3, cudaReadModeElementType> visTex;         // 3D texture
+//texture<VisibilityType, 3, cudaReadModeNormalizedFloat> visTex;         // 3D texture
 
 typedef struct
 {
@@ -418,7 +419,6 @@ void initCuda(void *h_volume, cudaExtent volumeSize)
     // create 3D array
     cudaChannelFormatDesc channelDesc = cudaCreateChannelDesc<VolumeType>();
     checkCudaErrors(cudaMalloc3DArray(&d_volumeArray, &channelDesc, volumeSize));
-
 	std::cout << "channelDesc \t" << channelDesc.x << "\t" << channelDesc.y << "\t" << channelDesc.z << "\t" << channelDesc.w << "\t" << channelDesc.f << std::endl;
 
     // copy data to 3D array
@@ -484,15 +484,16 @@ void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, u
 
 	auto len = sizeOfVolume.width * sizeOfVolume.height * sizeOfVolume.depth;
 	//auto cube = malloc(sizeof(float) * len);
-	memset(visVolume, 0, sizeof(VisibilityType) * len);
+	//memset(visVolume, 0, sizeof(VisibilityType) * len);
+	cudaMemset(visVolume, 0, sizeof(VisibilityType) * len);
 
 	d_visibility << <gridSize, blockSize >> >(d_output, imageW, imageH, density, brightness, transferOffset, transferScale);
 	cudaDeviceSynchronize();
 
-	auto channelDesc0 = cudaCreateChannelDesc<VisibilityType>();
+	cudaChannelFormatDesc channelDesc0 = cudaCreateChannelDesc<VisibilityType>();
 	//checkCudaErrors(cudaMalloc3DArray(&d_visibilityArray, &channelDesc0, sizeOfVolume, cudaArraySurfaceLoadStore));
 	checkCudaErrors(cudaMalloc3DArray(&d_visibilityArray, &channelDesc0, sizeOfVolume));
-	std::cout << "channelDesc0 \t" << channelDesc0.x << "\t" << channelDesc0.y << "\t" << channelDesc0.z << "\t" << channelDesc0.w << "\t" << channelDesc0.f << std::endl;
+	//std::cout << "channelDesc0 \t" << channelDesc0.x << "\t" << channelDesc0.y << "\t" << channelDesc0.z << "\t" << channelDesc0.w << "\t" << channelDesc0.f << std::endl;
 
 	// copy data to 3D array
 	cudaMemcpy3DParms copyParams2 = { 0 };
@@ -506,8 +507,8 @@ void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, u
 
 	// set texture parameters
 	visTex.normalized = true;                      // access with normalized texture coordinates
-	//visTex.filterMode = cudaFilterModeLinear;      // linear interpolation
-	visTex.filterMode = cudaFilterModePoint;      // linear interpolation
+	visTex.filterMode = cudaFilterModeLinear;      // linear interpolation
+	//visTex.filterMode = cudaFilterModePoint;      // linear interpolation
 	visTex.addressMode[0] = cudaAddressModeClamp;  // clamp texture coordinates
 	visTex.addressMode[1] = cudaAddressModeClamp;
 
