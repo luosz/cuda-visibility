@@ -119,6 +119,9 @@ char **pArgv;
 #define MAX(a,b) ((a > b) ? a : b)
 #endif
 
+extern "C" void set_save(bool value);
+extern "C" bool get_save();
+
 extern "C" void setTextureFilterMode(bool bLinearFilter);
 extern "C" void initCuda(void *h_volume, cudaExtent volumeSize);
 extern "C" void freeCudaBuffers();
@@ -304,6 +307,10 @@ void keyboard(unsigned char key, int x, int y)
         case ',':
             transferScale -= 0.01f;
             break;
+
+		case 's':
+			set_save(true);
+			break;
 
         default:
             break;

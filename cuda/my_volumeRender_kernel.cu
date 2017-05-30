@@ -45,6 +45,21 @@ typedef float VisibilityType;
 texture<VisibilityType, 3, cudaReadModeElementType> visTex;         // 3D texture
 //texture<VisibilityType, 3, cudaReadModeNormalizedFloat> visTex;         // 3D texture
 
+// save visibility
+bool save_visibility = false;
+
+extern "C" void set_save(bool value)
+{
+	save_visibility = value;
+	printf("set save %s\n", save_visibility ?"true":"false");
+}
+
+extern "C" bool get_save()
+{
+	//printf("get save %s\n", save_visibility ? "true" : "false");
+	return save_visibility;
+}
+
 typedef struct
 {
     float4 m[3];
@@ -517,6 +532,16 @@ void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, u
 	d_renderVisibility << <gridSize, blockSize >> >(d_output, imageW, imageH, density, brightness, transferOffset, transferScale);
 
 	cudaDeviceSynchronize();
+
+	if (get_save())
+	{
+		set_save(false);
+		printf("save visibility to visibility.raw.\n");
+
+		auto fp = fopen("visibility.raw", "wb");
+		fwrite(visVolume, sizeof(VisibilityType), len, fp);
+		fclose(fp);
+	}
 }
 
 extern "C"
