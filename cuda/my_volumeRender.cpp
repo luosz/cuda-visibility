@@ -77,13 +77,17 @@ const char *sReference[] =
 
 const char *sSDKsample = "CUDA 3D Volume Render";
 
-const char *volumeFilename = "Bucky.raw";
-cudaExtent volumeSize = make_cudaExtent(32, 32, 32);
-typedef unsigned char VolumeType;
+//const char *volumeFilename = "Bucky.raw";
+//cudaExtent volumeSize = make_cudaExtent(32, 32, 32);
+//typedef unsigned char VolumeType;
 
 //char *volumeFilename = "mrt16_angio.raw";
 //cudaExtent volumeSize = make_cudaExtent(416, 512, 112);
 //typedef unsigned short VolumeType;
+
+const char *volumeFilename = "vorts1.raw";
+cudaExtent volumeSize = make_cudaExtent(128, 128, 128);
+typedef unsigned char VolumeType;
 
 uint width = 512, height = 512;
 dim3 blockSize(16, 16);
@@ -121,6 +125,7 @@ char **pArgv;
 
 extern "C" void set_save(bool value);
 extern "C" bool get_save();
+extern "C" void set_volume_file(const char *file, int n);
 
 extern "C" void setTextureFilterMode(bool bLinearFilter);
 extern "C" void initCuda(void *h_volume, cudaExtent volumeSize);
@@ -638,6 +643,8 @@ main(int argc, char **argv)
         n= getCmdLineArgumentInt(argc, (const char **) argv, "zsize");
         volumeSize.depth = n;
     }
+
+	set_volume_file(volumeFilename, strlen(volumeFilename));
 
     // load volume data
     char *path = sdkFindFilePath(volumeFilename, argv[0]);

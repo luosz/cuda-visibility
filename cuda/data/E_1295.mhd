@@ -1,0 +1,6 @@
+NDims = 3
+DimSize = 432 432 432
+ElementType = MET_UCHAR
+ElementSpacing = 1.0 1.0 1.0
+ElementByteOrderMSB = False
+ElementDataFile = E_1295.raw

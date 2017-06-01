@@ -1,5 +1,11 @@
 ################################################################
 ## 2017-04-24
+
+# Miscellaneous #
+###################
+*.hgignore
+*~*
+
 ## VisualStudio.gitignore
 ################################################################
 ## Ignore Visual Studio temporary files, build results, and
