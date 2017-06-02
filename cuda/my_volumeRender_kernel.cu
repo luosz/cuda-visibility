@@ -46,6 +46,8 @@ typedef float VisibilityType;
 texture<VisibilityType, 3, cudaReadModeElementType> visTex;         // 3D texture
 //texture<VisibilityType, 3, cudaReadModeNormalizedFloat> visTex;         // 3D texture
 
+__device__ __managed__ int2 loc = { 512 / 2, 512 / 2 };
+
 // save visibility
 bool save_visibility = false;
 
@@ -383,13 +385,15 @@ d_renderVisibility(uint *d_output, uint imageW, uint imageH,
 	{
 		// read from 3D texture
 		// remap position to [0, 1] coordinates
-		float sample = tex3D(visTex, pos.x*0.5f + 0.5f, pos.y*0.5f + 0.5f, pos.z*0.5f + 0.5f);
+		float sample = tex3D(tex, pos.x*0.5f + 0.5f, pos.y*0.5f + 0.5f, pos.z*0.5f + 0.5f);
+		float vis = tex3D(visTex, pos.x*0.5f + 0.5f, pos.y*0.5f + 0.5f, pos.z*0.5f + 0.5f);
 		//sample *= 64.0f;    // scale for 10-bit data
 
 		// lookup in transfer function texture
-		//float4 col = tex1D(transferTex, (sample - transferOffset)*transferScale);
-		float4 col = make_float4(sample, sample, sample, sample);
+		float4 col = tex1D(transferTex, (sample - transferOffset)*transferScale);
+		//float4 col = make_float4(sample, sample, sample, sample);
 		col.w *= density;
+		col.w /= vis;
 
 		// "under" operator for back-to-front blending
 		//sum = lerp(sum, col, col.w);
@@ -535,8 +539,8 @@ void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, u
 
 	// set texture parameters
 	visTex.normalized = true;                      // access with normalized texture coordinates
-	visTex.filterMode = cudaFilterModeLinear;      // linear interpolation
-	//visTex.filterMode = cudaFilterModePoint;      // linear interpolation
+	//visTex.filterMode = cudaFilterModeLinear;      // linear interpolation
+	visTex.filterMode = cudaFilterModePoint;      // linear interpolation
 	visTex.addressMode[0] = cudaAddressModeClamp;  // clamp texture coordinates
 	visTex.addressMode[1] = cudaAddressModeClamp;
 
