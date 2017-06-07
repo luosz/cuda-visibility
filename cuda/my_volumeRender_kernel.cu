@@ -44,9 +44,12 @@ __device__ __managed__ int *countVolume = NULL;
 __device__ __managed__ cudaExtent sizeOfVolume;// = make_cudaExtent(32, 32, 32);
 typedef float VisibilityType;
 texture<VisibilityType, 3, cudaReadModeElementType> visTex;         // 3D texture
+texture<VolumeType, 3, cudaReadModeElementType> volTex;         // 3D texture
 //texture<VisibilityType, 3, cudaReadModeNormalizedFloat> visTex;         // 3D texture
 
 __device__ __managed__ int2 loc = { 512 / 2, 512 / 2 };
+const int BIN_COUNT = 256;
+__device__ __managed__ float histogram[BIN_COUNT] = {0};
 
 // save visibility
 bool save_visibility = false;
@@ -147,11 +150,12 @@ __device__ void addVisibility(float value, float3 pos)
 {
 	int w = sizeOfVolume.width, h = sizeOfVolume.height, d = sizeOfVolume.depth;
 	//w = h = d = 32;
-	int x = (int)((pos.x + 1) * 0.5f * w + 0.5f);
+	//pos.x*0.5f + 0.5f, pos.y*0.5f + 0.5f, pos.z*0.5f + 0.5f
+	int x = (int)((pos.x*0.5f + 0.5f) * w + 0.5f);
 	x = (x >= w) ? (w - 1) : x;
-	int y = (int)((pos.y + 1) * 0.5f * h + 0.5f);
+	int y = (int)((pos.y*0.5f + 0.5f) * h + 0.5f);
 	y = (y >= h) ? (h - 1) : y;
-	int z = (int)((pos.z + 1) * 0.5f * d + 0.5f);
+	int z = (int)((pos.z*0.5f + 0.5f) * d + 0.5f);
 	z = (z >= d) ? (d - 1) : z;
 
 	int index = z*w*h + y*w + x;
@@ -161,6 +165,10 @@ __device__ void addVisibility(float value, float3 pos)
 	atomicAdd((countVolume + index), 1);
 	atomicAdd((visVolume + index), value);
 	//printf("atomicAdd %d \t %g \n", countVolume[index], visVolume[index]);
+
+	float sample = tex3D(volTex, pos.x*0.5f + 0.5f, pos.y*0.5f + 0.5f, pos.z*0.5f + 0.5f);
+	VolumeType intensity = (int)(sample + 0.5f);
+	atomicAdd((histogram + intensity), value);
 }
 
 __global__ void
@@ -475,6 +483,16 @@ void initCuda(void *h_volume, cudaExtent volumeSize)
     // bind array to 3D texture
     checkCudaErrors(cudaBindTextureToArray(tex, d_volumeArray, channelDesc));
 
+	// set texture parameters
+	volTex.normalized = true;                      // access with normalized texture coordinates
+	//volTex.filterMode = cudaFilterModeLinear;      // linear interpolation
+	volTex.filterMode = cudaFilterModePoint;      // nearest-neighbor interpolation
+	volTex.addressMode[0] = cudaAddressModeClamp;  // clamp texture coordinates
+	volTex.addressMode[1] = cudaAddressModeClamp;
+
+	// bind array to 3D texture
+	checkCudaErrors(cudaBindTextureToArray(volTex, d_volumeArray, channelDesc));
+
     // create transfer function texture
     float4 transferFunc[] =
     {
@@ -523,6 +541,7 @@ void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, u
 	//auto cube = malloc(sizeof(float) * len);
 	//memset(visVolume, 0, sizeof(VisibilityType) * len);
 	cudaMemset(visVolume, 0, sizeof(VisibilityType) * len);
+	cudaMemset(histogram, 0, sizeof(float)*BIN_COUNT);
 
 	d_visibility << <gridSize, blockSize >> >(d_output, imageW, imageH, density, brightness, transferOffset, transferScale);
 	cudaDeviceSynchronize();
