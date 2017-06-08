@@ -54,6 +54,7 @@
 #include <helper_timer.h>
 
 #include <iostream>
+#include "tinyxml2.h"
 using namespace std;
 
 typedef unsigned int uint;
@@ -135,6 +136,110 @@ extern "C" void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uin
 extern "C" void copyInvViewMatrix(float *invViewMatrix, size_t sizeofMatrix);
 
 void initPixelBuffer();
+
+/// Re-maps a number from one range to another.
+double map_to_range(double val, double src_lower, double src_upper, double target_lower, double target_upper)
+{
+	val = val < src_lower ? src_lower : val;
+	val = val > src_upper ? src_upper : val;
+	double normalised = (val - src_lower) / (src_upper - src_lower);
+	return normalised * (target_upper - target_lower) + target_lower;
+}
+
+double normalise_rgba(int n)
+{
+	return map_to_range(n, 0, 255, 0, 1);
+}
+
+/// open Voreen transfer functions
+void openTransferFunctionFromVoreenXML(const char *filename)
+{
+	//ui->statusBar->showMessage(QString(filename));
+
+	tinyxml2::XMLDocument doc;
+	auto r = doc.LoadFile(filename);
+	
+	if (r != tinyxml2::XML_SUCCESS)
+	{
+		std::cout << "failed to open file" << endl;
+		return;
+	}
+
+	auto transFuncIntensity = doc.FirstChildElement("VoreenData")->FirstChildElement("TransFuncIntensity");
+
+	//auto threshold = transFuncIntensity->FirstChildElement("threshold");
+	//if (threshold != NULL)
+	//{
+	//	Threshold_x(atof(threshold->Attribute("x")));
+	//	Threshold_y(atof(threshold->Attribute("y")));
+	//}
+	//else
+	//{
+	//	Threshold_x(atof(transFuncIntensity->FirstChildElement("lower")->Attribute("value")));
+	//	Threshold_y(atof(transFuncIntensity->FirstChildElement("upper")->Attribute("value")));
+	//}
+
+	//auto domain = transFuncIntensity->FirstChildElement("domain");
+	//if (domain != NULL)
+	//{
+	//	Domain_x(atof(domain->Attribute("x")));
+	//	Domain_y(atof(domain->Attribute("y")));
+	//	std::cout << "domain x=" << Domain_x() << " y=" << Domain_y() << std::endl;
+	//}
+	//else
+	//{
+	//	Domain_x(0);
+	//	Domain_y(1);
+	//	std::cout << "domain doesn't exist. default: " << Domain_x() << " " << Domain_y() << std::endl;
+	//}
+
+	auto key = doc.FirstChildElement("VoreenData")->FirstChildElement("TransFuncIntensity")->FirstChildElement("Keys")->FirstChildElement("key");
+	float4 transferFunc[] = { 0 };
+	//intensity_list_clear();
+	//colour_list_clear();
+	//opacity_list_clear();
+	do
+	{
+		double intensity = atof(key->FirstChildElement("intensity")->Attribute("value"));
+		//intensity_list_push_back(intensity);
+		int r = atoi(key->FirstChildElement("colorL")->Attribute("r"));
+		int g = atoi(key->FirstChildElement("colorL")->Attribute("g"));
+		int b = atoi(key->FirstChildElement("colorL")->Attribute("b"));
+		int a = atoi(key->FirstChildElement("colorL")->Attribute("a"));
+		std::vector<double> colour;
+		colour.push_back(normalise_rgba(r));
+		colour.push_back(normalise_rgba(g));
+		colour.push_back(normalise_rgba(b));
+		//colour_list_push_back(colour);
+		//opacity_list_push_back(normalise_rgba(a));
+
+		bool split = (0 == strcmp("true", key->FirstChildElement("split")->Attribute("value")));
+		std::cout << "intensity=" << intensity;
+		std::cout << "\tsplit=" << (split ? "true" : "false");
+		std::cout << "\tcolorL r=" << r << " g=" << g << " b=" << b << " a=" << a;
+		const double epsilon = 1e-6;
+		if (split)
+		{
+			intensity_list_push_back(intensity + epsilon);
+			auto colorR = key->FirstChildElement("colorR");
+			int r2 = atoi(colorR->Attribute("r"));
+			int g2 = atoi(colorR->Attribute("g"));
+			int b2 = atoi(colorR->Attribute("b"));
+			int a2 = atoi(colorR->Attribute("a"));
+			std::vector<double> colour2;
+			colour2.push_back(normalise_rgba(r2));
+			colour2.push_back(normalise_rgba(g2));
+			colour2.push_back(normalise_rgba(b2));
+			//colour2.push_back(normalise_rgba(a2));
+			colour_list_push_back(colour2);
+			opacity_list_push_back(normalise_rgba(a2));
+			std::cout << "\tcolorR r=" << r2 << " g=" << g2 << " b=" << b2 << " a=" << a2;
+		}
+		std::cout << endl;
+
+		key = key->NextSiblingElement();
+	} while (key);
+}
 
 void computeFPS()
 {
