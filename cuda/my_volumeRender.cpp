@@ -54,6 +54,7 @@
 #include <helper_timer.h>
 
 #include <iostream>
+#include <helper_math.h>
 #include "tinyxml2.h"
 using namespace std;
 
@@ -151,6 +152,16 @@ double normalise_rgba(int n)
 	return map_to_range(n, 0, 255, 0, 1);
 }
 
+float4 lerp(float4 a, float4 b, float x)
+{
+	return a*x + b*(1 - x);
+}
+
+void lookuptable()
+{
+
+}
+
 /// open Voreen transfer functions
 void openTransferFunctionFromVoreenXML(const char *filename)
 {
@@ -195,6 +206,8 @@ void openTransferFunctionFromVoreenXML(const char *filename)
 
 	auto key = doc.FirstChildElement("VoreenData")->FirstChildElement("TransFuncIntensity")->FirstChildElement("Keys")->FirstChildElement("key");
 	float4 transferFunc[] = { 0 };
+	std::vector<float> intensity_list;
+	std::vector<float4> rgba_list;
 	//intensity_list_clear();
 	//colour_list_clear();
 	//opacity_list_clear();
@@ -220,7 +233,7 @@ void openTransferFunctionFromVoreenXML(const char *filename)
 		const double epsilon = 1e-6;
 		if (split)
 		{
-			intensity_list_push_back(intensity + epsilon);
+			//intensity_list_push_back(intensity + epsilon);
 			auto colorR = key->FirstChildElement("colorR");
 			int r2 = atoi(colorR->Attribute("r"));
 			int g2 = atoi(colorR->Attribute("g"));
@@ -231,8 +244,8 @@ void openTransferFunctionFromVoreenXML(const char *filename)
 			colour2.push_back(normalise_rgba(g2));
 			colour2.push_back(normalise_rgba(b2));
 			//colour2.push_back(normalise_rgba(a2));
-			colour_list_push_back(colour2);
-			opacity_list_push_back(normalise_rgba(a2));
+			//colour_list_push_back(colour2);
+			//opacity_list_push_back(normalise_rgba(a2));
 			std::cout << "\tcolorR r=" << r2 << " g=" << g2 << " b=" << b2 << " a=" << a2;
 		}
 		std::cout << endl;

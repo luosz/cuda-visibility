@@ -1,3 +1,22 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CudaCompile Include="my_volumeRender_kernel.cu" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="my_volumeRender.cpp" />
+    <ClCompile Include="tinyxml2.cpp">
+      <Filter>tinyxml2</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="tinyxml2">
+      <UniqueIdentifier>{0260f884-a0cd-4671-8710-bb9f525efa50}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="tinyxml2.h">
+      <Filter>tinyxml2</Filter>
+    </ClInclude>
+  </ItemGroup>
 </Project>
