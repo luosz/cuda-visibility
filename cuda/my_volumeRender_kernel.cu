@@ -87,6 +87,47 @@ extern "C" void set_volume_file(const char *file, int n)
 	memcpy(volume_file, file, n);
 }
 
+extern "C" void blend_tf(float3 color)
+{
+	float hist[BIN_COUNT];
+	//float sum = 0;
+	float max = 0;
+	for (int i = 0; i < BIN_COUNT; i++)
+	{
+		//sum += histogram2[i] * histogram2[i];
+		if (max < histogram2[i])
+		{
+			max = histogram2[i];
+		}
+	}
+	//sum = sqrt(sum);
+	for (int i = 0; i < BIN_COUNT; i++)
+	{
+		hist[i] = histogram2[i] / max;
+	}
+	for (int i = 0; i < BIN_COUNT; i++)
+	{
+		auto c = make_float3(tf_array[i].x, tf_array[i].y, tf_array[i].z);
+		auto c2 = lerp(c, color, hist[i]);
+		if (hist[i] > 0.5)
+		{
+			printf("%g r %g %g g %g %g b %g %g \n", i/(float)BIN_COUNT, tf_array[i].x, c2.x, tf_array[i].y, c2.y, tf_array[i].z, c2.z);
+		}
+		tf_array[i].x = c2.x;
+		tf_array[i].y = c2.y;
+		tf_array[i].z = c2.z;
+	}
+
+	cudaChannelFormatDesc channelDesc2 = cudaCreateChannelDesc<float4>();
+	cudaArray *d_transferFuncArray;
+	//checkCudaErrors(cudaMallocArray(&d_transferFuncArray, &channelDesc2, sizeof(transferFunc)/sizeof(float4), 1));
+	//checkCudaErrors(cudaMemcpyToArray(d_transferFuncArray, 0, 0, transferFunc, sizeof(transferFunc), cudaMemcpyHostToDevice));
+	checkCudaErrors(cudaMallocArray(&d_transferFuncArray, &channelDesc2, sizeof(tf_array) / sizeof(float4), 1));
+	checkCudaErrors(cudaMemcpyToArray(d_transferFuncArray, 0, 0, tf_array, sizeof(tf_array), cudaMemcpyHostToDevice));
+	// Bind the array to the texture
+	checkCudaErrors(cudaBindTextureToArray(transferTex, d_transferFuncArray, channelDesc2));
+}
+
 typedef struct
 {
     float4 m[3];
@@ -734,6 +775,8 @@ void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, u
 			fprintf(fp3, "%g\n", histogram2[i]);
 		}
 		fclose(fp3);
+
+		blend_tf(make_float3(0, 0, 1));
 	}
 }
 

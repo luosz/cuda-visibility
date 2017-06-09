@@ -835,7 +835,8 @@ main(int argc, char **argv)
     void *h_volume = loadRawFile(path, size);
 
 	// load transfer function
-	openTransferFunctionFromVoreenXML("vortex_naive_proportional_optimized_linesearch.tfi");
+	openTransferFunctionFromVoreenXML("vortex_naive_proportional.tfi");
+	//openTransferFunctionFromVoreenXML("vortex_naive_proportional_optimized_linesearch.tfi");
 	//auto tf = get_tf_array();
 	//tf[0] = make_float4(0.1f,0.2f,0.3f,0.4f);
 	//printf("%g %g %g %g \n", tf[0].x, tf[0].y, tf[0].z, tf[0].w);
