@@ -91,9 +91,7 @@ const char *volumeFilename = "vorts1.raw";
 cudaExtent volumeSize = make_cudaExtent(128, 128, 128);
 typedef unsigned char VolumeType;
 
-#define W 512
-#define H 512
-int2 loc = { W / 2, H / 2 };
+int2 loc = {0, 0};
 bool dragMode = false; // mouse tracking mode
 
 uint width = 512, height = 512;
@@ -140,7 +138,7 @@ extern "C" void setTextureFilterMode(bool bLinearFilter);
 extern "C" void initCuda(void *h_volume, cudaExtent volumeSize);
 extern "C" void freeCudaBuffers();
 extern "C" void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, uint imageH,
-                              float density, float brightness, float transferOffset, float transferScale);
+                              float density, float brightness, float transferOffset, float transferScale, int2 loc);
 extern "C" void copyInvViewMatrix(float *invViewMatrix, size_t sizeofMatrix);
 
 void initPixelBuffer();
@@ -348,7 +346,7 @@ void render()
     checkCudaErrors(cudaMemset(d_output, 0, width*height*4));
 
     // call CUDA kernel, writing results to PBO
-    render_kernel(gridSize, blockSize, d_output, width, height, density, brightness, transferOffset, transferScale);
+    render_kernel(gridSize, blockSize, d_output, width, height, density, brightness, transferOffset, transferScale, loc);
 
     getLastCudaError("kernel failed");
 
@@ -505,6 +503,9 @@ int buttonState = 0;
 
 void mouse(int button, int state, int x, int y)
 {
+	loc.x = x;
+	loc.y = y;
+
     if (state == GLUT_DOWN)
     {
         buttonState  |= 1<<button;
@@ -719,7 +720,7 @@ void runSingleTest(const char *ref_file, const char *exec_path)
             sdkStartTimer(&timer);
         }
 
-        render_kernel(gridSize, blockSize, d_output, width, height, density, brightness, transferOffset, transferScale);
+        render_kernel(gridSize, blockSize, d_output, width, height, density, brightness, transferOffset, transferScale, loc);
     }
 
     cudaDeviceSynchronize();

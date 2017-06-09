@@ -49,6 +49,7 @@ texture<VolumeType, 3, cudaReadModeElementType> volTex;         // 3D texture
 
 const int BIN_COUNT = 256;
 __device__ __managed__ float histogram[BIN_COUNT] = {0};
+__device__ __managed__ float histogram2[BIN_COUNT] = {0};
 __device__ __managed__ float4 tf_array[BIN_COUNT] = {0};
 
 // save visibility
@@ -179,6 +180,27 @@ __device__ void addVisibility(float value, float3 pos)
 	float sample = tex3D(volTex, pos.x*0.5f + 0.5f, pos.y*0.5f + 0.5f, pos.z*0.5f + 0.5f);
 	VolumeType intensity = (int)(sample + 0.5f);
 	atomicAdd((histogram + intensity), value);
+}
+
+__device__ void addVisibility2(float value, float3 pos)
+{
+	int w = sizeOfVolume.width, h = sizeOfVolume.height, d = sizeOfVolume.depth;
+	//w = h = d = 32;
+	//pos.x*0.5f + 0.5f, pos.y*0.5f + 0.5f, pos.z*0.5f + 0.5f
+	int x = (int)((pos.x*0.5f + 0.5f) * w + 0.5f);
+	x = (x >= w) ? (w - 1) : x;
+	int y = (int)((pos.y*0.5f + 0.5f) * h + 0.5f);
+	y = (y >= h) ? (h - 1) : y;
+	int z = (int)((pos.z*0.5f + 0.5f) * d + 0.5f);
+	z = (z >= d) ? (d - 1) : z;
+
+	//int index = z*w*h + y*w + x;
+	//atomicAdd((countVolume + index), 1);
+	//atomicAdd((visVolume + index), value);
+
+	float sample = tex3D(volTex, pos.x*0.5f + 0.5f, pos.y*0.5f + 0.5f, pos.z*0.5f + 0.5f);
+	VolumeType intensity = (int)(sample + 0.5f);
+	atomicAdd((histogram2 + intensity), value);
 }
 
 __global__ void
@@ -363,7 +385,7 @@ d_visibility(uint *d_output, uint imageW, uint imageH,
 __global__ void
 d_visibilityLocal(uint *d_output, uint imageW, uint imageH,
 	float density, float brightness,
-	float transferOffset, float transferScale)
+	float transferOffset, float transferScale, int2 loc)
 {
 	const int maxSteps = 500;
 	const float tstep = 0.01f;
@@ -423,6 +445,10 @@ d_visibilityLocal(uint *d_output, uint imageW, uint imageH,
 		sum = sum + col*(1.0f - sum.w);
 
 		addVisibility(sum.w - sumw, pos);
+		if (fabsf(x - loc.x) <= 10 && fabsf(y - loc.y) <= 10)
+		{
+			addVisibility2(sum.w - sumw, pos);
+		}
 
 		// exit early if opaque
 		if (sum.w > opacityThreshold)
@@ -548,9 +574,6 @@ void initCuda(void *h_volume, cudaExtent volumeSize)
 	auto tf2 = tf_array;
 	printf("sizeof \t histogram %d \t tf_array %d \t tf2 %d %d \n", sizeof(histogram) / sizeof(float), sizeof(tf_array) / sizeof(float4), sizeof(tf2), sizeof(float4));
 
-	//checkCudaErrors(cudaMallocManaged(&volume_file, sizeof(char) * _MAX_PATH));
-	
-
 	cudaChannelFormatDesc channelDesc0 = cudaCreateChannelDesc<VisibilityType>();
 	//checkCudaErrors(cudaMalloc3DArray(&d_visibilityArray, &channelDesc0, sizeOfVolume, cudaArraySurfaceLoadStore));
 	checkCudaErrors(cudaMalloc3DArray(&d_visibilityArray, &channelDesc0, sizeOfVolume));
@@ -629,7 +652,7 @@ void freeCudaBuffers()
 
 extern "C"
 void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, uint imageH,
-                   float density, float brightness, float transferOffset, float transferScale)
+                   float density, float brightness, float transferOffset, float transferScale, int2 loc)
 {
     //d_render<<<gridSize, blockSize>>>(d_output, imageW, imageH, density, brightness, transferOffset, transferScale);
 
@@ -638,8 +661,12 @@ void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, u
 	//memset(visVolume, 0, sizeof(VisibilityType) * len);
 	cudaMemset(visVolume, 0, sizeof(VisibilityType) * len);
 	cudaMemset(histogram, 0, sizeof(float)*BIN_COUNT);
+	cudaMemset(histogram2, 0, sizeof(float)*BIN_COUNT);
 
-	d_visibility << <gridSize, blockSize >> >(d_output, imageW, imageH, density, brightness, transferOffset, transferScale);
+	//d_visibility << <gridSize, blockSize >> >(d_output, imageW, imageH, density, brightness, transferOffset, transferScale);
+	//cudaDeviceSynchronize();
+
+	d_visibilityLocal << <gridSize, blockSize >> >(d_output, imageW, imageH, density, brightness, transferOffset, transferScale, loc);
 	cudaDeviceSynchronize();
 
 	// copy data to 3D array
@@ -679,12 +706,20 @@ void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, u
 
 		sprintf(buffer, "~%s.txt", volume_file);
 		auto fp2 = fopen(buffer, "w");
-		//fwrite(visVolume, sizeof(VisibilityType), len, fp);
 		for (int i = 0; i < BIN_COUNT; i++)
 		{
 			fprintf(fp2, "%g\n", histogram[i]);
 		}
 		fclose(fp2);
+
+		printf("loc %d %d\n", loc.x, loc.y);
+		sprintf(buffer, "~%s.2.txt", volume_file);
+		auto fp3 = fopen(buffer, "w");
+		for (int i = 0; i < BIN_COUNT; i++)
+		{
+			fprintf(fp3, "%g\n", histogram2[i]);
+		}
+		fclose(fp3);
 	}
 }
 
