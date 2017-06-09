@@ -171,14 +171,14 @@ __device__ void addVisibility(float value, float3 pos)
 
 	int index = z*w*h + y*w + x;
 	
-	//countVolume[index] += 1;
-	//visVolume[index] += value;
 	atomicAdd((countVolume + index), 1);
 	atomicAdd((visVolume + index), value);
 	//printf("atomicAdd %d \t %g \n", countVolume[index], visVolume[index]);
 
 	float sample = tex3D(volTex, pos.x*0.5f + 0.5f, pos.y*0.5f + 0.5f, pos.z*0.5f + 0.5f);
 	VolumeType intensity = (int)(sample + 0.5f);
+	//float sample = tex3D(tex, pos.x*0.5f + 0.5f, pos.y*0.5f + 0.5f, pos.z*0.5f + 0.5f);
+	//VolumeType intensity = (int)(sample*255 + 0.5f);
 	atomicAdd((histogram + intensity), value);
 }
 
@@ -200,6 +200,8 @@ __device__ void addVisibility2(float value, float3 pos)
 
 	float sample = tex3D(volTex, pos.x*0.5f + 0.5f, pos.y*0.5f + 0.5f, pos.z*0.5f + 0.5f);
 	VolumeType intensity = (int)(sample + 0.5f);
+	//float sample = tex3D(tex, pos.x*0.5f + 0.5f, pos.y*0.5f + 0.5f, pos.z*0.5f + 0.5f);
+	//VolumeType intensity = (int)(sample*255 + 0.5f);
 	atomicAdd((histogram2 + intensity), value);
 }
 
@@ -445,7 +447,7 @@ d_visibilityLocal(uint *d_output, uint imageW, uint imageH,
 		sum = sum + col*(1.0f - sum.w);
 
 		addVisibility(sum.w - sumw, pos);
-		if (fabsf(x - loc.x) <= 10 && fabsf(y - loc.y) <= 10)
+		if (fabsf(x - loc.x) <= 20 && fabsf(y - loc.y) <= 20)
 		{
 			addVisibility2(sum.w - sumw, pos);
 		}
@@ -460,7 +462,6 @@ d_visibilityLocal(uint *d_output, uint imageW, uint imageH,
 
 		pos += step;
 	}
-
 	sum *= brightness;
 
 	// write output color
@@ -470,7 +471,7 @@ d_visibilityLocal(uint *d_output, uint imageW, uint imageH,
 __global__ void
 d_renderVisibility(uint *d_output, uint imageW, uint imageH,
 	float density, float brightness,
-	float transferOffset, float transferScale)
+	float transferOffset, float transferScale, int2 loc)
 {
 	const int maxSteps = 500;
 	const float tstep = 0.01f;
@@ -496,7 +497,11 @@ d_renderVisibility(uint *d_output, uint imageW, uint imageH,
 	float tnear, tfar;
 	int hit = intersectBox(eyeRay, boxMin, boxMax, &tnear, &tfar);
 
-	if (!hit) return;
+	if (!hit)
+	{
+		d_output[y*imageW + x] = rgbaFloatToInt(make_float4(1.0f, 1.0f, 1.0f, 0.0f));
+		return;
+	}
 
 	if (tnear < 0.0f) tnear = 0.0f;     // clamp to near plane
 
@@ -511,7 +516,7 @@ d_renderVisibility(uint *d_output, uint imageW, uint imageH,
 		// read from 3D texture
 		// remap position to [0, 1] coordinates
 		float sample = tex3D(tex, pos.x*0.5f + 0.5f, pos.y*0.5f + 0.5f, pos.z*0.5f + 0.5f);
-		float vis = tex3D(visTex, pos.x*0.5f + 0.5f, pos.y*0.5f + 0.5f, pos.z*0.5f + 0.5f);
+		//float vis = tex3D(visTex, pos.x*0.5f + 0.5f, pos.y*0.5f + 0.5f, pos.z*0.5f + 0.5f);
 		//sample *= 64.0f;    // scale for 10-bit data
 
 		// lookup in transfer function texture
@@ -540,7 +545,16 @@ d_renderVisibility(uint *d_output, uint imageW, uint imageH,
 
 		pos += step;
 	}
-
+	if (sum.w < 1.0f)
+	{
+		sum += make_float4(1.0f, 1.0f, 1.0f, 0.0f) * (1.0f - sum.w);
+	}
+	if (fabsf(x - loc.x) <= 20 && fabsf(y - loc.y) <= 20)
+	{
+		auto w = sum.w;
+		sum = make_float4(1, 1, 1, 1) - sum;
+		sum.w = w;
+	}
 	sum *= brightness;
 
 	// write output color
@@ -689,7 +703,7 @@ void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, u
 	cudaChannelFormatDesc channelDesc0 = cudaCreateChannelDesc<VisibilityType>();
 	checkCudaErrors(cudaBindTextureToArray(visTex, d_visibilityArray, channelDesc0));
 
-	d_renderVisibility << <gridSize, blockSize >> >(d_output, imageW, imageH, density, brightness, transferOffset, transferScale);
+	d_renderVisibility << <gridSize, blockSize >> >(d_output, imageW, imageH, density, brightness, transferOffset, transferScale, loc);
 
 	cudaDeviceSynchronize();
 
