@@ -128,6 +128,7 @@ char **pArgv;
 #define MAX(a,b) ((a > b) ? a : b)
 #endif
 
+extern "C" int get_region_size();
 extern "C" float4* get_tf_array();
 extern "C" int get_bin_count();
 extern "C" void set_save(bool value);
@@ -503,8 +504,9 @@ int buttonState = 0;
 
 void mouse(int button, int state, int x, int y)
 {
-	loc.x = x-10;
-	loc.y = height-y-20;
+	auto n = get_region_size();
+	loc.x = x-n/2;
+	loc.y = height-y-n;
 
     if (state == GLUT_DOWN)
     {
@@ -558,6 +560,7 @@ void reshape(int w, int h)
 {
     width = w;
     height = h;
+	printf("reshape %d %d \n", width, height);
     initPixelBuffer();
 
     // calculate new grid size
@@ -837,6 +840,7 @@ main(int argc, char **argv)
 	// load transfer function
 	openTransferFunctionFromVoreenXML("vortex_naive_proportional.tfi");
 	//openTransferFunctionFromVoreenXML("vortex_naive_proportional_optimized_linesearch.tfi");
+
 	//auto tf = get_tf_array();
 	//tf[0] = make_float4(0.1f,0.2f,0.3f,0.4f);
 	//printf("%g %g %g %g \n", tf[0].x, tf[0].y, tf[0].z, tf[0].w);

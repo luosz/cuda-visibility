@@ -49,11 +49,18 @@ texture<VolumeType, 3, cudaReadModeElementType> volTex;         // 3D texture
 
 const int BIN_COUNT = 256;
 __device__ __managed__ float histogram[BIN_COUNT] = {0};
-__device__ __managed__ float histogram2[BIN_COUNT] = {0};
+__device__ __managed__ float histogram2[BIN_COUNT] = { 0 };
+__device__ __managed__ float histogram3[BIN_COUNT] = { 0 };
 __device__ __managed__ float4 tf_array[BIN_COUNT] = {0};
+__device__ __managed__ int radius = 12;
 
 // save visibility
 bool save_visibility = false;
+
+extern "C" int get_region_size()
+{
+	return radius;
+}
 
 extern "C" float4* get_tf_array()
 {
@@ -112,6 +119,68 @@ extern "C" void blend_tf(float3 color)
 		if (hist[i] > 0.5)
 		{
 			printf("%g r %g %g g %g %g b %g %g \n", i/(float)BIN_COUNT, tf_array[i].x, c2.x, tf_array[i].y, c2.y, tf_array[i].z, c2.z);
+		}
+		tf_array[i].x = c2.x;
+		tf_array[i].y = c2.y;
+		tf_array[i].z = c2.z;
+	}
+
+	cudaChannelFormatDesc channelDesc2 = cudaCreateChannelDesc<float4>();
+	cudaArray *d_transferFuncArray;
+	//checkCudaErrors(cudaMallocArray(&d_transferFuncArray, &channelDesc2, sizeof(transferFunc)/sizeof(float4), 1));
+	//checkCudaErrors(cudaMemcpyToArray(d_transferFuncArray, 0, 0, transferFunc, sizeof(transferFunc), cudaMemcpyHostToDevice));
+	checkCudaErrors(cudaMallocArray(&d_transferFuncArray, &channelDesc2, sizeof(tf_array) / sizeof(float4), 1));
+	checkCudaErrors(cudaMemcpyToArray(d_transferFuncArray, 0, 0, tf_array, sizeof(tf_array), cudaMemcpyHostToDevice));
+	// Bind the array to the texture
+	checkCudaErrors(cudaBindTextureToArray(transferTex, d_transferFuncArray, channelDesc2));
+}
+
+extern "C" void blend_tf_relatively(float3 color)
+{
+	float hist[BIN_COUNT], hist2[BIN_COUNT];
+	float sum = 0;
+	for (int i = 0; i < BIN_COUNT; i++)
+	{
+		sum += histogram[i];
+	}
+	for (int i = 0; i < BIN_COUNT; i++)
+	{
+		hist[i] = histogram[i] / sum;
+	}
+	float sum2 = 0;
+	for (int i = 0; i < BIN_COUNT; i++)
+	{
+		sum2 += histogram2[i];
+	}
+	for (int i = 0; i < BIN_COUNT; i++)
+	{
+		hist2[i] = histogram2[i] / sum2;
+	}
+	float min = 1, max = 0;
+	for (int i = 0; i < BIN_COUNT; i++)
+	{
+		histogram3[i] = hist2[i] - hist[i];
+		if (min > histogram3[i])
+		{
+			min = histogram3[i];
+		}
+		if (max < histogram3[i])
+		{
+			max = histogram3[i];
+		}
+	}
+	for (int i = 0; i < BIN_COUNT; i++)
+	{
+		//histogram3[i] = (histogram3[i] - min) / (max - min);
+		histogram3[i] = histogram3[i] > 0 ? (histogram3[i] / max) : 0;
+	}
+	for (int i = 0; i < BIN_COUNT; i++)
+	{
+		auto c = make_float3(tf_array[i].x, tf_array[i].y, tf_array[i].z);
+		auto c2 = lerp(c, color, histogram3[i]);
+		if (histogram3[i] > 0.5)
+		{
+			printf("%g r %g %g g %g %g b %g %g \n", i / (float)BIN_COUNT, tf_array[i].x, c2.x, tf_array[i].y, c2.y, tf_array[i].z, c2.z);
 		}
 		tf_array[i].x = c2.x;
 		tf_array[i].y = c2.y;
@@ -488,7 +557,7 @@ d_visibilityLocal(uint *d_output, uint imageW, uint imageH,
 		sum = sum + col*(1.0f - sum.w);
 
 		addVisibility(sum.w - sumw, pos);
-		if (fabsf(x - loc.x) <= 20 && fabsf(y - loc.y) <= 20)
+		if (fabsf(x - loc.x) <= radius && fabsf(y - loc.y) <= radius)
 		{
 			addVisibility2(sum.w - sumw, pos);
 		}
@@ -546,7 +615,7 @@ d_renderVisibility(uint *d_output, uint imageW, uint imageH,
 
 	if (tnear < 0.0f) tnear = 0.0f;     // clamp to near plane
 
-										// march along ray from front to back, accumulating color
+	// march along ray from front to back, accumulating color
 	float4 sum = make_float4(0.0f);
 	float t = tnear;
 	float3 pos = eyeRay.o + eyeRay.d*tnear;
@@ -590,7 +659,7 @@ d_renderVisibility(uint *d_output, uint imageW, uint imageH,
 	{
 		sum += make_float4(1.0f, 1.0f, 1.0f, 0.0f) * (1.0f - sum.w);
 	}
-	if (fabsf(x - loc.x) <= 20 && fabsf(y - loc.y) <= 20)
+	if (fabsf(x - loc.x) <= radius && fabsf(y - loc.y) <= radius)
 	{
 		auto w = sum.w;
 		sum = make_float4(1, 1, 1, 1) - sum;
@@ -760,23 +829,32 @@ void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, u
 		fclose(fp);
 
 		sprintf(buffer, "~%s.txt", volume_file);
-		auto fp2 = fopen(buffer, "w");
+		auto fp1 = fopen(buffer, "w");
 		for (int i = 0; i < BIN_COUNT; i++)
 		{
-			fprintf(fp2, "%g\n", histogram[i]);
+			fprintf(fp1, "%g\n", histogram[i]);
 		}
-		fclose(fp2);
+		fclose(fp1);
 
 		printf("loc %d %d\n", loc.x, loc.y);
 		sprintf(buffer, "~%s.2.txt", volume_file);
+		auto fp2 = fopen(buffer, "w");
+		for (int i = 0; i < BIN_COUNT; i++)
+		{
+			fprintf(fp2, "%g\n", histogram2[i]);
+		}
+		fclose(fp2);
+
+		//blend_tf(make_float3(0, 0, 1));
+		blend_tf_relatively(make_float3(1, 1, 0));
+
+		sprintf(buffer, "~%s.3.txt", volume_file);
 		auto fp3 = fopen(buffer, "w");
 		for (int i = 0; i < BIN_COUNT; i++)
 		{
-			fprintf(fp3, "%g\n", histogram2[i]);
+			fprintf(fp3, "%g\n", histogram3[i]);
 		}
 		fclose(fp3);
-
-		blend_tf(make_float3(0, 0, 1));
 	}
 }
 
