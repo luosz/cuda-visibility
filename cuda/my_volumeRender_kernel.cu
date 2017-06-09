@@ -47,12 +47,22 @@ texture<VisibilityType, 3, cudaReadModeElementType> visTex;         // 3D textur
 texture<VolumeType, 3, cudaReadModeElementType> volTex;         // 3D texture
 //texture<VisibilityType, 3, cudaReadModeNormalizedFloat> visTex;         // 3D texture
 
-__device__ __managed__ int2 loc = { 512 / 2, 512 / 2 };
 const int BIN_COUNT = 256;
 __device__ __managed__ float histogram[BIN_COUNT] = {0};
+__device__ __managed__ float4 tf_array[BIN_COUNT] = {0};
 
 // save visibility
 bool save_visibility = false;
+
+extern "C" float4* get_tf_array()
+{
+	return tf_array;
+}
+
+extern "C" int get_bin_count()
+{
+	return BIN_COUNT;
+}
 
 extern "C" void set_save(bool value)
 {
@@ -482,7 +492,7 @@ d_renderVisibility(uint *d_output, uint imageW, uint imageH,
 		float4 col = tex1D(transferTex, (sample - transferOffset)*transferScale);
 		//float4 col = make_float4(sample, sample, sample, sample);
 		col.w *= density;
-		col.w /= vis;
+		//col.w /= vis;
 
 		// "under" operator for back-to-front blending
 		//sum = lerp(sum, col, col.w);
@@ -534,6 +544,9 @@ void initCuda(void *h_volume, cudaExtent volumeSize)
 	checkCudaErrors(cudaMallocManaged(&countVolume, sizeof(int) * len));
 	printf("%g\n", *(visVolume + 1));
 	printf("%d\n", *(countVolume + 1));
+
+	auto tf2 = tf_array;
+	printf("sizeof \t histogram %d \t tf_array %d \t tf2 %d %d \n", sizeof(histogram) / sizeof(float), sizeof(tf_array) / sizeof(float4), sizeof(tf2), sizeof(float4));
 
 	//checkCudaErrors(cudaMallocManaged(&volume_file, sizeof(char) * _MAX_PATH));
 	
@@ -590,15 +603,17 @@ void initCuda(void *h_volume, cudaExtent volumeSize)
 
     cudaChannelFormatDesc channelDesc2 = cudaCreateChannelDesc<float4>();
     cudaArray *d_transferFuncArray;
-    checkCudaErrors(cudaMallocArray(&d_transferFuncArray, &channelDesc2, sizeof(transferFunc)/sizeof(float4), 1));
-    checkCudaErrors(cudaMemcpyToArray(d_transferFuncArray, 0, 0, transferFunc, sizeof(transferFunc), cudaMemcpyHostToDevice));
+    //checkCudaErrors(cudaMallocArray(&d_transferFuncArray, &channelDesc2, sizeof(transferFunc)/sizeof(float4), 1));
+    //checkCudaErrors(cudaMemcpyToArray(d_transferFuncArray, 0, 0, transferFunc, sizeof(transferFunc), cudaMemcpyHostToDevice));
+	checkCudaErrors(cudaMallocArray(&d_transferFuncArray, &channelDesc2, sizeof(tf_array) / sizeof(float4), 1));
+	checkCudaErrors(cudaMemcpyToArray(d_transferFuncArray, 0, 0, tf_array, sizeof(tf_array), cudaMemcpyHostToDevice));
 
     transferTex.filterMode = cudaFilterModeLinear;
     transferTex.normalized = true;    // access with normalized texture coordinates
     transferTex.addressMode[0] = cudaAddressModeClamp;   // wrap texture coordinates
 
     // Bind the array to the texture
-    checkCudaErrors(cudaBindTextureToArray(transferTex, d_transferFuncArray, channelDesc2));
+	checkCudaErrors(cudaBindTextureToArray(transferTex, d_transferFuncArray, channelDesc2));
 }
 
 extern "C"

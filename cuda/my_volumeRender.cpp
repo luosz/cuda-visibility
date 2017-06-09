@@ -91,6 +91,11 @@ const char *volumeFilename = "vorts1.raw";
 cudaExtent volumeSize = make_cudaExtent(128, 128, 128);
 typedef unsigned char VolumeType;
 
+#define W 512
+#define H 512
+int2 loc = { W / 2, H / 2 };
+bool dragMode = false; // mouse tracking mode
+
 uint width = 512, height = 512;
 dim3 blockSize(16, 16);
 dim3 gridSize;
@@ -125,6 +130,8 @@ char **pArgv;
 #define MAX(a,b) ((a > b) ? a : b)
 #endif
 
+extern "C" float4* get_tf_array();
+extern "C" int get_bin_count();
 extern "C" void set_save(bool value);
 extern "C" bool get_save();
 extern "C" void set_volume_file(const char *file, int n);
@@ -139,27 +146,64 @@ extern "C" void copyInvViewMatrix(float *invViewMatrix, size_t sizeofMatrix);
 void initPixelBuffer();
 
 /// Re-maps a number from one range to another.
-double map_to_range(double val, double src_lower, double src_upper, double target_lower, double target_upper)
+inline float map_to_range(float val, float src_lower, float src_upper, float target_lower, float target_upper)
 {
 	val = val < src_lower ? src_lower : val;
 	val = val > src_upper ? src_upper : val;
-	double normalised = (val - src_lower) / (src_upper - src_lower);
+	auto normalised = (val - src_lower) / (src_upper - src_lower);
 	return normalised * (target_upper - target_lower) + target_lower;
 }
 
-double normalise_rgba(int n)
+inline float normalise_rgba(int n)
 {
 	return map_to_range(n, 0, 255, 0, 1);
 }
 
-float4 lerp(float4 a, float4 b, float x)
-{
-	return a*x + b*(1 - x);
-}
+//template<typename T>
+//float4 lerp_(T a, T b, float t)
+//{
+//	return a + t*(b - a);
+//}
 
-void lookuptable()
+void lookuptable(std::vector<float> intensity, std::vector<float4> rgba)
 {
-
+	auto n = get_bin_count();
+	float4 *tf = get_tf_array();
+	int last = (int)intensity.size() - 1;
+	int k = 0;
+	for (int i = 0; i < n; i++)
+	{
+		auto d = i / (float)(n - 1);
+		while (d > intensity[k])
+		{
+			k++;
+		}
+		if (k == 0)
+		{
+			tf[i] = rgba[k];
+		}
+		else
+		{
+			if (k > last)
+			{
+				tf[i] = rgba[last];
+			}
+			else
+			{
+				auto a = intensity[k - 1];
+				auto b = intensity[k];
+				if (abs(b - a) > 0.0001f)
+				{
+					auto t = (d - a) / (b - a);
+					tf[i] = lerp(rgba[k - 1], rgba[k], t);
+				}
+				else
+				{
+					tf[i] = rgba[k];
+				}
+			}
+		}
+	}
 }
 
 /// open Voreen transfer functions
@@ -205,7 +249,10 @@ void openTransferFunctionFromVoreenXML(const char *filename)
 	//}
 
 	auto key = doc.FirstChildElement("VoreenData")->FirstChildElement("TransFuncIntensity")->FirstChildElement("Keys")->FirstChildElement("key");
-	float4 transferFunc[] = { 0 };
+
+	//float4 transferFunc[] = { 0 };
+	//std::vector<float> intensity_list;
+	//std::vector<float4> rgba_list;
 	std::vector<float> intensity_list;
 	std::vector<float4> rgba_list;
 	//intensity_list_clear();
@@ -213,45 +260,55 @@ void openTransferFunctionFromVoreenXML(const char *filename)
 	//opacity_list_clear();
 	do
 	{
-		double intensity = atof(key->FirstChildElement("intensity")->Attribute("value"));
+		auto intensity = (float)atof(key->FirstChildElement("intensity")->Attribute("value"));
 		//intensity_list_push_back(intensity);
+		intensity_list.push_back(intensity);
 		int r = atoi(key->FirstChildElement("colorL")->Attribute("r"));
 		int g = atoi(key->FirstChildElement("colorL")->Attribute("g"));
 		int b = atoi(key->FirstChildElement("colorL")->Attribute("b"));
 		int a = atoi(key->FirstChildElement("colorL")->Attribute("a"));
-		std::vector<double> colour;
-		colour.push_back(normalise_rgba(r));
-		colour.push_back(normalise_rgba(g));
-		colour.push_back(normalise_rgba(b));
+		//std::vector<double> colour;
+		//colour.push_back(normalise_rgba(r));
+		//colour.push_back(normalise_rgba(g));
+		//colour.push_back(normalise_rgba(b));
 		//colour_list_push_back(colour);
 		//opacity_list_push_back(normalise_rgba(a));
+		rgba_list.push_back(make_float4(normalise_rgba(r), normalise_rgba(g), normalise_rgba(b), normalise_rgba(a)));
 
 		bool split = (0 == strcmp("true", key->FirstChildElement("split")->Attribute("value")));
 		std::cout << "intensity=" << intensity;
 		std::cout << "\tsplit=" << (split ? "true" : "false");
 		std::cout << "\tcolorL r=" << r << " g=" << g << " b=" << b << " a=" << a;
-		const double epsilon = 1e-6;
+		const auto epsilon = 1e-6f;
 		if (split)
 		{
 			//intensity_list_push_back(intensity + epsilon);
+			intensity_list.push_back(intensity+ epsilon);
 			auto colorR = key->FirstChildElement("colorR");
 			int r2 = atoi(colorR->Attribute("r"));
 			int g2 = atoi(colorR->Attribute("g"));
 			int b2 = atoi(colorR->Attribute("b"));
 			int a2 = atoi(colorR->Attribute("a"));
-			std::vector<double> colour2;
-			colour2.push_back(normalise_rgba(r2));
-			colour2.push_back(normalise_rgba(g2));
-			colour2.push_back(normalise_rgba(b2));
+			//std::vector<double> colour2;
+			//colour2.push_back(normalise_rgba(r2));
+			//colour2.push_back(normalise_rgba(g2));
+			//colour2.push_back(normalise_rgba(b2));
 			//colour2.push_back(normalise_rgba(a2));
 			//colour_list_push_back(colour2);
 			//opacity_list_push_back(normalise_rgba(a2));
+			rgba_list.push_back(make_float4(normalise_rgba(r2), normalise_rgba(g2), normalise_rgba(b2), normalise_rgba(a2)));
 			std::cout << "\tcolorR r=" << r2 << " g=" << g2 << " b=" << b2 << " a=" << a2;
 		}
 		std::cout << endl;
 
 		key = key->NextSiblingElement();
 	} while (key);
+
+	for (int i=0;i<intensity_list.size();i++)
+	{
+		printf("%g\n", intensity_list[i]);
+	}
+	lookuptable(intensity_list, rgba_list);
 }
 
 void computeFPS()
@@ -775,6 +832,16 @@ main(int argc, char **argv)
 
     size_t size = volumeSize.width*volumeSize.height*volumeSize.depth*sizeof(VolumeType);
     void *h_volume = loadRawFile(path, size);
+
+	// load transfer function
+	openTransferFunctionFromVoreenXML("vortex_naive_proportional.tfi");
+	//auto tf = get_tf_array();
+	//tf[0] = make_float4(0.1f,0.2f,0.3f,0.4f);
+	//printf("%g %g %g %g \n", tf[0].x, tf[0].y, tf[0].z, tf[0].w);
+	//for (int i=0;i<get_bin_count();i++)
+	//{
+	//	printf("%g %g %g %g \n", tf[i].x, tf[i].y, tf[i].z, tf[i].w);
+	//}
 
     initCuda(h_volume, volumeSize);
     free(h_volume);
