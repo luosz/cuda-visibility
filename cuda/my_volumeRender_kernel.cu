@@ -52,7 +52,7 @@ __device__ __managed__ float histogram[BIN_COUNT] = {0};
 __device__ __managed__ float histogram2[BIN_COUNT] = { 0 };
 __device__ __managed__ float histogram3[BIN_COUNT] = { 0 };
 __device__ __managed__ float4 tf_array[BIN_COUNT] = {0};
-__device__ __managed__ int radius = 10;
+__device__ __managed__ int radius = 12;
 
 // save visibility
 bool save_visibility = false;
