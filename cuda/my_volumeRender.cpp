@@ -147,6 +147,16 @@ char **pArgv;
 #define MAX(a,b) ((a > b) ? a : b)
 #endif
 
+//// Shapes material
+//float g_SelectedColor[] = { 1.f,1.f,0.f,1.f };
+//bool g_ApplyColor = true;
+//bool g_ApplyOpacity = true;
+
+typedef float(*Pointer)[4];
+extern "C" Pointer get_SelectedColor();
+extern "C" void set_SelectedColor(float r, float g, float b);
+extern "C" bool* get_ApplyColor();
+extern "C" bool* get_ApplyOpacity();
 extern "C" int get_region_size();
 extern "C" float4* get_tf_array();
 extern "C" int get_bin_count();
@@ -451,6 +461,9 @@ void display()
     glBindTexture(GL_TEXTURE_2D, 0);
 #endif
 
+	// Draw tweak bars
+	TwDraw();
+
     glutSwapBuffers();
     glutReportErrors();
 
@@ -466,7 +479,12 @@ void idle()
 
 void keyboard(unsigned char key, int x, int y)
 {
+	if (TwEventKeyboardGLUT(key, x, y))
+	{
+		return;
+	}
 	printf("keyboard %d %d key %d \n", x, y, (int)key);
+	auto c = get_SelectedColor();
     switch (key)
     {
         case 27:
@@ -527,6 +545,15 @@ void keyboard(unsigned char key, int x, int y)
 			set_save(true);
 			break;
 
+		case 'c':
+			printf("enter color (e.g. 1 1 0) \n");
+			float r, g, b;
+			scanf("%g %g %g", &r, &g, &b);
+			set_SelectedColor(r, g, b);
+			c = get_SelectedColor();
+			printf("%g %g %g \n", (*c)[0], (*c)[1], (*c)[2]);
+			break;
+
 		default:
             break;
     }
@@ -540,10 +567,14 @@ int buttonState = 0;
 
 void mouse(int button, int state, int x, int y)
 {
-	if (1==state)
+	if (TwEventMouseButtonGLUT(button, state, x, y))
 	{
-		printf("mouse %d %d button %d state %d \n", x, y, button, state);
+		return;
 	}
+	//if (1==state)
+	//{
+	//	printf("mouse %d %d button %d state %d \n", x, y, button, state);
+	//}
 
 	auto n = get_region_size();
 	loc.x = x-n/2;
@@ -565,7 +596,11 @@ void mouse(int button, int state, int x, int y)
 
 void motion(int x, int y)
 {
-	printf("motion %d %d \n", x, y);
+	if (TwEventMouseMotionGLUT(x, y))
+	{
+		return;
+	}
+	//printf("motion %d %d \n", x, y);
     float dx, dy;
     dx = (float)(x - ox);
     dy = (float)(y - oy);
@@ -616,10 +651,15 @@ void reshape(int w, int h)
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glOrtho(0.0, 1.0, 0.0, 1.0, 0.0, 1.0);
+
+	// Send the new window size to AntTweakBar
+	TwWindowSize(width, height);
 }
 
 void cleanup()
 {
+	TwTerminate();
+
     sdkDeleteTimer(&timer);
 
     freeCudaBuffers();
@@ -883,14 +923,6 @@ main(int argc, char **argv)
 	openTransferFunctionFromVoreenXML("vortex_naive_proportional.tfi");
 	//openTransferFunctionFromVoreenXML("vortex_naive_proportional_optimized_linesearch.tfi");
 
-	//auto tf = get_tf_array();
-	//tf[0] = make_float4(0.1f,0.2f,0.3f,0.4f);
-	//printf("%g %g %g %g \n", tf[0].x, tf[0].y, tf[0].z, tf[0].w);
-	//for (int i=0;i<get_bin_count();i++)
-	//{
-	//	printf("%g %g %g %g \n", tf[i].x, tf[i].y, tf[i].z, tf[i].w);
-	//}
-
     initCuda(h_volume, volumeSize);
     free(h_volume);
 
@@ -917,6 +949,9 @@ main(int argc, char **argv)
         glutMotionFunc(motion);
         glutReshapeFunc(reshape);
         glutIdleFunc(idle);
+		glutPassiveMotionFunc((GLUTmousemotionfun)TwEventMouseMotionGLUT);
+		glutSpecialFunc((GLUTspecialfun)TwEventSpecialGLUT);
+		TwGLUTModifiersFunc(glutGetModifiers);
 
         initPixelBuffer();
 
@@ -925,6 +960,15 @@ main(int argc, char **argv)
 #else
         glutCloseFunc(cleanup);
 #endif
+
+		// Initialize AntTweakBar
+		TwInit(TW_OPENGL, NULL);
+		// Create a tweak bar
+		auto bar = TwNewBar("Settings");
+		TwDefine("Settings size='145 85' position='0 0'");
+		TwAddVarRW(bar, "color", TW_TYPE_BOOL32, get_ApplyColor(), "");
+		TwAddVarRW(bar, "opacity", TW_TYPE_BOOL32, get_ApplyOpacity(), "");
+		TwAddVarRW(bar, "select", TW_TYPE_COLOR3F, get_SelectedColor(), "");
 
         glutMainLoop();
     }

@@ -55,10 +55,38 @@ __device__ __managed__ float4 tf_array[BIN_COUNT] = { 0 };
 __device__ __managed__ float4 tf_array0[BIN_COUNT] = { 0 };
 __device__ __managed__ int radius = 12;
 
+// GUI settings
+float g_SelectedColor[] = { 1.f,1.f,0.f,1.f };
+bool g_ApplyColor = true;
+bool g_ApplyOpacity = true;
+
 // apply, save and discard operations
 bool apply_visibility = false;
 bool discard_visibility = false;
 bool save_visibility = false;
+
+typedef float(*Pointer)[4];
+extern "C" Pointer get_SelectedColor()
+{
+	return &g_SelectedColor;
+}
+
+extern "C" void set_SelectedColor(float r, float g, float b)
+{
+	g_SelectedColor[0] = r;
+	g_SelectedColor[1] = g;
+	g_SelectedColor[2] = b;
+}
+
+extern "C" bool* get_ApplyColor()
+{
+	return &g_ApplyColor;
+}
+
+extern "C" bool* get_ApplyOpacity()
+{
+	return &g_ApplyOpacity;
+}
 
 extern "C" int get_region_size()
 {
@@ -850,7 +878,7 @@ void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, u
 	if (get_apply())
 	{
 		set_apply(false);
-		blend_tf_relatively(make_float3(1, 1, 0));
+		blend_tf_relatively(make_float3(g_SelectedColor[0], g_SelectedColor[1], g_SelectedColor[2]));
 	}
 
 	if (get_save())
