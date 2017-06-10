@@ -70,14 +70,25 @@ extern "C" float4* get_tf_array()
 	return tf_array;
 }
 
-extern "C" void save_tf()
+extern "C" void backup_tf()
 {
 	memcpy(tf_array0, tf_array, sizeof(tf_array));
+}
+
+extern "C" void bind_tf_texture()
+{
+	cudaChannelFormatDesc channelDesc2 = cudaCreateChannelDesc<float4>();
+	cudaArray *d_transferFuncArray;
+	checkCudaErrors(cudaMallocArray(&d_transferFuncArray, &channelDesc2, sizeof(tf_array) / sizeof(float4), 1));
+	checkCudaErrors(cudaMemcpyToArray(d_transferFuncArray, 0, 0, tf_array, sizeof(tf_array), cudaMemcpyHostToDevice));
+	// Bind the array to the texture
+	checkCudaErrors(cudaBindTextureToArray(transferTex, d_transferFuncArray, channelDesc2));
 }
 
 extern "C" void discard_tf()
 {
 	memcpy(tf_array, tf_array0, sizeof(tf_array));
+	bind_tf_texture();
 }
 
 extern "C" int get_bin_count()
@@ -159,14 +170,7 @@ extern "C" void blend_tf(float3 color)
 		tf_array[i].z = c2.z;
 	}
 
-	cudaChannelFormatDesc channelDesc2 = cudaCreateChannelDesc<float4>();
-	cudaArray *d_transferFuncArray;
-	//checkCudaErrors(cudaMallocArray(&d_transferFuncArray, &channelDesc2, sizeof(transferFunc)/sizeof(float4), 1));
-	//checkCudaErrors(cudaMemcpyToArray(d_transferFuncArray, 0, 0, transferFunc, sizeof(transferFunc), cudaMemcpyHostToDevice));
-	checkCudaErrors(cudaMallocArray(&d_transferFuncArray, &channelDesc2, sizeof(tf_array) / sizeof(float4), 1));
-	checkCudaErrors(cudaMemcpyToArray(d_transferFuncArray, 0, 0, tf_array, sizeof(tf_array), cudaMemcpyHostToDevice));
-	// Bind the array to the texture
-	checkCudaErrors(cudaBindTextureToArray(transferTex, d_transferFuncArray, channelDesc2));
+	bind_tf_texture();
 }
 
 extern "C" void blend_tf_relatively(float3 color)
@@ -216,14 +220,7 @@ extern "C" void blend_tf_relatively(float3 color)
 		tf_array[i].w = lerp(tf_array[i].w, histogram3[i]>0?1:0, fabsf(histogram3[i]));
 	}
 
-	cudaChannelFormatDesc channelDesc2 = cudaCreateChannelDesc<float4>();
-	cudaArray *d_transferFuncArray;
-	//checkCudaErrors(cudaMallocArray(&d_transferFuncArray, &channelDesc2, sizeof(transferFunc)/sizeof(float4), 1));
-	//checkCudaErrors(cudaMemcpyToArray(d_transferFuncArray, 0, 0, transferFunc, sizeof(transferFunc), cudaMemcpyHostToDevice));
-	checkCudaErrors(cudaMallocArray(&d_transferFuncArray, &channelDesc2, sizeof(tf_array) / sizeof(float4), 1));
-	checkCudaErrors(cudaMemcpyToArray(d_transferFuncArray, 0, 0, tf_array, sizeof(tf_array), cudaMemcpyHostToDevice));
-	// Bind the array to the texture
-	checkCudaErrors(cudaBindTextureToArray(transferTex, d_transferFuncArray, channelDesc2));
+	bind_tf_texture();
 }
 
 typedef struct
@@ -586,6 +583,8 @@ d_visibilityLocal(uint *d_output, uint imageW, uint imageH,
 		sum = sum + col*(1.0f - sum.w);
 
 		addVisibility(sum.w - sumw, pos);
+		
+		// calculate visibility for selected region
 		if (fabsf(x - loc.x) <= radius && fabsf(y - loc.y) <= radius)
 		{
 			addVisibility2(sum.w - sumw, pos);
@@ -688,13 +687,15 @@ d_renderVisibility(uint *d_output, uint imageW, uint imageH,
 	{
 		sum += make_float4(1.0f, 1.0f, 1.0f, 0.0f) * (1.0f - sum.w);
 	}
+	sum *= brightness;
+
+	// draw selected region in inverted colors
 	if (fabsf(x - loc.x) <= radius && fabsf(y - loc.y) <= radius)
 	{
 		auto w = sum.w;
 		sum = make_float4(1, 1, 1, 1) - sum;
 		sum.w = w;
 	}
-	sum *= brightness;
 
 	// write output color
 	d_output[y*imageW + x] = rgbaFloatToInt(sum);
@@ -855,6 +856,8 @@ void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, u
 	if (get_save())
 	{
 		set_save(false);
+		backup_tf();
+
 		char buffer[_MAX_PATH];
 		sprintf(buffer, "~%s", volume_file);
 		printf("save a visibility field and histograms to %s.\n", buffer);
@@ -892,7 +895,7 @@ void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, u
 	if (get_discard())
 	{
 		set_discard(false);
-
+		discard_tf();
 	}
 }
 

@@ -54,10 +54,28 @@
 #include <helper_timer.h>
 
 #include <iostream>
+#include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 #include <helper_math.h>
+#include <AntTweakBar.h>
 #include "tinyxml2.h"
 using namespace std;
+
+#if defined(_WIN32) || defined(_WIN64)
+//  MiniGLUT.h is provided to avoid the need of having GLUT installed to 
+//  recompile this example. Do not use it in your own programs, better
+//  install and use the actual GLUT library SDK.
+#   define USE_MINI_GLUT
+#endif
+
+#if defined(USE_MINI_GLUT)
+#   include "../src/MiniGLUT.h"
+#elif defined(_MACOSX)
+#   include <GLUT/glut.h>
+#else
+#   include <GL/glut.h>
+#endif
 
 typedef unsigned int uint;
 typedef unsigned char uchar;
@@ -139,6 +157,8 @@ extern "C" void set_discard(bool value);
 extern "C" bool get_save();
 extern "C" void set_save(bool value);
 extern "C" void set_volume_file(const char *file, int n);
+extern "C" void backup_tf();
+extern "C" void discard_tf();
 
 extern "C" void setTextureFilterMode(bool bLinearFilter);
 extern "C" void initCuda(void *h_volume, cudaExtent volumeSize);
@@ -208,6 +228,8 @@ void lookuptable(std::vector<float> intensity, std::vector<float4> rgba)
 			}
 		}
 	}
+
+	backup_tf();
 }
 
 /// open Voreen transfer functions
