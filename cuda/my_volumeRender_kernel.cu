@@ -52,7 +52,7 @@ __device__ __managed__ float histogram[BIN_COUNT] = {0};
 __device__ __managed__ float histogram2[BIN_COUNT] = { 0 };
 __device__ __managed__ float histogram3[BIN_COUNT] = { 0 };
 __device__ __managed__ float4 tf_array[BIN_COUNT] = {0};
-__device__ __managed__ int radius = 12;
+__device__ __managed__ int radius = 10;
 
 // save visibility
 bool save_visibility = false;
@@ -156,35 +156,30 @@ extern "C" void blend_tf_relatively(float3 color)
 	{
 		hist2[i] = histogram2[i] / sum2;
 	}
-	float min = 1, max = 0;
+	float max = 0;
 	for (int i = 0; i < BIN_COUNT; i++)
 	{
 		histogram3[i] = hist2[i] - hist[i];
-		if (min > histogram3[i])
-		{
-			min = histogram3[i];
-		}
-		if (max < histogram3[i])
-		{
-			max = histogram3[i];
-		}
+		auto m = fabsf(histogram3[i]);
+		max = max < m ? m : max;
 	}
 	for (int i = 0; i < BIN_COUNT; i++)
 	{
-		//histogram3[i] = (histogram3[i] - min) / (max - min);
-		histogram3[i] = histogram3[i] > 0 ? (histogram3[i] / max) : 0;
+		histogram3[i] /= max;
 	}
 	for (int i = 0; i < BIN_COUNT; i++)
 	{
 		auto c = make_float3(tf_array[i].x, tf_array[i].y, tf_array[i].z);
-		auto c2 = lerp(c, color, histogram3[i]);
-		if (histogram3[i] > 0.5)
+		auto t = histogram3[i] > 0 ? histogram3[i] : 0;
+		auto c2 = lerp(c, color, t);
+		if (t > 0.75)
 		{
 			printf("%g r %g %g g %g %g b %g %g \n", i / (float)BIN_COUNT, tf_array[i].x, c2.x, tf_array[i].y, c2.y, tf_array[i].z, c2.z);
 		}
 		tf_array[i].x = c2.x;
 		tf_array[i].y = c2.y;
 		tf_array[i].z = c2.z;
+		tf_array[i].w = lerp(tf_array[i].w, histogram3[i]>0?1:0, fabsf(histogram3[i]));
 	}
 
 	cudaChannelFormatDesc channelDesc2 = cudaCreateChannelDesc<float4>();
