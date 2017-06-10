@@ -83,7 +83,7 @@ extern "C" bool* get_ApplyColor()
 	return &g_ApplyColor;
 }
 
-extern "C" bool* get_ApplyOpacity()
+extern "C" bool* get_ApplyAlpha()
 {
 	return &g_ApplyAlpha;
 }

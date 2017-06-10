@@ -151,7 +151,7 @@ typedef float(*Pointer)[4];
 extern "C" Pointer get_SelectedColor();
 extern "C" void set_SelectedColor(float r, float g, float b);
 extern "C" bool* get_ApplyColor();
-extern "C" bool* get_ApplyOpacity();
+extern "C" bool* get_ApplyAlpha();
 extern "C" int get_region_size();
 extern "C" float4* get_tf_array();
 extern "C" int get_bin_count();
@@ -480,6 +480,7 @@ void keyboard(unsigned char key, int x, int y)
 	}
 	printf("keyboard %d %d key %d \n", x, y, (int)key);
 	auto c = get_SelectedColor();
+	bool *p = NULL;
     switch (key)
     {
         case 27:
@@ -540,13 +541,25 @@ void keyboard(unsigned char key, int x, int y)
 			set_save(true);
 			break;
 
-		case 'c':
+		case 'z':
 			printf("enter color (e.g. 1 1 0) \n");
 			float r, g, b;
 			scanf("%g %g %g", &r, &g, &b);
 			set_SelectedColor(r, g, b);
 			c = get_SelectedColor();
 			printf("%g %g %g \n", (*c)[0], (*c)[1], (*c)[2]);
+			break;
+
+		case 'x':
+			p = get_ApplyAlpha();
+			*p = !(*p);
+			printf("toggle alpha %s\n", *p ? "true" : "false");
+			break;
+
+		case 'c':
+			p = get_ApplyColor();
+			*p = !(*p);
+			printf("toggle color %s\n", *p ? "true" : "false");
 			break;
 
 		default:
@@ -961,8 +974,8 @@ main(int argc, char **argv)
 		// Create a tweak bar
 		auto bar = TwNewBar("Settings");
 		TwDefine("Settings size='140 84' position='0 0'");
+		TwAddVarRW(bar, "alpha", TW_TYPE_BOOL32, get_ApplyAlpha(), "");
 		TwAddVarRW(bar, "color", TW_TYPE_BOOL32, get_ApplyColor(), "");
-		TwAddVarRW(bar, "alpha", TW_TYPE_BOOL32, get_ApplyOpacity(), "");
 		TwAddVarRW(bar, "select", TW_TYPE_COLOR3F, get_SelectedColor(), "");
 
         glutMainLoop();
