@@ -472,6 +472,11 @@ void idle()
     glutPostRedisplay();
 }
 
+inline void print_info()
+{
+	printf("density = %.2f, brightness = %.2f, transferOffset = %.2f, transferScale = %.2f\n", density, brightness, transferOffset, transferScale);
+}
+
 void keyboard(unsigned char key, int x, int y)
 {
 	if (TwEventKeyboardGLUT(key, x, y))
@@ -480,7 +485,7 @@ void keyboard(unsigned char key, int x, int y)
 	}
 	printf("keyboard %d %d key %d \n", x, y, (int)key);
 	auto c = get_SelectedColor();
-	bool *p = NULL;
+	bool *p1 = get_ApplyAlpha(), *p2 = get_ApplyColor();
     switch (key)
     {
         case 27:
@@ -499,34 +504,42 @@ void keyboard(unsigned char key, int x, int y)
 
         case '+':
             density += 0.01f;
+			print_info();
             break;
 
         case '-':
             density -= 0.01f;
+			print_info();
             break;
 
         case ']':
             brightness += 0.1f;
+			print_info();
             break;
 
         case '[':
             brightness -= 0.1f;
+			print_info();
             break;
 
         case ';':
             transferOffset += 0.01f;
+			print_info();
             break;
 
         case '\'':
             transferOffset -= 0.01f;
+			print_info();
             break;
 
         case '.':
             transferScale += 0.01f;
+			print_info();
             break;
 
         case ',':
             transferScale -= 0.01f;
+			print_info();
             break;
 
 		case 'a':
@@ -546,27 +559,23 @@ void keyboard(unsigned char key, int x, int y)
 			float r, g, b;
 			scanf("%g %g %g", &r, &g, &b);
 			set_SelectedColor(r, g, b);
-			c = get_SelectedColor();
 			printf("%g %g %g \n", (*c)[0], (*c)[1], (*c)[2]);
 			break;
 
 		case 'x':
-			p = get_ApplyAlpha();
-			*p = !(*p);
-			printf("toggle alpha %s\n", *p ? "true" : "false");
+			*p1 = !(*p1);
+			printf("toggle alpha %s color %s \n", *p1 ? "true" : "false", *p2 ? "true" : "false");
 			break;
 
 		case 'c':
-			p = get_ApplyColor();
-			*p = !(*p);
-			printf("toggle color %s\n", *p ? "true" : "false");
+			*p2 = !(*p2);
+			printf("toggle alpha %s color %s \n", *p1 ? "true" : "false", *p2 ? "true" : "false");
 			break;
 
 		default:
             break;
     }
 
-    printf("density = %.2f, brightness = %.2f, transferOffset = %.2f, transferScale = %.2f\n", density, brightness, transferOffset, transferScale);
     glutPostRedisplay();
 }
 
