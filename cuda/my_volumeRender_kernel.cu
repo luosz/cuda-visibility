@@ -51,10 +51,13 @@ const int BIN_COUNT = 256;
 __device__ __managed__ float histogram[BIN_COUNT] = {0};
 __device__ __managed__ float histogram2[BIN_COUNT] = { 0 };
 __device__ __managed__ float histogram3[BIN_COUNT] = { 0 };
-__device__ __managed__ float4 tf_array[BIN_COUNT] = {0};
+__device__ __managed__ float4 tf_array[BIN_COUNT] = { 0 };
+__device__ __managed__ float4 tf_array0[BIN_COUNT] = { 0 };
 __device__ __managed__ int radius = 12;
 
-// save visibility
+// apply, save and discard operations
+bool apply_visibility = false;
+bool discard_visibility = false;
 bool save_visibility = false;
 
 extern "C" int get_region_size()
@@ -67,9 +70,24 @@ extern "C" float4* get_tf_array()
 	return tf_array;
 }
 
+extern "C" void save_tf()
+{
+	memcpy(tf_array0, tf_array, sizeof(tf_array));
+}
+
+extern "C" void discard_tf()
+{
+	memcpy(tf_array, tf_array0, sizeof(tf_array));
+}
+
 extern "C" int get_bin_count()
 {
 	return BIN_COUNT;
+}
+
+extern "C" bool get_save()
+{
+	return save_visibility;
 }
 
 extern "C" void set_save(bool value)
@@ -78,10 +96,26 @@ extern "C" void set_save(bool value)
 	printf("set save %s\n", save_visibility ?"true":"false");
 }
 
-extern "C" bool get_save()
+extern "C" bool get_apply()
 {
-	//printf("get save %s\n", save_visibility ? "true" : "false");
-	return save_visibility;
+	return apply_visibility;
+}
+
+extern "C" void set_apply(bool value)
+{
+	apply_visibility = value;
+	printf("set apply %s\n", apply_visibility ? "true" : "false");
+}
+
+extern "C" bool get_discard()
+{
+	return discard_visibility;
+}
+
+extern "C" void set_discard(bool value)
+{
+	discard_visibility = value;
+	printf("set discard %s\n", discard_visibility ? "true" : "false");
 }
 
 extern "C" void set_volume_file(const char *file, int n)
@@ -812,12 +846,18 @@ void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, u
 
 	cudaDeviceSynchronize();
 
+	if (get_apply())
+	{
+		set_apply(false);
+		blend_tf_relatively(make_float3(1, 1, 0));
+	}
+
 	if (get_save())
 	{
 		set_save(false);
 		char buffer[_MAX_PATH];
 		sprintf(buffer, "~%s", volume_file);
-		printf("save visibility to %s.\n", buffer);
+		printf("save a visibility field and histograms to %s.\n", buffer);
 
 		auto fp = fopen(buffer, "wb");
 		fwrite(visVolume, sizeof(VisibilityType), len, fp);
@@ -840,9 +880,6 @@ void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, u
 		}
 		fclose(fp2);
 
-		//blend_tf(make_float3(0, 0, 1));
-		blend_tf_relatively(make_float3(1, 1, 0));
-
 		sprintf(buffer, "~%s.3.txt", volume_file);
 		auto fp3 = fopen(buffer, "w");
 		for (int i = 0; i < BIN_COUNT; i++)
@@ -850,6 +887,12 @@ void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, u
 			fprintf(fp3, "%g\n", histogram3[i]);
 		}
 		fclose(fp3);
+	}
+
+	if (get_discard())
+	{
+		set_discard(false);
+
 	}
 }
 

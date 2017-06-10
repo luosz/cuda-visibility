@@ -54,6 +54,7 @@
 #include <helper_timer.h>
 
 #include <iostream>
+#include <stdio.h>
 #include <helper_math.h>
 #include "tinyxml2.h"
 using namespace std;
@@ -131,8 +132,12 @@ char **pArgv;
 extern "C" int get_region_size();
 extern "C" float4* get_tf_array();
 extern "C" int get_bin_count();
-extern "C" void set_save(bool value);
+extern "C" bool get_apply();
+extern "C" void set_apply(bool value);
+extern "C" bool get_discard();
+extern "C" void set_discard(bool value);
 extern "C" bool get_save();
+extern "C" void set_save(bool value);
 extern "C" void set_volume_file(const char *file, int n);
 
 extern "C" void setTextureFilterMode(bool bLinearFilter);
@@ -439,6 +444,7 @@ void idle()
 
 void keyboard(unsigned char key, int x, int y)
 {
+	printf("keyboard %d %d key %d \n", x, y, (int)key);
     switch (key)
     {
         case 27:
@@ -487,11 +493,19 @@ void keyboard(unsigned char key, int x, int y)
             transferScale -= 0.01f;
             break;
 
+		case 'a':
+			set_apply(true);
+			break;
+
+		case 'd':
+			set_discard(true);
+			break;
+
 		case 's':
 			set_save(true);
 			break;
 
-        default:
+		default:
             break;
     }
 
@@ -504,6 +518,11 @@ int buttonState = 0;
 
 void mouse(int button, int state, int x, int y)
 {
+	if (1==state)
+	{
+		printf("mouse %d %d button %d state %d \n", x, y, button, state);
+	}
+
 	auto n = get_region_size();
 	loc.x = x-n/2;
 	loc.y = height-y-n;
@@ -524,6 +543,7 @@ void mouse(int button, int state, int x, int y)
 
 void motion(int x, int y)
 {
+	printf("motion %d %d \n", x, y);
     float dx, dy;
     dx = (float)(x - ox);
     dy = (float)(y - oy);
