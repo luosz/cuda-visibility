@@ -1,4 +1,7 @@
 # cuda-visibility
 
-![screenshot 1](before.png?raw=true "Before applying color and adjusting opacity")
-![screenshot 2](after.png?raw=true "After applying color and adjusting opacity")
+Before applying color and adjusting opacity
+![before](before.png?raw=true)
+
+After applying color and adjusting opacity
+![after](after.png?raw=true)
