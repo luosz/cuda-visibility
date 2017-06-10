@@ -58,7 +58,7 @@ __device__ __managed__ int radius = 12;
 // GUI settings
 float g_SelectedColor[] = { 1.f,1.f,0.f,1.f };
 bool g_ApplyColor = true;
-bool g_ApplyOpacity = true;
+bool g_ApplyAlpha = true;
 
 // apply, save and discard operations
 bool apply_visibility = false;
@@ -85,7 +85,7 @@ extern "C" bool* get_ApplyColor()
 
 extern "C" bool* get_ApplyOpacity()
 {
-	return &g_ApplyOpacity;
+	return &g_ApplyAlpha;
 }
 
 extern "C" int get_region_size()
@@ -233,19 +233,30 @@ extern "C" void blend_tf_relatively(float3 color)
 	{
 		histogram3[i] /= max;
 	}
-	for (int i = 0; i < BIN_COUNT; i++)
+
+	if (g_ApplyColor)
 	{
-		auto c = make_float3(tf_array[i].x, tf_array[i].y, tf_array[i].z);
-		auto t = histogram3[i] > 0 ? histogram3[i] : 0;
-		auto c2 = lerp(c, color, t);
-		if (t > 0.75)
+		for (int i = 0; i < BIN_COUNT; i++)
 		{
-			printf("%g r %g %g g %g %g b %g %g \n", i / (float)BIN_COUNT, tf_array[i].x, c2.x, tf_array[i].y, c2.y, tf_array[i].z, c2.z);
+			auto c = make_float3(tf_array[i].x, tf_array[i].y, tf_array[i].z);
+			auto t = histogram3[i] > 0 ? histogram3[i] : 0;
+			auto c2 = lerp(c, color, t);
+			if (t > 0.75)
+			{
+				printf("%g r %g %g g %g %g b %g %g \n", i / (float)BIN_COUNT, tf_array[i].x, c2.x, tf_array[i].y, c2.y, tf_array[i].z, c2.z);
+			}
+			tf_array[i].x = c2.x;
+			tf_array[i].y = c2.y;
+			tf_array[i].z = c2.z;
 		}
-		tf_array[i].x = c2.x;
-		tf_array[i].y = c2.y;
-		tf_array[i].z = c2.z;
-		tf_array[i].w = lerp(tf_array[i].w, histogram3[i]>0?1:0, fabsf(histogram3[i]));
+	}
+
+	if (g_ApplyAlpha)
+	{
+		for (int i = 0; i < BIN_COUNT; i++)
+		{
+			tf_array[i].w = lerp(tf_array[i].w, histogram3[i] > 0 ? 1 : 0, fabsf(histogram3[i]));
+		}
 	}
 
 	bind_tf_texture();

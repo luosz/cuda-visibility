@@ -147,11 +147,6 @@ char **pArgv;
 #define MAX(a,b) ((a > b) ? a : b)
 #endif
 
-//// Shapes material
-//float g_SelectedColor[] = { 1.f,1.f,0.f,1.f };
-//bool g_ApplyColor = true;
-//bool g_ApplyOpacity = true;
-
 typedef float(*Pointer)[4];
 extern "C" Pointer get_SelectedColor();
 extern "C" void set_SelectedColor(float r, float g, float b);
@@ -965,9 +960,9 @@ main(int argc, char **argv)
 		TwInit(TW_OPENGL, NULL);
 		// Create a tweak bar
 		auto bar = TwNewBar("Settings");
-		TwDefine("Settings size='145 85' position='0 0'");
+		TwDefine("Settings size='140 84' position='0 0'");
 		TwAddVarRW(bar, "color", TW_TYPE_BOOL32, get_ApplyColor(), "");
-		TwAddVarRW(bar, "opacity", TW_TYPE_BOOL32, get_ApplyOpacity(), "");
+		TwAddVarRW(bar, "alpha", TW_TYPE_BOOL32, get_ApplyOpacity(), "");
 		TwAddVarRW(bar, "select", TW_TYPE_COLOR3F, get_SelectedColor(), "");
 
         glutMainLoop();
