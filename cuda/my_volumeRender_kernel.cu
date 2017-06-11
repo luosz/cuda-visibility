@@ -20,6 +20,7 @@
 #include <helper_math.h>
 
 #include <iostream>
+#include "util.h"
 using namespace std;
 
 typedef unsigned int  uint;
@@ -53,6 +54,7 @@ __device__ __managed__ float histogram2[BIN_COUNT] = { 0 };
 __device__ __managed__ float histogram3[BIN_COUNT] = { 0 };
 __device__ __managed__ float4 tf_array[BIN_COUNT] = { 0 };
 __device__ __managed__ float4 tf_array0[BIN_COUNT] = { 0 };
+__device__ __managed__ float4 tf_array_tmp[BIN_COUNT] = { 0 };
 __device__ __managed__ int radius = 12;
 
 // GUI settings
@@ -256,6 +258,29 @@ extern "C" void blend_tf_relatively(float3 color)
 		for (int i = 0; i < BIN_COUNT; i++)
 		{
 			tf_array[i].w = lerp(tf_array[i].w, histogram3[i] > 0 ? 1 : 0, fabsf(histogram3[i]));
+		}
+	}
+
+	// apply gaussian kernel to transfer function
+	memcpy(tf_array_tmp, tf_array, BIN_COUNT * sizeof(float4));
+	if (g_ApplyColor || g_ApplyAlpha)
+	{
+		gaussian(tf_array_tmp, BIN_COUNT);
+		if (g_ApplyColor)
+		{
+			for (int i = 0; i < BIN_COUNT; i++)
+			{
+				tf_array[i].x = tf_array_tmp[i].x;
+				tf_array[i].y = tf_array_tmp[i].y;
+				tf_array[i].z = tf_array_tmp[i].z;
+			}
+		}
+		if (g_ApplyAlpha)
+		{
+			for (int i = 0; i < BIN_COUNT; i++)
+			{
+				tf_array[i].w = tf_array_tmp[i].w;
+			}
 		}
 	}
 
