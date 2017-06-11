@@ -33,16 +33,16 @@ void gaussian_kernel_1d(float kernel[], const int n = 11, const float sigma = 1)
 	//std::cout << std::endl;
 }
 
-void gaussian(float4 tf[], const int count, const int kernel_size = 5, const float sigma = 1)
+void gaussian(float tf[], const int count, const int kernel_size = 5, const float sigma = 1)
 {
 	int half = kernel_size / 2;
 	auto kernel = (float*)malloc(kernel_size * sizeof(float));
 	gaussian_kernel_1d(kernel, kernel_size, sigma);
-	auto data = (float4*)malloc(count * sizeof(float4));
-	memcpy(data, tf, count * sizeof(float4));
+	auto data = (float*)malloc(count * sizeof(float));
+	memcpy(data, tf, count * sizeof(float));
 	for (int i = half; i < count - half; i++)
 	{
-		float4 sum = make_float4(0, 0, 0, 0);
+		float sum = 0;
 		for (int j = 0; j < kernel_size; j++)
 		{
 			int k = i + j - half;
@@ -50,7 +50,7 @@ void gaussian(float4 tf[], const int count, const int kernel_size = 5, const flo
 		}
 		data[i] = sum;
 	}
-	memcpy(tf, data, count * sizeof(float4));
+	memcpy(tf, data, count * sizeof(float));
 	free(data);
 	free(kernel);
 }

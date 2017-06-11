@@ -158,13 +158,15 @@ extern "C" float4* get_tf_array();
 extern "C" int get_bin_count();
 extern "C" bool get_apply();
 extern "C" void set_apply(bool value);
-extern "C" bool get_discard();
-extern "C" void set_discard(bool value);
 extern "C" bool get_save();
 extern "C" void set_save(bool value);
+extern "C" bool get_discard();
+extern "C" void set_discard(bool value);
+extern "C" bool get_gaussian();
+extern "C" void set_gaussian(bool value);
 extern "C" void set_volume_file(const char *file, int n);
 extern "C" void backup_tf();
-extern "C" void discard_tf();
+extern "C" void restore_tf();
 
 extern "C" void setTextureFilterMode(bool bLinearFilter);
 extern "C" void initCuda(void *h_volume, cudaExtent volumeSize);
@@ -533,6 +535,10 @@ void keyboard(unsigned char key, int x, int y)
 
 		case 's':
 			set_save(true);
+			break;
+
+		case 'g':
+			set_gaussian(true);
 			break;
 
 		case 'z':

@@ -50,6 +50,7 @@ const int BIN_COUNT = 256;
 __device__ __managed__ float histogram[BIN_COUNT] = {0};
 __device__ __managed__ float histogram2[BIN_COUNT] = { 0 };
 __device__ __managed__ float histogram3[BIN_COUNT] = { 0 };
+__device__ __managed__ float histogram4[BIN_COUNT] = { 0 };
 __device__ __managed__ float4 tf_array[BIN_COUNT] = { 0 };
 __device__ __managed__ float4 tf_array0[BIN_COUNT] = { 0 };
 __device__ __managed__ float4 tf_array_tmp[BIN_COUNT] = { 0 };
@@ -61,9 +62,10 @@ bool g_ApplyColor = true;
 bool g_ApplyAlpha = true;
 
 // apply, save and discard operations
-bool apply_visibility = false;
-bool discard_visibility = false;
-bool save_visibility = false;
+bool apply_blend = false;
+bool discard_table = false;
+bool save_histogram = false;
+bool gaussian_table = false;
 
 typedef float(*Pointer)[4];
 extern "C" Pointer get_SelectedColor()
@@ -113,9 +115,15 @@ extern "C" void bind_tf_texture()
 	checkCudaErrors(cudaBindTextureToArray(transferTex, d_transferFuncArray, channelDesc2));
 }
 
-extern "C" void discard_tf()
+extern "C" void restore_tf()
 {
 	memcpy(tf_array, tf_array0, sizeof(tf_array));
+	bind_tf_texture();
+}
+
+extern "C" void gaussian_tf()
+{
+	memcpy(tf_array, tf_array_tmp, sizeof(tf_array));
 	bind_tf_texture();
 }
 
@@ -126,35 +134,46 @@ extern "C" int get_bin_count()
 
 extern "C" bool get_save()
 {
-	return save_visibility;
+	return save_histogram;
 }
 
 extern "C" void set_save(bool value)
 {
-	save_visibility = value;
-	printf("set save %s\n", save_visibility ?"true":"false");
+	save_histogram = value;
+	printf("set save %s\n", save_histogram ?"true":"false");
 }
 
 extern "C" bool get_apply()
 {
-	return apply_visibility;
+	return apply_blend;
 }
 
 extern "C" void set_apply(bool value)
 {
-	apply_visibility = value;
-	printf("set apply %s\n", apply_visibility ? "true" : "false");
+	apply_blend = value;
+	printf("set apply %s\n", apply_blend ? "true" : "false");
 }
 
 extern "C" bool get_discard()
 {
-	return discard_visibility;
+	return discard_table;
 }
 
 extern "C" void set_discard(bool value)
 {
-	discard_visibility = value;
-	printf("set discard %s\n", discard_visibility ? "true" : "false");
+	discard_table = value;
+	printf("set discard %s\n", discard_table ? "true" : "false");
+}
+
+extern "C" bool get_gaussian()
+{
+	return gaussian_table;
+}
+
+extern "C" void set_gaussian(bool value)
+{
+	gaussian_table = value;
+	printf("set gaussian %s\n", gaussian_table ? "true" : "false");
 }
 
 extern "C" void set_volume_file(const char *file, int n)
@@ -234,6 +253,11 @@ extern "C" void blend_tf_relatively(float3 color)
 		histogram3[i] /= max;
 	}
 
+	// apply Gaussian filter to relateive visibility histogram
+	memcpy(histogram4, histogram3, BIN_COUNT * sizeof(float));
+	gaussian(histogram4, BIN_COUNT);
+	memcpy(tf_array_tmp, tf_array, BIN_COUNT * sizeof(float4));
+
 	if (g_ApplyColor)
 	{
 		for (int i = 0; i < BIN_COUNT; i++)
@@ -259,26 +283,29 @@ extern "C" void blend_tf_relatively(float3 color)
 		}
 	}
 
-	// apply gaussian kernel to transfer function
-	memcpy(tf_array_tmp, tf_array, BIN_COUNT * sizeof(float4));
-	if (g_ApplyColor || g_ApplyAlpha)
+	// blend color and alpha
+	if (g_ApplyColor)
 	{
-		gaussian(tf_array_tmp, BIN_COUNT);
-		if (g_ApplyColor)
+		for (int i = 0; i < BIN_COUNT; i++)
 		{
-			for (int i = 0; i < BIN_COUNT; i++)
+			auto c = make_float3(tf_array_tmp[i].x, tf_array_tmp[i].y, tf_array_tmp[i].z);
+			auto t = histogram3[i] > 0 ? histogram3[i] : 0;
+			auto c2 = lerp(c, color, t);
+			if (t > 0.75)
 			{
-				tf_array[i].x = tf_array_tmp[i].x;
-				tf_array[i].y = tf_array_tmp[i].y;
-				tf_array[i].z = tf_array_tmp[i].z;
+				printf("%g r %g %g g %g %g b %g %g \n", i / (float)BIN_COUNT, tf_array_tmp[i].x, c2.x, tf_array_tmp[i].y, c2.y, tf_array_tmp[i].z, c2.z);
 			}
+			tf_array_tmp[i].x = c2.x;
+			tf_array_tmp[i].y = c2.y;
+			tf_array_tmp[i].z = c2.z;
 		}
-		if (g_ApplyAlpha)
+	}
+
+	if (g_ApplyAlpha)
+	{
+		for (int i = 0; i < BIN_COUNT; i++)
 		{
-			for (int i = 0; i < BIN_COUNT; i++)
-			{
-				tf_array[i].w = tf_array_tmp[i].w;
-			}
+			tf_array_tmp[i].w = lerp(tf_array_tmp[i].w, histogram3[i] > 0 ? 1 : 0, fabsf(histogram3[i]));
 		}
 	}
 
@@ -787,8 +814,8 @@ void initCuda(void *h_volume, cudaExtent volumeSize)
 	printf("%g\n", *(visVolume + 1));
 	printf("%d\n", *(countVolume + 1));
 
-	auto tf2 = tf_array;
-	printf("sizeof \t histogram %d \t tf_array %d \t tf2 %d %d \n", sizeof(histogram) / sizeof(float), sizeof(tf_array) / sizeof(float4), sizeof(tf2), sizeof(float4));
+	//auto tf2 = tf_array;
+	//printf("sizeof \t histogram %d \t tf_array %d \t tf2 %d %d \n", sizeof(histogram) / sizeof(float), sizeof(tf_array) / sizeof(float4), sizeof(tf2), sizeof(float4));
 
 	cudaChannelFormatDesc channelDesc0 = cudaCreateChannelDesc<VisibilityType>();
 	//checkCudaErrors(cudaMalloc3DArray(&d_visibilityArray, &channelDesc0, sizeOfVolume, cudaArraySurfaceLoadStore));
@@ -952,12 +979,26 @@ void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, u
 			fprintf(fp3, "%g\n", histogram3[i]);
 		}
 		fclose(fp3);
+
+		sprintf(buffer, "~%s.4.txt", volume_file);
+		auto fp4 = fopen(buffer, "w");
+		for (int i = 0; i < BIN_COUNT; i++)
+		{
+			fprintf(fp4, "%g\n", histogram4[i]);
+		}
+		fclose(fp4);
 	}
 
 	if (get_discard())
 	{
 		set_discard(false);
-		discard_tf();
+		restore_tf();
+	}
+
+	if (get_gaussian())
+	{
+		set_gaussian(false);
+		gaussian_tf();
 	}
 }
 
