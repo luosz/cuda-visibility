@@ -60,6 +60,7 @@
 #include <helper_math.h>
 #include <AntTweakBar.h>
 #include "tinyxml2.h"
+#include "util.h"
 using namespace std;
 
 #if defined(_WIN32) || defined(_WIN64)
@@ -174,27 +175,7 @@ extern "C" void copyInvViewMatrix(float *invViewMatrix, size_t sizeofMatrix);
 
 void initPixelBuffer();
 
-/// Re-maps a number from one range to another.
-inline float map_to_range(float val, float src_lower, float src_upper, float target_lower, float target_upper)
-{
-	val = val < src_lower ? src_lower : val;
-	val = val > src_upper ? src_upper : val;
-	auto normalised = (val - src_lower) / (src_upper - src_lower);
-	return normalised * (target_upper - target_lower) + target_lower;
-}
-
-inline float normalise_rgba(int n)
-{
-	return map_to_range(n, 0, 255, 0, 1);
-}
-
-//template<typename T>
-//float4 lerp_(T a, T b, float t)
-//{
-//	return a + t*(b - a);
-//}
-
-void lookuptable(std::vector<float> intensity, std::vector<float4> rgba)
+void load_lookuptable(std::vector<float> intensity, std::vector<float4> rgba)
 {
 	auto n = get_bin_count();
 	float4 *tf = get_tf_array();
@@ -339,7 +320,7 @@ void openTransferFunctionFromVoreenXML(const char *filename)
 	{
 		printf("%g\n", intensity_list[i]);
 	}
-	lookuptable(intensity_list, rgba_list);
+	load_lookuptable(intensity_list, rgba_list);
 }
 
 void computeFPS()
