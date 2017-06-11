@@ -111,6 +111,9 @@ const char *volumeFilename = "vorts1.raw";
 cudaExtent volumeSize = make_cudaExtent(128, 128, 128);
 typedef unsigned char VolumeType;
 
+const char *tfi = "data/vortex_naive_proportional.tfi";
+//const char *tfi = "data/vortex_naive_proportional_optimized_linesearch.tfi";
+
 int2 loc = {0, 0};
 bool dragMode = false; // mouse tracking mode
 
@@ -924,8 +927,7 @@ main(int argc, char **argv)
     void *h_volume = loadRawFile(path, size);
 
 	// load transfer function
-	openTransferFunctionFromVoreenXML("vortex_naive_proportional.tfi");
-	//openTransferFunctionFromVoreenXML("vortex_naive_proportional_optimized_linesearch.tfi");
+	openTransferFunctionFromVoreenXML(tfi);
 
     initCuda(h_volume, volumeSize);
     free(h_volume);

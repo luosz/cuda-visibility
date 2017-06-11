@@ -65,7 +65,7 @@ bool g_ApplyAlpha = true;
 bool apply_blend = false;
 bool discard_table = false;
 bool save_histogram = false;
-bool gaussian_table = false;
+bool gaussian_histogram = false;
 
 typedef float(*Pointer)[4];
 extern "C" Pointer get_SelectedColor()
@@ -167,13 +167,13 @@ extern "C" void set_discard(bool value)
 
 extern "C" bool get_gaussian()
 {
-	return gaussian_table;
+	return gaussian_histogram;
 }
 
 extern "C" void set_gaussian(bool value)
 {
-	gaussian_table = value;
-	printf("set gaussian %s\n", gaussian_table ? "true" : "false");
+	gaussian_histogram = value;
+	printf("set gaussian %s\n", gaussian_histogram ? "true" : "false");
 }
 
 extern "C" void set_volume_file(const char *file, int n)
@@ -253,9 +253,7 @@ extern "C" void blend_tf_relatively(float3 color)
 		histogram3[i] /= max;
 	}
 
-	// apply Gaussian filter to relateive visibility histogram
-	memcpy(histogram4, histogram3, BIN_COUNT * sizeof(float));
-	gaussian(histogram4, BIN_COUNT);
+	// backup transfer function table
 	memcpy(tf_array_tmp, tf_array, BIN_COUNT * sizeof(float4));
 
 	if (g_ApplyColor)
@@ -265,10 +263,10 @@ extern "C" void blend_tf_relatively(float3 color)
 			auto c = make_float3(tf_array[i].x, tf_array[i].y, tf_array[i].z);
 			auto t = histogram3[i] > 0 ? histogram3[i] : 0;
 			auto c2 = lerp(c, color, t);
-			if (t > 0.75)
-			{
-				printf("%g r %g %g g %g %g b %g %g \n", i / (float)BIN_COUNT, tf_array[i].x, c2.x, tf_array[i].y, c2.y, tf_array[i].z, c2.z);
-			}
+			//if (t > 0.75)
+			//{
+			//	printf("%g r %g %g g %g %g b %g %g \n", i / (float)BIN_COUNT, tf_array[i].x, c2.x, tf_array[i].y, c2.y, tf_array[i].z, c2.z);
+			//}
 			tf_array[i].x = c2.x;
 			tf_array[i].y = c2.y;
 			tf_array[i].z = c2.z;
@@ -283,18 +281,22 @@ extern "C" void blend_tf_relatively(float3 color)
 		}
 	}
 
-	// blend color and alpha
+	// apply Gaussian filter to relateive visibility histogram
+	memcpy(histogram4, histogram3, BIN_COUNT * sizeof(float));
+	gaussian(histogram4, BIN_COUNT);
+
+	// blend color and alpha using Gaussian filtered relative visibility histogram
 	if (g_ApplyColor)
 	{
 		for (int i = 0; i < BIN_COUNT; i++)
 		{
 			auto c = make_float3(tf_array_tmp[i].x, tf_array_tmp[i].y, tf_array_tmp[i].z);
-			auto t = histogram3[i] > 0 ? histogram3[i] : 0;
+			auto t = histogram4[i] > 0 ? histogram4[i] : 0;
 			auto c2 = lerp(c, color, t);
-			if (t > 0.75)
-			{
-				printf("%g r %g %g g %g %g b %g %g \n", i / (float)BIN_COUNT, tf_array_tmp[i].x, c2.x, tf_array_tmp[i].y, c2.y, tf_array_tmp[i].z, c2.z);
-			}
+			//if (t > 0.75)
+			//{
+			//	printf("%g r %g %g g %g %g b %g %g \n", i / (float)BIN_COUNT, tf_array_tmp[i].x, c2.x, tf_array_tmp[i].y, c2.y, tf_array_tmp[i].z, c2.z);
+			//}
 			tf_array_tmp[i].x = c2.x;
 			tf_array_tmp[i].y = c2.y;
 			tf_array_tmp[i].z = c2.z;
@@ -305,9 +307,12 @@ extern "C" void blend_tf_relatively(float3 color)
 	{
 		for (int i = 0; i < BIN_COUNT; i++)
 		{
-			tf_array_tmp[i].w = lerp(tf_array_tmp[i].w, histogram3[i] > 0 ? 1 : 0, fabsf(histogram3[i]));
+			tf_array_tmp[i].w = lerp(tf_array_tmp[i].w, histogram4[i] > 0 ? 1 : 0, fabsf(histogram4[i]));
 		}
 	}
+
+	//// use gaussian transfer function
+	//memcpy(tf_array, tf_array_tmp, BIN_COUNT * sizeof(float4));
 
 	bind_tf_texture();
 }
