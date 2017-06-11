@@ -9,10 +9,8 @@
  *
  */
 
-// Simple 3D volume renderer
+ // Simple 3D volume renderer
 
-#include <helper_cuda.h>
-#include <helper_cuda.h>
 #ifndef _VOLUMERENDER_KERNEL_CU_
 #define _VOLUMERENDER_KERNEL_CU_
 
@@ -20,7 +18,7 @@
 #include <helper_math.h>
 
 #include <iostream>
-#include "util.h"
+#include "gaussian.h"
 using namespace std;
 
 typedef unsigned int  uint;
