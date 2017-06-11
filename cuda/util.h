@@ -13,14 +13,13 @@ def gauss(n=11,sigma=1):
 r = range(-int(n/2),int(n/2)+1)
 return [1 / (sigma * sqrt(2*pi)) * exp(-float(x)**2/(2*sigma**2)) for x in r]
 */
-std::vector<double> gaussian_kernel_1d(int n = 11, double sigma = 1)
+std::vector<float> gaussian_kernel_1d(int n = 11, float sigma = 1)
 {
-	std::vector<double> kernel;
-	const double pi = M_PI;
+	std::vector<float> kernel;
 	std::cout << "gaussian_kernel_1d" << std::endl;
 	for (int x = -(n / 2); x < (n / 2) + 1; x++)
 	{
-		double val = 1 / (sigma * sqrt(2 * pi)) * exp(-x*x / (2. * sigma*sigma));
+		float val = 1 / (sigma * sqrt(2 * M_PI)) * exp(-x*x / (2. * sigma*sigma));
 		kernel.push_back(val);
 		std::cout << val << " ";
 	}
@@ -28,28 +27,25 @@ std::vector<double> gaussian_kernel_1d(int n = 11, double sigma = 1)
 	return kernel;
 }
 
-void gaussian(int n = 5, double sigma = 1)
+void gaussian(float4 tf[], int count, int kernel_size = 5, float sigma = 1)
 {
-	int half = n / 2;
-	auto kernel = gaussian_kernel_1d(n, sigma);
-	std::vector<double> opacity_new = opacity_list;
-	for (int i = half; i < opacity_new.size() - half; i++)
+	auto data = (float4*)malloc(count * sizeof(float4));
+	memcpy(data, tf, count * sizeof(float4));
+	int half = kernel_size / 2;
+	auto kernel = gaussian_kernel_1d(kernel_size, sigma);
+	for (int i = half; i < count - half; i++)
 	{
-		double sum = 0;
-		for (int j = 0; j < n; j++)
+		float4 sum = make_float4(0, 0, 0, 0);
+		for (int j = 0; j < kernel_size; j++)
 		{
-			int offset = j - half;
-			int k = i + offset;
-			sum += kernel[j] * get_opacity(k);
+			int k = i + j - half;
+			sum += kernel[j] * tf[k];
 		}
-		opacity_new[i] = sum;
+		data[i] = sum;
 	}
-	opacity_list = opacity_new;
-
-	updateTFWidgetFromOpacityArrays();
-	updateOpacityArrayFromTFWidget();
+	memcpy(tf, data, count * sizeof(float4));
+	free(data);
 }
-
 
 /// Re-maps a number from one range to another.
 inline float map_to_range(float val, float src_lower, float src_upper, float target_lower, float target_upper)
