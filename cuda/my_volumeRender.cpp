@@ -107,12 +107,13 @@ const char *sSDKsample = "CUDA 3D Volume Render";
 //cudaExtent volumeSize = make_cudaExtent(416, 512, 112);
 //typedef unsigned short VolumeType;
 
-const char *volumeFilename = "vorts1.raw";
-cudaExtent volumeSize = make_cudaExtent(128, 128, 128);
+const char *tfs[] = { "vortex_naive_proportional_2.tfi" ,"nucleon_naive_proportional_2.tfi"};
+const char *volumes[] = { "vorts1.raw" ,"nucleon.raw"};
+const int data_index = 1;
+const char *tfFile = tfs[data_index];
+const char *volumeFilename = volumes[data_index];
+cudaExtent volumeSize = make_cudaExtent(41, 41, 41);
 typedef unsigned char VolumeType;
-
-const char *tfi = "data/vortex_naive_proportional.tfi";
-//const char *tfi = "data/vortex_naive_proportional_optimized_linesearch.tfi";
 
 int2 loc = {0, 0};
 bool dragMode = false; // mouse tracking mode
@@ -189,7 +190,7 @@ void load_lookuptable(std::vector<float> intensity, std::vector<float4> rgba)
 	for (int i = 0; i < n; i++)
 	{
 		auto d = i / (float)(n - 1);
-		while (d > intensity[k])
+		while (k <= last && d > intensity[k])
 		{
 			k++;
 		}
@@ -293,9 +294,9 @@ void openTransferFunctionFromVoreenXML(const char *filename)
 		rgba_list.push_back(make_float4(normalise_rgba(r), normalise_rgba(g), normalise_rgba(b), normalise_rgba(a)));
 
 		bool split = (0 == strcmp("true", key->FirstChildElement("split")->Attribute("value")));
-		std::cout << "intensity=" << intensity;
-		std::cout << "\tsplit=" << (split ? "true" : "false");
-		std::cout << "\tcolorL r=" << r << " g=" << g << " b=" << b << " a=" << a;
+		//std::cout << "intensity=" << intensity;
+		//std::cout << "\tsplit=" << (split ? "true" : "false");
+		//std::cout << "\tcolorL r=" << r << " g=" << g << " b=" << b << " a=" << a;
 		const auto epsilon = 1e-6f;
 		if (split)
 		{
@@ -314,17 +315,17 @@ void openTransferFunctionFromVoreenXML(const char *filename)
 			//colour_list_push_back(colour2);
 			//opacity_list_push_back(normalise_rgba(a2));
 			rgba_list.push_back(make_float4(normalise_rgba(r2), normalise_rgba(g2), normalise_rgba(b2), normalise_rgba(a2)));
-			std::cout << "\tcolorR r=" << r2 << " g=" << g2 << " b=" << b2 << " a=" << a2;
+			//std::cout << "\tcolorR r=" << r2 << " g=" << g2 << " b=" << b2 << " a=" << a2;
 		}
-		std::cout << endl;
+		//std::cout << endl;
 
 		key = key->NextSiblingElement();
 	} while (key);
 
-	for (int i=0;i<intensity_list.size();i++)
-	{
-		printf("%g\n", intensity_list[i]);
-	}
+	//for (int i=0;i<intensity_list.size();i++)
+	//{
+	//	printf("%g\n", intensity_list[i]);
+	//}
 	load_lookuptable(intensity_list, rgba_list);
 }
 
@@ -916,7 +917,8 @@ main(int argc, char **argv)
 
     // load volume data
     char *path = sdkFindFilePath(volumeFilename, argv[0]);
-
+	printf("volume %s\n", path);
+	
     if (path == 0)
     {
         printf("Error finding file '%s'\n", volumeFilename);
@@ -927,7 +929,9 @@ main(int argc, char **argv)
     void *h_volume = loadRawFile(path, size);
 
 	// load transfer function
-	openTransferFunctionFromVoreenXML(tfi);
+	auto tf_path = sdkFindFilePath(tfFile, argv[0]);
+	printf("transfer function %s\n", tf_path);
+	openTransferFunctionFromVoreenXML(tf_path);
 
     initCuda(h_volume, volumeSize);
     free(h_volume);

@@ -777,6 +777,7 @@ d_renderVisibility(uint *d_output, uint imageW, uint imageH,
 
 		pos += step;
 	}
+
 	if (sum.w < 1.0f)
 	{
 		sum += make_float4(1.0f, 1.0f, 1.0f, 0.0f) * (1.0f - sum.w);
@@ -805,19 +806,19 @@ extern "C"
 void initCuda(void *h_volume, cudaExtent volumeSize)
 {
 	auto len = volumeSize.width * volumeSize.height * volumeSize.depth;
-	auto cube = malloc(sizeof(float) * len);
-	memset(cube, 0, sizeof(float) * len);
-	printf("%g\n", *((float*)cube+len-1));
+	//auto cube = malloc(sizeof(float) * len);
+	//memset(cube, 0, sizeof(float) * len);
+	//printf("%g\n", *((float*)cube+len-1));
 
 	sizeOfVolume = volumeSize;
-	printf("sizeOfVolume \t %d %d %d\n", sizeOfVolume.width, sizeOfVolume.height, sizeOfVolume.depth);
-	printf("volumeSize \t %d %d %d\n", volumeSize.width, volumeSize.height, volumeSize.depth);
+	printf("volumeSize \t %d %d %d\n", sizeOfVolume.width, sizeOfVolume.height, sizeOfVolume.depth);
+	//printf("volumeSize \t %d %d %d\n", volumeSize.width, volumeSize.height, volumeSize.depth);
 
 	//auto len = volumeSize.width * volumeSize.height * volumeSize.depth;
 	checkCudaErrors(cudaMallocManaged(&visVolume, sizeof(float) * len));
 	checkCudaErrors(cudaMallocManaged(&countVolume, sizeof(int) * len));
-	printf("%g\n", *(visVolume + 1));
-	printf("%d\n", *(countVolume + 1));
+	//printf("%g\n", *(visVolume + 1));
+	//printf("%d\n", *(countVolume + 1));
 
 	//auto tf2 = tf_array;
 	//printf("sizeof \t histogram %d \t tf_array %d \t tf2 %d %d \n", sizeof(histogram) / sizeof(float), sizeof(tf_array) / sizeof(float4), sizeof(tf2), sizeof(float4));
