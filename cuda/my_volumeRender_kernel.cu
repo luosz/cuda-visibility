@@ -65,6 +65,7 @@ bool apply_blend = false;
 bool discard_table = false;
 bool save_histogram = false;
 bool gaussian_histogram = false;
+bool backup_table = false;
 
 typedef float(*Pointer)[4];
 extern "C" Pointer get_SelectedColor()
@@ -167,6 +168,17 @@ extern "C" void set_gaussian(bool value)
 {
 	gaussian_histogram = value;
 	printf("set gaussian %s\n", gaussian_histogram ? "true" : "false");
+}
+
+extern "C" bool get_backup()
+{
+	return backup_table;
+}
+
+extern "C" void set_backup(bool value)
+{
+	backup_table = value;
+	printf("set backup %s\n", backup_table ? "true" : "false");
 }
 
 extern "C" void set_volume_file(const char *file, int n)
@@ -1001,7 +1013,6 @@ void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, u
 	if (get_save())
 	{
 		set_save(false);
-		backup_tf();
 
 		char buffer[_MAX_PATH];
 		sprintf(buffer, "~%s", volume_file);
@@ -1049,6 +1060,12 @@ void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, u
 	{
 		set_discard(false);
 		restore_tf();
+	}
+
+	if (get_backup())
+	{
+		set_backup(false);
+		backup_tf();
 	}
 }
 

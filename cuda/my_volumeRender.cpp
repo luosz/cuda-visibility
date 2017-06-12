@@ -174,6 +174,8 @@ extern "C" bool get_discard();
 extern "C" void set_discard(bool value);
 extern "C" bool get_gaussian();
 extern "C" void set_gaussian(bool value);
+extern "C" bool get_backup();
+extern "C" void set_backup(bool value);
 extern "C" void set_volume_file(const char *file, int n);
 extern "C" void backup_tf();
 extern "C" void restore_tf();
@@ -549,6 +551,10 @@ void keyboard(unsigned char key, int x, int y)
 
 		case 'g':
 			set_gaussian(true);
+			break;
+
+		case 'b':
+			set_backup(true);
 			break;
 
 		case 'z':
