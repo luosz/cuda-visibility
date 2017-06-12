@@ -53,7 +53,6 @@ __device__ __managed__ float histogram3[BIN_COUNT] = { 0 };
 __device__ __managed__ float histogram4[BIN_COUNT] = { 0 };
 __device__ __managed__ float4 tf_array[BIN_COUNT] = { 0 };
 __device__ __managed__ float4 tf_array0[BIN_COUNT] = { 0 };
-__device__ __managed__ float4 tf_array_tmp[BIN_COUNT] = { 0 };
 __device__ __managed__ int radius = 12;
 
 // GUI settings
@@ -121,12 +120,6 @@ extern "C" void restore_tf()
 	bind_tf_texture();
 }
 
-extern "C" void gaussian_tf()
-{
-	memcpy(tf_array, tf_array_tmp, sizeof(tf_array));
-	bind_tf_texture();
-}
-
 extern "C" int get_bin_count()
 {
 	return BIN_COUNT;
@@ -189,17 +182,15 @@ extern "C" void set_volume_file(const char *file, int n)
 extern "C" void blend_tf(float3 color)
 {
 	float hist[BIN_COUNT];
-	//float sum = 0;
 	float max = 0;
 	for (int i = 0; i < BIN_COUNT; i++)
 	{
-		//sum += histogram2[i] * histogram2[i];
 		if (max < histogram2[i])
 		{
 			max = histogram2[i];
 		}
 	}
-	//sum = sqrt(sum);
+
 	for (int i = 0; i < BIN_COUNT; i++)
 	{
 		hist[i] = histogram2[i] / max;
@@ -220,7 +211,7 @@ extern "C" void blend_tf(float3 color)
 	bind_tf_texture();
 }
 
-extern "C" void blend_tf_relatively(float3 color)
+extern "C" void blend_tf_rgba(float3 color)
 {
 	float hist[BIN_COUNT], hist2[BIN_COUNT];
 	float sum = 0;
@@ -248,13 +239,28 @@ extern "C" void blend_tf_relatively(float3 color)
 		auto m = fabsf(histogram3[i]);
 		max = max < m ? m : max;
 	}
+
+	// apply Gaussian filter to relateive visibility histogram
+	memcpy(histogram4, histogram3, BIN_COUNT * sizeof(float));
+	gaussian(histogram4, BIN_COUNT);
+
+	// normalize histogram3
 	for (int i = 0; i < BIN_COUNT; i++)
 	{
 		histogram3[i] /= max;
 	}
 
-	// backup transfer function table
-	memcpy(tf_array_tmp, tf_array, BIN_COUNT * sizeof(float4));
+	// normalize histogram4
+	max = 0;
+	for (int i = 0; i < BIN_COUNT; i++)
+	{
+		auto m = fabsf(histogram4[i]);
+		max = max < m ? m : max;
+	}
+	for (int i = 0; i < BIN_COUNT; i++)
+	{
+		histogram4[i] /= max;
+	}
 
 	if (g_ApplyColor)
 	{
@@ -263,10 +269,6 @@ extern "C" void blend_tf_relatively(float3 color)
 			auto c = make_float3(tf_array[i].x, tf_array[i].y, tf_array[i].z);
 			auto t = histogram3[i] > 0 ? histogram3[i] : 0;
 			auto c2 = lerp(c, color, t);
-			//if (t > 0.75)
-			//{
-			//	printf("%g r %g %g g %g %g b %g %g \n", i / (float)BIN_COUNT, tf_array[i].x, c2.x, tf_array[i].y, c2.y, tf_array[i].z, c2.z);
-			//}
 			tf_array[i].x = c2.x;
 			tf_array[i].y = c2.y;
 			tf_array[i].z = c2.z;
@@ -281,25 +283,70 @@ extern "C" void blend_tf_relatively(float3 color)
 		}
 	}
 
+	bind_tf_texture();
+}
+
+extern "C" void gaussian_tf(float3 color)
+{
+	float hist[BIN_COUNT], hist2[BIN_COUNT];
+	float sum = 0;
+	for (int i = 0; i < BIN_COUNT; i++)
+	{
+		sum += histogram[i];
+	}
+	for (int i = 0; i < BIN_COUNT; i++)
+	{
+		hist[i] = histogram[i] / sum;
+	}
+	float sum2 = 0;
+	for (int i = 0; i < BIN_COUNT; i++)
+	{
+		sum2 += histogram2[i];
+	}
+	for (int i = 0; i < BIN_COUNT; i++)
+	{
+		hist2[i] = histogram2[i] / sum2;
+	}
+	float max = 0;
+	for (int i = 0; i < BIN_COUNT; i++)
+	{
+		histogram3[i] = hist2[i] - hist[i];
+		auto m = fabsf(histogram3[i]);
+		max = max < m ? m : max;
+	}
+
 	// apply Gaussian filter to relateive visibility histogram
 	memcpy(histogram4, histogram3, BIN_COUNT * sizeof(float));
 	gaussian(histogram4, BIN_COUNT);
 
-	// blend color and alpha using Gaussian filtered relative visibility histogram
+	// normalize histogram3
+	for (int i = 0; i < BIN_COUNT; i++)
+	{
+		histogram3[i] /= max;
+	}
+
+	// normalize histogram4
+	max = 0;
+	for (int i = 0; i < BIN_COUNT; i++)
+	{
+		auto m = fabsf(histogram4[i]);
+		max = max < m ? m : max;
+	}
+	for (int i = 0; i < BIN_COUNT; i++)
+	{
+		histogram4[i] /= max;
+	}
+
 	if (g_ApplyColor)
 	{
 		for (int i = 0; i < BIN_COUNT; i++)
 		{
-			auto c = make_float3(tf_array_tmp[i].x, tf_array_tmp[i].y, tf_array_tmp[i].z);
+			auto c = make_float3(tf_array[i].x, tf_array[i].y, tf_array[i].z);
 			auto t = histogram4[i] > 0 ? histogram4[i] : 0;
 			auto c2 = lerp(c, color, t);
-			//if (t > 0.75)
-			//{
-			//	printf("%g r %g %g g %g %g b %g %g \n", i / (float)BIN_COUNT, tf_array_tmp[i].x, c2.x, tf_array_tmp[i].y, c2.y, tf_array_tmp[i].z, c2.z);
-			//}
-			tf_array_tmp[i].x = c2.x;
-			tf_array_tmp[i].y = c2.y;
-			tf_array_tmp[i].z = c2.z;
+			tf_array[i].x = c2.x;
+			tf_array[i].y = c2.y;
+			tf_array[i].z = c2.z;
 		}
 	}
 
@@ -307,12 +354,9 @@ extern "C" void blend_tf_relatively(float3 color)
 	{
 		for (int i = 0; i < BIN_COUNT; i++)
 		{
-			tf_array_tmp[i].w = lerp(tf_array_tmp[i].w, histogram4[i] > 0 ? 1 : 0, fabsf(histogram4[i]));
+			tf_array[i].w = lerp(tf_array[i].w, histogram4[i] > 0 ? 1 : 0, fabsf(histogram4[i]));
 		}
 	}
-
-	//// use gaussian transfer function
-	//memcpy(tf_array, tf_array_tmp, BIN_COUNT * sizeof(float4));
 
 	bind_tf_texture();
 }
@@ -945,7 +989,13 @@ void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, u
 	if (get_apply())
 	{
 		set_apply(false);
-		blend_tf_relatively(make_float3(g_SelectedColor[0], g_SelectedColor[1], g_SelectedColor[2]));
+		blend_tf_rgba(make_float3(g_SelectedColor[0], g_SelectedColor[1], g_SelectedColor[2]));
+	}
+
+	if (get_gaussian())
+	{
+		set_gaussian(false);
+		gaussian_tf(make_float3(g_SelectedColor[0], g_SelectedColor[1], g_SelectedColor[2]));
 	}
 
 	if (get_save())
@@ -999,12 +1049,6 @@ void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, u
 	{
 		set_discard(false);
 		restore_tf();
-	}
-
-	if (get_gaussian())
-	{
-		set_gaussian(false);
-		gaussian_tf();
 	}
 }
 
