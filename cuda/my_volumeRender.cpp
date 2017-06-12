@@ -980,11 +980,11 @@ main(int argc, char **argv)
 		// Initialize AntTweakBar
 		TwInit(TW_OPENGL, NULL);
 		// Create a tweak bar
-		auto bar = TwNewBar("Settings");
-		TwDefine("Settings size='140 84' position='0 0'");
+		auto bar = TwNewBar("Blend");
+		TwDefine("Blend size='140 84' position='0 8'");
 		TwAddVarRW(bar, "alpha", TW_TYPE_BOOL32, get_ApplyAlpha(), "");
 		TwAddVarRW(bar, "color", TW_TYPE_BOOL32, get_ApplyColor(), "");
-		TwAddVarRW(bar, "select", TW_TYPE_COLOR3F, get_SelectedColor(), "");
+		TwAddVarRW(bar, "pick", TW_TYPE_COLOR3F, get_SelectedColor(), "");
 
         glutMainLoop();
     }
