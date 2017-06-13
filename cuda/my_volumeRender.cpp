@@ -134,7 +134,7 @@ dim3 gridSize;
 float3 viewRotation;
 float3 viewTranslation = make_float3(0.0, 0.0, -4.0f);
 float invViewMatrix[12];
-const char *view_file = "view.xml";
+const char *view_file = "~view.xml";
 
 float density = 0.05f;
 float brightness = 1.0f;
