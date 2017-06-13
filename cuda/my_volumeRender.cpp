@@ -134,6 +134,7 @@ dim3 gridSize;
 float3 viewRotation;
 float3 viewTranslation = make_float3(0.0, 0.0, -4.0f);
 float invViewMatrix[12];
+const char *view_file = "view.xml";
 
 float density = 0.05f;
 float brightness = 1.0f;
@@ -580,8 +581,8 @@ void keyboard(unsigned char key, int x, int y)
 
 		case 'v':
 			{
-				printf("save view to view.xml\n");
-				std::ofstream os("view.xml");
+				printf("save view to %s\n", view_file);
+				std::ofstream os(view_file);
 				cereal::XMLOutputArchive archive(os);
 				archive(viewRotation.x, viewRotation.y, viewRotation.z, viewTranslation.x, viewTranslation.y, viewTranslation.z);
 			}
@@ -589,16 +590,16 @@ void keyboard(unsigned char key, int x, int y)
 
 		case 'b':
 			{
-				std::ifstream is("view.xml");
+				std::ifstream is(view_file);
 				if (is.is_open())
 				{
-					printf("load view from view.xml\n");
+					printf("load view from %s\n", view_file);
 					cereal::XMLInputArchive archive(is);
 					archive(viewRotation.x, viewRotation.y, viewRotation.z, viewTranslation.x, viewTranslation.y, viewTranslation.z);
 				}
 				else
 				{
-					printf("cannot open view.xml\n");
+					printf("cannot open %s\n", view_file);
 				}
 			}
 			break;
