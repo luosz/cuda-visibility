@@ -579,6 +579,12 @@ void keyboard(unsigned char key, int x, int y)
 			printf("toggle alpha %s color %s \n", *p1 ? "true" : "false", *p2 ? "true" : "false");
 			break;
 
+		case 'l':
+			printf("enter loc (e.g. 307 194)\n");
+			scanf("%d %d", &loc.x, &loc.y);
+			printf("loc %d %d\n", loc.x, loc.y);
+			break;
+
 		case 'b':
 			{
 				printf("save view to %s\n", view_file);

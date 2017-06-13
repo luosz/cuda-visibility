@@ -1001,12 +1001,14 @@ void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, u
 	if (get_apply())
 	{
 		set_apply(false);
+		printf("loc %d %d\n", loc.x, loc.y);
 		blend_tf_rgba(make_float3(g_SelectedColor[0], g_SelectedColor[1], g_SelectedColor[2]));
 	}
 
 	if (get_gaussian())
 	{
 		set_gaussian(false);
+		printf("loc %d %d\n", loc.x, loc.y);
 		gaussian_tf(make_float3(g_SelectedColor[0], g_SelectedColor[1], g_SelectedColor[2]));
 	}
 
