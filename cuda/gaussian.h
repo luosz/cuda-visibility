@@ -33,7 +33,7 @@ void gaussian_kernel_1d(float kernel[], const int n = 11, const float sigma = 1)
 	//std::cout << std::endl;
 }
 
-void gaussian(float tf[], const int count, const int kernel_size = 5, const float sigma = 1)
+void gaussian(float tf[], const int count, const int kernel_size = 7, const float sigma = 1)
 {
 	int half = kernel_size / 2;
 	auto kernel = (float*)malloc(kernel_size * sizeof(float));

@@ -579,23 +579,23 @@ void keyboard(unsigned char key, int x, int y)
 			printf("toggle alpha %s color %s \n", *p1 ? "true" : "false", *p2 ? "true" : "false");
 			break;
 
-		case 'v':
+		case 'b':
 			{
 				printf("save view to %s\n", view_file);
 				std::ofstream os(view_file);
 				cereal::XMLOutputArchive archive(os);
-				archive(viewRotation.x, viewRotation.y, viewRotation.z, viewTranslation.x, viewTranslation.y, viewTranslation.z);
+				archive(viewRotation.x, viewRotation.y, viewRotation.z, viewTranslation.x, viewTranslation.y, viewTranslation.z, loc.x, loc.y);
 			}
 			break;
 
-		case 'b':
+		case 'v':
 			{
 				std::ifstream is(view_file);
 				if (is.is_open())
 				{
 					printf("load view from %s\n", view_file);
 					cereal::XMLInputArchive archive(is);
-					archive(viewRotation.x, viewRotation.y, viewRotation.z, viewTranslation.x, viewTranslation.y, viewTranslation.z);
+					archive(viewRotation.x, viewRotation.y, viewRotation.z, viewTranslation.x, viewTranslation.y, viewTranslation.z, loc.x, loc.y);
 				}
 				else
 				{
