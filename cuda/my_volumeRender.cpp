@@ -61,6 +61,9 @@
 #include <AntTweakBar.h>
 #include "tinyxml2.h"
 #include "util.h"
+
+// include cereal for serialization
+#include "cereal/archives/xml.hpp"
 using namespace std;
 
 #if defined(_WIN32) || defined(_WIN64)
@@ -553,7 +556,7 @@ void keyboard(unsigned char key, int x, int y)
 			set_gaussian(true);
 			break;
 
-		case 'b':
+		case 't':
 			set_backup(true);
 			break;
 
@@ -573,6 +576,31 @@ void keyboard(unsigned char key, int x, int y)
 		case 'c':
 			*p2 = !(*p2);
 			printf("toggle alpha %s color %s \n", *p1 ? "true" : "false", *p2 ? "true" : "false");
+			break;
+
+		case 'v':
+			{
+				printf("save view to view.xml\n");
+				std::ofstream os("view.xml");
+				cereal::XMLOutputArchive archive(os);
+				archive(viewRotation.x, viewRotation.y, viewRotation.z, viewTranslation.x, viewTranslation.y, viewTranslation.z);
+			}
+			break;
+
+		case 'b':
+			{
+				std::ifstream is("view.xml");
+				if (is.is_open())
+				{
+					printf("load view from view.xml\n");
+					cereal::XMLInputArchive archive(is);
+					archive(viewRotation.x, viewRotation.y, viewRotation.z, viewTranslation.x, viewTranslation.y, viewTranslation.z);
+				}
+				else
+				{
+					printf("cannot open view.xml\n");
+				}
+			}
 			break;
 
 		default:

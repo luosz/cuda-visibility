@@ -18,6 +18,9 @@
     <CudaCompile Include="my_volumeRender_kernel.cu" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="cereal\access.hpp" />
+    <ClInclude Include="cereal\cereal.hpp" />
+    <ClInclude Include="cereal\macros.hpp" />
     <ClInclude Include="gaussian.h" />
     <ClInclude Include="tinyxml2.h" />
     <ClInclude Include="util.h" />

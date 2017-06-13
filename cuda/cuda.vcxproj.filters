@@ -13,6 +13,9 @@
     <Filter Include="tinyxml2">
       <UniqueIdentifier>{0260f884-a0cd-4671-8710-bb9f525efa50}</UniqueIdentifier>
     </Filter>
+    <Filter Include="cereal">
+      <UniqueIdentifier>{7e396c14-a1d7-48e4-86e3-22507a1a2360}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="tinyxml2.h">
@@ -20,5 +23,14 @@
     </ClInclude>
     <ClInclude Include="util.h" />
     <ClInclude Include="gaussian.h" />
+    <ClInclude Include="cereal\access.hpp">
+      <Filter>cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="cereal\cereal.hpp">
+      <Filter>cereal</Filter>
+    </ClInclude>
+    <ClInclude Include="cereal\macros.hpp">
+      <Filter>cereal</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
