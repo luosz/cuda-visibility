@@ -1056,6 +1056,14 @@ void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, u
 			fprintf(fp4, "%g\n", histogram4[i]);
 		}
 		fclose(fp4);
+
+		sprintf(buffer, "~%s.tf.txt", volume_file);
+		auto fp5 = fopen(buffer, "w");
+		for (int i = 0; i < BIN_COUNT; i++)
+		{
+			fprintf(fp5, "{%f,%f,%f,%f}\n", tf_array[i].x, tf_array[i].y, tf_array[i].z, tf_array[i].w);
+		}
+		fclose(fp5);
 	}
 
 	if (get_discard())
