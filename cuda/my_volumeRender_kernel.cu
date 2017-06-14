@@ -1028,7 +1028,7 @@ void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, u
 		auto fp1 = fopen(buffer, "w");
 		for (int i = 0; i < BIN_COUNT; i++)
 		{
-			fprintf(fp1, "%g\n", histogram[i]);
+			fprintf(fp1, "%f\n", histogram[i]);
 		}
 		fclose(fp1);
 
@@ -1037,7 +1037,7 @@ void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, u
 		auto fp2 = fopen(buffer, "w");
 		for (int i = 0; i < BIN_COUNT; i++)
 		{
-			fprintf(fp2, "%g\n", histogram2[i]);
+			fprintf(fp2, "%f\n", histogram2[i]);
 		}
 		fclose(fp2);
 
@@ -1045,7 +1045,7 @@ void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, u
 		auto fp3 = fopen(buffer, "w");
 		for (int i = 0; i < BIN_COUNT; i++)
 		{
-			fprintf(fp3, "%g\n", histogram3[i]);
+			fprintf(fp3, "%f\n", histogram3[i]);
 		}
 		fclose(fp3);
 
@@ -1053,7 +1053,7 @@ void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, u
 		auto fp4 = fopen(buffer, "w");
 		for (int i = 0; i < BIN_COUNT; i++)
 		{
-			fprintf(fp4, "%g\n", histogram4[i]);
+			fprintf(fp4, "%f\n", histogram4[i]);
 		}
 		fclose(fp4);
 
