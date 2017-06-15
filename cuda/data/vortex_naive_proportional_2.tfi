@@ -19,32 +19,32 @@
             <key type="TransFuncMappingKey">
                 <intensity value="0.30000001" />
                 <split value="false" />
-                <colorL r="145" g="78" b="221" a="0" />
+                <colorL r="145" g="78" b="221" a="64" />
             </key>
             <key type="TransFuncMappingKey">
                 <intensity value="0.40000001" />
                 <split value="false" />
-                <colorL r="255" g="0" b="0" a="0" />
+                <colorL r="255" g="0" b="0" a="64" />
             </key>
             <key type="TransFuncMappingKey">
                 <intensity value="0.44999999" />
                 <split value="false" />
-                <colorL r="255" g="0" b="0" a="128" />
+                <colorL r="255" g="0" b="0" a="160" />
             </key>
             <key type="TransFuncMappingKey">
                 <intensity value="0.5" />
                 <split value="false" />
-                <colorL r="255" g="0" b="0" a="0" />
+                <colorL r="255" g="0" b="0" a="64" />
             </key>
             <key type="TransFuncMappingKey">
                 <intensity value="0.60000002" />
                 <split value="false" />
-                <colorL r="4" g="255" b="0" a="0" />
+                <colorL r="4" g="255" b="0" a="64" />
             </key>
             <key type="TransFuncMappingKey">
                 <intensity value="0.80000001" />
                 <split value="false" />
-                <colorL r="73" g="255" b="1" a="128" />
+                <colorL r="73" g="255" b="1" a="192" />
             </key>
             <key type="TransFuncMappingKey">
                 <intensity value="1" />
