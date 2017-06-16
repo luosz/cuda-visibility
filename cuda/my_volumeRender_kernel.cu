@@ -366,7 +366,9 @@ extern "C" void gaussian_tf(float3 color)
 	{
 		for (int i = 0; i < BIN_COUNT; i++)
 		{
-			tf_array[i].w = lerp(tf_array[i].w, histogram4[i] > 0 ? 1 : 0, fabsf(histogram4[i]));
+			auto a = histogram4[i] > 0 ? 1 : 0;
+			auto t = fabsf(histogram4[i]);
+			tf_array[i].w = lerp(tf_array[i].w, a, t);
 		}
 	}
 
