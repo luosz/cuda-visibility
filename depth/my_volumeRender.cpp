@@ -455,8 +455,8 @@ void display()
     glBindTexture(GL_TEXTURE_2D, 0);
 #endif
 
-	//// Draw tweak bars
-	//TwDraw();
+	// Draw tweak bars
+	TwDraw();
 
     glutSwapBuffers();
     glutReportErrors();
@@ -1023,6 +1023,8 @@ main(int argc, char **argv)
 		// Create a tweak bar
 		auto bar = TwNewBar("Blend");
 		TwDefine("Blend size='140 84' position='0 8'");
+		TwDefine(" Blend iconified=true ");  // Blend is iconified
+		TwDefine(" TW_HELP visible=false ");  // help bar is hidden
 		TwAddVarRW(bar, "alpha", TW_TYPE_BOOL32, get_ApplyAlpha(), "");
 		TwAddVarRW(bar, "color", TW_TYPE_BOOL32, get_ApplyColor(), "");
 		TwAddVarRW(bar, "pick", TW_TYPE_COLOR3F, get_SelectedColor(), "");
