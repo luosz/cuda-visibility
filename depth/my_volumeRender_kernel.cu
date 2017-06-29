@@ -40,6 +40,7 @@ cudaArray *d_visibilityArray = 0;
 __device__ __managed__ char *volume_file = NULL;
 __device__ __managed__ float *visVolume = NULL;
 __device__ __managed__ int *countVolume = NULL;
+__device__ __managed__ float *depthVolume = NULL;
 __device__ __managed__ cudaExtent sizeOfVolume;// = make_cudaExtent(32, 32, 32);
 typedef float VisibilityType;
 texture<VisibilityType, 3, cudaReadModeElementType> visTex;         // 3D texture
@@ -873,6 +874,7 @@ void initCuda(void *h_volume, cudaExtent volumeSize)
 	//printf("volumeSize \t %d %d %d\n", volumeSize.width, volumeSize.height, volumeSize.depth);
 
 	//auto len = volumeSize.width * volumeSize.height * volumeSize.depth;
+	checkCudaErrors(cudaMallocManaged(&depthVolume, sizeof(float) * len));
 	checkCudaErrors(cudaMallocManaged(&visVolume, sizeof(float) * len));
 	checkCudaErrors(cudaMallocManaged(&countVolume, sizeof(int) * len));
 	//printf("%g\n", *(visVolume + 1));
@@ -952,6 +954,7 @@ void freeCudaBuffers()
     checkCudaErrors(cudaFreeArray(d_volumeArray));
 	checkCudaErrors(cudaFreeArray(d_transferFuncArray));
 	checkCudaErrors(cudaFreeArray(d_visibilityArray));
+	checkCudaErrors(cudaFree(depthVolume));
 	checkCudaErrors(cudaFree(visVolume));
 	checkCudaErrors(cudaFree(countVolume));
 }
@@ -966,6 +969,8 @@ void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, u
 	auto len = sizeOfVolume.width * sizeOfVolume.height * sizeOfVolume.depth;
 	//auto cube = malloc(sizeof(float) * len);
 	//memset(visVolume, 0, sizeof(VisibilityType) * len);
+	cudaMemset(countVolume, 0, sizeof(int) * len);
+	cudaMemset(depthVolume, 0, sizeof(float) * len);
 	cudaMemset(visVolume, 0, sizeof(VisibilityType) * len);
 	cudaMemset(histogram, 0, sizeof(float)*BIN_COUNT);
 	cudaMemset(histogram2, 0, sizeof(float)*BIN_COUNT);

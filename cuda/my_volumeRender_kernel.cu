@@ -966,6 +966,7 @@ void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, u
 	auto len = sizeOfVolume.width * sizeOfVolume.height * sizeOfVolume.depth;
 	//auto cube = malloc(sizeof(float) * len);
 	//memset(visVolume, 0, sizeof(VisibilityType) * len);
+	cudaMemset(countVolume, 0, sizeof(int) * len);
 	cudaMemset(visVolume, 0, sizeof(VisibilityType) * len);
 	cudaMemset(histogram, 0, sizeof(float)*BIN_COUNT);
 	cudaMemset(histogram2, 0, sizeof(float)*BIN_COUNT);
