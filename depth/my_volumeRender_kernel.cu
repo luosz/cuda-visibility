@@ -446,7 +446,7 @@ __device__ uint rgbaFloatToInt(float4 rgba)
     return (uint(rgba.w*255)<<24) | (uint(rgba.z*255)<<16) | (uint(rgba.y*255)<<8) | uint(rgba.x*255);
 }
 
-__device__ void addVisibility(float value, float3 pos)
+__device__ void addVisibility(float value, float3 pos, float depth)
 {
 	int w = sizeOfVolume.width, h = sizeOfVolume.height, d = sizeOfVolume.depth;
 	//w = h = d = 32;
@@ -462,6 +462,7 @@ __device__ void addVisibility(float value, float3 pos)
 	
 	atomicAdd((countVolume + index), 1);
 	atomicAdd((visVolume + index), value);
+	atomicAdd((depthVolume + index), depth);
 	//printf("atomicAdd %d \t %g \n", countVolume[index], visVolume[index]);
 
 	float sample = tex3D(volTex, pos.x*0.5f + 0.5f, pos.y*0.5f + 0.5f, pos.z*0.5f + 0.5f);
@@ -654,7 +655,7 @@ d_visibility(uint *d_output, uint imageW, uint imageH,
 		float sumw = sum.w;
 		sum = sum + col*(1.0f - sum.w);
 
-		addVisibility(sum.w - sumw, pos);
+		addVisibility(sum.w - sumw, pos, t);
 
 		// exit early if opaque
 		if (sum.w > opacityThreshold)
@@ -735,7 +736,7 @@ d_visibilityLocal(uint *d_output, uint imageW, uint imageH,
 		float sumw = sum.w;
 		sum = sum + col*(1.0f - sum.w);
 
-		addVisibility(sum.w - sumw, pos);
+		addVisibility(sum.w - sumw, pos, t);
 		
 		// calculate visibility for selected region
 		if (fabsf(x - loc.x) <= radius && fabsf(y - loc.y) <= radius)
