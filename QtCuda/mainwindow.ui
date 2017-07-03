@@ -81,9 +81,6 @@
           <property name="text">
            <string>Pick color</string>
           </property>
-          <property name="flat">
-           <bool>false</bool>
-          </property>
          </widget>
         </item>
        </layout>
