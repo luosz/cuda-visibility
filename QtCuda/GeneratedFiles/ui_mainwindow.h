@@ -102,7 +102,6 @@ public:
         sizePolicy1.setHeightForWidth(pushButton->sizePolicy().hasHeightForWidth());
         pushButton->setSizePolicy(sizePolicy1);
         pushButton->setAutoFillBackground(true);
-        pushButton->setFlat(false);
 
         gridLayout->addWidget(pushButton, 1, 0, 1, 1);
 
