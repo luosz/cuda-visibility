@@ -6,11 +6,12 @@ MainWindow::MainWindow(QWidget *parent)
 	this->setGeometry(
 		QStyle::alignedRect(
 			Qt::LeftToRight,
-			Qt::AlignRight | Qt::AlignVCenter,
+			Qt::AlignRight|Qt::AlignVCenter,
 			this->size(),
 			qApp->desktop()->availableGeometry()
 		)
 	);
+	this->move(this->pos() - QPoint(178, 178));
 	ui.setupUi(this);
 	update_color(QColor::fromRgbF(D_RGBA[0], D_RGBA[1], D_RGBA[2], D_RGBA[3]));
 }

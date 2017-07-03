@@ -40,9 +40,12 @@ public:
 		auto c2 = QColor(255 - color.red(), 255 - color.green(), 255 - color.blue());
 		QPalette sample_palette;
 		sample_palette.setColor(QPalette::Window, color);
+		sample_palette.setColor(QPalette::Button, color);
 		sample_palette.setColor(QPalette::WindowText, c2);
+		//sample_palette.setColor(QPalette::ButtonText, c2);
 		ui.label->setPalette(sample_palette);
 		ui.label->setText(color.name());
+		ui.pushButton->setPalette(sample_palette);
 	}
 
 	void set_color_pointer(Pointer p, bool *alpha, bool *color)

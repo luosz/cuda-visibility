@@ -358,7 +358,8 @@ void computeFPS()
     {
         char fps[256];
         float ifps = 1.f / (sdkGetAverageTimerValue(&timer) / 1000.f);
-        sprintf(fps, "Volume Render: %3.1f fps", ifps);
+		//sprintf(fps, "Volume Render: %3.1f fps", ifps);
+        sprintf(fps, "CUDA volume rendering: %3.1f fps", ifps);
 
         glutSetWindowTitle(fps);
         fpsCount = 0;

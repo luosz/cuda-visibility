@@ -45,6 +45,7 @@ public:
     QGridLayout *gridLayout_2;
     QCheckBox *checkBox;
     QCheckBox *checkBox_2;
+    QPushButton *pushButton_2;
     QMenuBar *menuBar;
     QMenu *menu_File;
     QToolBar *mainToolBar;
@@ -101,6 +102,7 @@ public:
         sizePolicy1.setHeightForWidth(pushButton->sizePolicy().hasHeightForWidth());
         pushButton->setSizePolicy(sizePolicy1);
         pushButton->setAutoFillBackground(true);
+        pushButton->setFlat(false);
 
         gridLayout->addWidget(pushButton, 1, 0, 1, 1);
 
@@ -129,6 +131,9 @@ public:
 
         gridLayout_2->addWidget(checkBox_2, 1, 0, 1, 1);
 
+        pushButton_2 = new QPushButton(frame);
+        pushButton_2->setObjectName(QStringLiteral("pushButton_2"));
+        pushButton_2->setGeometry(QRect(250, 70, 80, 16));
 
         formLayout->setWidget(0, QFormLayout::LabelRole, frame);
 
@@ -164,6 +169,7 @@ public:
         pushButton->setText(QApplication::translate("MainWindowClass", "Pick color", Q_NULLPTR));
         checkBox->setText(QApplication::translate("MainWindowClass", "Apply Alpha", Q_NULLPTR));
         checkBox_2->setText(QApplication::translate("MainWindowClass", "Apply color", Q_NULLPTR));
+        pushButton_2->setText(QApplication::translate("MainWindowClass", "PushButton", Q_NULLPTR));
         menu_File->setTitle(QApplication::translate("MainWindowClass", "&File", Q_NULLPTR));
     } // retranslateUi
 
