@@ -17,8 +17,9 @@
 #include <helper_cuda.h>
 #include <helper_math.h>
 
-#include <iostream>
 #include "gaussian.h"
+#include "def.h"
+#include <iostream>
 using namespace std;
 
 typedef unsigned int  uint;
@@ -55,12 +56,13 @@ __device__ __managed__ float histogram3[BIN_COUNT] = { 0 };
 __device__ __managed__ float histogram4[BIN_COUNT] = { 0 };
 __device__ __managed__ float4 tf_array[BIN_COUNT] = { 0 };
 __device__ __managed__ float4 tf_array0[BIN_COUNT] = { 0 };
-__device__ __managed__ int radius = 12;
+__device__ __managed__ int radius = 16;
 
 // GUI settings
-float g_SelectedColor[] = { 1.f,1.f,0.f,1.f };
-bool g_ApplyColor = true;
-bool g_ApplyAlpha = true;
+//float g_SelectedColor[] = { 1.f,1.f,0.f,1.f };
+float g_SelectedColor[] = { D_RGBA[0], D_RGBA[1], D_RGBA[2], D_RGBA[3] };
+bool g_ApplyAlpha = D_APPLY_ALPHA;
+bool g_ApplyColor = D_APPLY_COLOR;
 
 // apply, save and discard operations
 bool apply_blend = false;

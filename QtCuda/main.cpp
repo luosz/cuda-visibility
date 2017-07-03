@@ -60,9 +60,10 @@
 #include <stdio.h>
 #include <math.h>
 #include <helper_math.h>
-#include <AntTweakBar.h>
+//#include <AntTweakBar.h>
 #include "tinyxml2.h"
 #include "util.h"
+#include "def.h"
 
 // include cereal for serialization
 #include "cereal/archives/xml.hpp"
@@ -462,8 +463,8 @@ void display()
     glBindTexture(GL_TEXTURE_2D, 0);
 #endif
 
-	// Draw tweak bars
-	TwDraw();
+	//// Draw tweak bars
+	//TwDraw();
 
     glutSwapBuffers();
     glutReportErrors();
@@ -485,10 +486,10 @@ inline void print_info()
 
 void keyboard(unsigned char key, int x, int y)
 {
-	if (TwEventKeyboardGLUT(key, x, y))
-	{
-		return;
-	}
+	//if (TwEventKeyboardGLUT(key, x, y))
+	//{
+	//	return;
+	//}
 	printf("keyboard %d %d key %d \n", x, y, (int)key);
 	auto c = get_SelectedColor();
 	bool *p1 = get_ApplyAlpha(), *p2 = get_ApplyColor();
@@ -629,10 +630,10 @@ int buttonState = 0;
 
 void mouse(int button, int state, int x, int y)
 {
-	if (TwEventMouseButtonGLUT(button, state, x, y))
-	{
-		return;
-	}
+	//if (TwEventMouseButtonGLUT(button, state, x, y))
+	//{
+	//	return;
+	//}
 	//if (1==state)
 	//{
 	//	printf("mouse %d %d button %d state %d \n", x, y, button, state);
@@ -658,10 +659,10 @@ void mouse(int button, int state, int x, int y)
 
 void motion(int x, int y)
 {
-	if (TwEventMouseMotionGLUT(x, y))
-	{
-		return;
-	}
+	//if (TwEventMouseMotionGLUT(x, y))
+	//{
+	//	return;
+	//}
 	//printf("motion %d %d \n", x, y);
     float dx, dy;
     dx = (float)(x - ox);
@@ -714,13 +715,13 @@ void reshape(int w, int h)
     glLoadIdentity();
     glOrtho(0.0, 1.0, 0.0, 1.0, 0.0, 1.0);
 
-	// Send the new window size to AntTweakBar
-	TwWindowSize(width, height);
+	//// Send the new window size to AntTweakBar
+	//TwWindowSize(width, height);
 }
 
 void cleanup()
 {
-	TwTerminate();
+	//TwTerminate();
 
     sdkDeleteTimer(&timer);
 
@@ -1014,9 +1015,9 @@ gl_main(int argc, char **argv)
         glutMotionFunc(motion);
         glutReshapeFunc(reshape);
         glutIdleFunc(idle);
-		glutPassiveMotionFunc((GLUTmousemotionfun)TwEventMouseMotionGLUT);
-		glutSpecialFunc((GLUTspecialfun)TwEventSpecialGLUT);
-		TwGLUTModifiersFunc(glutGetModifiers);
+		//glutPassiveMotionFunc((GLUTmousemotionfun)TwEventMouseMotionGLUT);
+		//glutSpecialFunc((GLUTspecialfun)TwEventSpecialGLUT);
+		//TwGLUTModifiersFunc(glutGetModifiers);
 
         initPixelBuffer();
 
@@ -1026,16 +1027,16 @@ gl_main(int argc, char **argv)
         glutCloseFunc(cleanup);
 #endif
 
-		// Initialize AntTweakBar
-		TwInit(TW_OPENGL, NULL);
-		// Create a tweak bar
-		auto bar = TwNewBar("Blend");
-		TwDefine("Blend size='140 84' position='0 8'");
-		TwDefine(" Blend iconified=true ");  // Blend is iconified
-		TwDefine(" TW_HELP visible=false ");  // help bar is hidden
-		TwAddVarRW(bar, "alpha", TW_TYPE_BOOL32, get_ApplyAlpha(), "");
-		TwAddVarRW(bar, "color", TW_TYPE_BOOL32, get_ApplyColor(), "");
-		TwAddVarRW(bar, "pick", TW_TYPE_COLOR3F, get_SelectedColor(), "");
+		//// Initialize AntTweakBar
+		//TwInit(TW_OPENGL, NULL);
+		//// Create a tweak bar
+		//auto bar = TwNewBar("Blend");
+		//TwDefine("Blend size='140 84' position='0 8'");
+		//TwDefine(" Blend iconified=true ");  // Blend is iconified
+		//TwDefine(" TW_HELP visible=false ");  // help bar is hidden
+		//TwAddVarRW(bar, "alpha", TW_TYPE_BOOL32, get_ApplyAlpha(), "");
+		//TwAddVarRW(bar, "color", TW_TYPE_BOOL32, get_ApplyColor(), "");
+		//TwAddVarRW(bar, "pick", TW_TYPE_COLOR3F, get_SelectedColor(), "");
 
         glutMainLoop();
     }
@@ -1046,6 +1047,8 @@ int main(int argc, char *argv[])
 	QApplication a(argc, argv);
 	MainWindow w;
 	w.show();
+
+	w.set_color_pointer(get_SelectedColor(), get_ApplyAlpha(), get_ApplyColor());
 
 	gl_main(argc, argv);
 

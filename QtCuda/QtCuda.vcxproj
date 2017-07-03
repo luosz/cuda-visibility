@@ -127,6 +127,7 @@
     <ClInclude Include="cereal\access.hpp" />
     <ClInclude Include="cereal\cereal.hpp" />
     <ClInclude Include="cereal\macros.hpp" />
+    <ClInclude Include="def.h" />
     <ClInclude Include="gaussian.h" />
     <ClInclude Include="GeneratedFiles\ui_mainwindow.h" />
     <ClInclude Include="tinyxml2.h" />
