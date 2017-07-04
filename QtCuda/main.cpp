@@ -135,7 +135,7 @@ int2 loc = {0, 0};
 bool dragMode = false; // mouse tracking mode
 
 //uint width = 512, height = 512;
-uint width = 1024, height = 1024;
+uint width = D_WIDTH, height = D_HEIGHT;
 dim3 blockSize(16, 16);
 dim3 gridSize;
 

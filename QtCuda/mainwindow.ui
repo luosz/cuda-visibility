@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>600</width>
-    <height>800</height>
+    <height>1000</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -43,30 +43,11 @@
         <rect>
          <x>10</x>
          <y>10</y>
-         <width>191</width>
-         <height>91</height>
+         <width>101</width>
+         <height>61</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout">
-        <item row="0" column="0">
-         <widget class="QLabel" name="label">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="autoFillBackground">
-           <bool>true</bool>
-          </property>
-          <property name="text">
-           <string>Current color</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
         <item row="1" column="0">
          <widget class="QPushButton" name="pushButton">
           <property name="sizePolicy">
@@ -83,15 +64,31 @@
           </property>
          </widget>
         </item>
+        <item row="0" column="0">
+         <widget class="QLineEdit" name="lineEdit">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="autoFillBackground">
+           <bool>true</bool>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
        </layout>
       </widget>
       <widget class="QWidget" name="gridLayoutWidget_2">
        <property name="geometry">
         <rect>
-         <x>10</x>
-         <y>110</y>
-         <width>160</width>
-         <height>80</height>
+         <x>120</x>
+         <y>10</y>
+         <width>121</width>
+         <height>61</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout_2">
@@ -104,7 +101,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>Apply Alpha</string>
+           <string>Adjust alpha</string>
           </property>
           <property name="checked">
            <bool>true</bool>
@@ -114,7 +111,7 @@
         <item row="1" column="0">
          <widget class="QCheckBox" name="checkBox_2">
           <property name="text">
-           <string>Apply color</string>
+           <string>Adjust color</string>
           </property>
           <property name="checked">
            <bool>true</bool>
@@ -123,11 +120,22 @@
         </item>
        </layout>
       </widget>
+      <widget class="QWidget" name="gridLayoutWidget_3">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>80</y>
+         <width>160</width>
+         <height>80</height>
+        </rect>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_3"/>
+      </widget>
       <widget class="QPushButton" name="pushButton_2">
        <property name="geometry">
         <rect>
-         <x>250</x>
-         <y>70</y>
+         <x>180</x>
+         <y>80</y>
          <width>80</width>
          <height>16</height>
         </rect>
