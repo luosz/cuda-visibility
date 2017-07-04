@@ -49,14 +49,14 @@ texture<VisibilityType, 3, cudaReadModeElementType> visTex;         // 3D textur
 texture<VolumeType, 3, cudaReadModeElementType> volTex;         // 3D texture
 //texture<VisibilityType, 3, cudaReadModeNormalizedFloat> visTex;         // 3D texture
 
-const int BIN_COUNT = 256;
+const int BIN_COUNT = D_BIN_COUNT;
 __device__ __managed__ float histogram[BIN_COUNT] = {0};
 __device__ __managed__ float histogram2[BIN_COUNT] = { 0 };
 __device__ __managed__ float histogram3[BIN_COUNT] = { 0 };
 __device__ __managed__ float histogram4[BIN_COUNT] = { 0 };
 __device__ __managed__ float4 tf_array[BIN_COUNT] = { 0 };
 __device__ __managed__ float4 tf_array0[BIN_COUNT] = { 0 };
-__device__ __managed__ int radius = 16;
+__device__ __managed__ int radius = D_RADIUS;
 
 // GUI settings
 //float g_SelectedColor[] = { 1.f,1.f,0.f,1.f };

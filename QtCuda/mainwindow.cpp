@@ -45,42 +45,48 @@ void MainWindow::on_checkBox_2_clicked()
 
 void MainWindow::on_pushButton_2_clicked()
 {
-	QBarSet *set0 = new QBarSet("Jane");
-	QBarSet *set1 = new QBarSet("John");
-	QBarSet *set2 = new QBarSet("Axel");
-	QBarSet *set3 = new QBarSet("Mary");
-	QBarSet *set4 = new QBarSet("Samantha");
+	auto p = get_tf_array();
+	for (int i = 0; i < D_BIN_COUNT; i++)
+	{
+		//std::cout << p[i].x << " " << p[i].y << " " << p[i].z << " " << p[i].w << std::endl;
+		//series->append(i, (qreal)p[i].w);
+	}
 
-	*set0 << 1 << 2 << 3 << 4 << 5 << 6;
-	*set1 << 5 << 0 << 0 << 4 << 0 << 7;
-	*set2 << 3 << 5 << 8 << 13 << 8 << 5;
-	*set3 << 5 << 6 << 7 << 3 << 4 << 5;
-	*set4 << 9 << 7 << 5 << 3 << 1 << 2;
+	QLineSeries *series0 = new QLineSeries();
+	QLineSeries *series1 = new QLineSeries();
 
-	QBarSeries *series = new QBarSeries();
-	series->append(set0);
-	series->append(set1);
-	series->append(set2);
-	series->append(set3);
-	series->append(set4);
+	*series0 << QPointF(1, 5) << QPointF(3, 7) << QPointF(7, 6) << QPointF(9, 7) << QPointF(12, 6)
+		<< QPointF(16, 7) << QPointF(18, 5);
+	*series1 << QPointF(1, 3) << QPointF(3, 4) << QPointF(7, 3) << QPointF(8, 2) << QPointF(12, 3)
+		<< QPointF(16, 4) << QPointF(18, 3);
+
+	QAreaSeries *series = new QAreaSeries(series0, series1);
+	series->setName("Batman");
+	QPen pen(0x059605);
+	pen.setWidth(3);
+	series->setPen(pen);
+
+	QLinearGradient gradient(QPointF(0, 0), QPointF(0, 1));
+	gradient.setColorAt(0.0, 0x3cc63c);
+	gradient.setColorAt(0.5, 0x0000ff);
+	gradient.setColorAt(1.0, 0x26f626);
+	gradient.setCoordinateMode(QGradient::ObjectBoundingMode);
+	series->setBrush(gradient);
 
 	QChart *chart = new QChart();
 	chart->addSeries(series);
-	chart->setTitle("Simple barchart example");
-	chart->setAnimationOptions(QChart::SeriesAnimations);
-
-	QStringList categories;
-	categories << "Jan" << "Feb" << "Mar" << "Apr" << "May" << "Jun";
-	QBarCategoryAxis *axis = new QBarCategoryAxis();
-	axis->append(categories);
+	chart->setTitle("Simple areachart example");
 	chart->createDefaultAxes();
-	chart->setAxisX(axis, series);
+	chart->axisX()->setRange(0, 20);
+	chart->axisY()->setRange(0, 10);
 
-	chart->legend()->setVisible(true);
-	chart->legend()->setAlignment(Qt::AlignBottom);
-
-	QChartView *chartView = new QChartView(chart);
-	chartView->setRenderHint(QPainter::Antialiasing);
-
-	ui.gridLayout_3->addWidget(chartView);
+	if (!chartView)
+	{
+		chartView = new QChartView(chart);
+		chartView->setRenderHint(QPainter::Antialiasing);
+		ui.gridLayout->addWidget(chartView);
+	}else
+	{
+		chartView->setChart(chart);
+	}
 }

@@ -358,8 +358,8 @@ void computeFPS()
     {
         char fps[256];
         float ifps = 1.f / (sdkGetAverageTimerValue(&timer) / 1000.f);
-		//sprintf(fps, "Volume Render: %3.1f fps", ifps);
-        sprintf(fps, "CUDA volume rendering: %3.1f fps", ifps);
+		sprintf(fps, "Volume Render: %3.1f fps", ifps);
+        //sprintf(fps, "CUDA volume rendering: %3.1f fps", ifps);
 
         glutSetWindowTitle(fps);
         fpsCount = 0;
@@ -1049,7 +1049,7 @@ int main(int argc, char *argv[])
 	MainWindow w;
 	w.show();
 
-	w.set_color_pointer(get_SelectedColor(), get_ApplyAlpha(), get_ApplyColor());
+	w.set_pointers(get_SelectedColor(), get_ApplyAlpha(), get_ApplyColor());
 
 	gl_main(argc, argv);
 

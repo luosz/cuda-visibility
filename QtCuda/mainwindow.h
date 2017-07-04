@@ -2,6 +2,7 @@
 
 #include <string>
 #include <iostream>
+#include <vector_types.h>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QCheckBox>
@@ -12,13 +13,12 @@
 #include "def.h"
 
 #include <QtCharts/QChartView>
-#include <QtCharts/QBarSeries>
-#include <QtCharts/QBarSet>
-#include <QtCharts/QLegend>
-#include <QtCharts/QBarCategoryAxis>
-using namespace QtCharts;
+#include <QtCharts/QLineSeries>
+#include <QtCharts/QAreaSeries>
+QT_CHARTS_USE_NAMESPACE
 
 typedef float(*Pointer)[4];
+extern "C" float4* get_tf_array();
 
 class MainWindow : public QMainWindow
 {
@@ -53,11 +53,13 @@ public:
 		ui.lineEdit->setText(color.name());
 	}
 
-	void set_color_pointer(Pointer p, bool *alpha, bool *color)
+	//void set_pointers(Pointer picked_color, bool *alpha, bool *color, float4 *tf_)
+	void set_pointers(Pointer picked_color, bool *alpha, bool *color)
 	{
-		color_array = p;
+		color_array = picked_color;
 		apply_alpha = alpha;
 		apply_color = color;
+		//tf = tf_;
 	}
 
 private slots:
@@ -75,4 +77,5 @@ private:
 	Pointer color_array = NULL;
 	bool *apply_alpha = NULL;
 	bool *apply_color = NULL;
+	QChartView * chartView = NULL;
 };
