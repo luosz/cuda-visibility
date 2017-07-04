@@ -11,8 +11,11 @@
 #include "ui_mainwindow.h"
 #include "def.h"
 
-#include <QChartView>
-#include <QtCharts>
+#include <QtCharts/QChartView>
+#include <QtCharts/QBarSeries>
+#include <QtCharts/QBarSet>
+#include <QtCharts/QLegend>
+#include <QtCharts/QBarCategoryAxis>
 using namespace QtCharts;
 
 typedef float(*Pointer)[4];
