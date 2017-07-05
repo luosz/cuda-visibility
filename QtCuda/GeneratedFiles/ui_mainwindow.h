@@ -16,6 +16,7 @@
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QFormLayout>
 #include <QtWidgets/QFrame>
+#include <QtWidgets/QGraphicsView>
 #include <QtWidgets/QGridLayout>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLineEdit>
@@ -40,10 +41,11 @@ public:
     QGridLayout *gridLayout;
     QFormLayout *formLayout;
     QLineEdit *lineEdit;
-    QCheckBox *checkBox;
     QPushButton *pushButton;
+    QCheckBox *checkBox;
     QCheckBox *checkBox_2;
     QPushButton *pushButton_2;
+    QGraphicsView *graphicsView;
     QMenuBar *menuBar;
     QMenu *menu_File;
     QToolBar *mainToolBar;
@@ -72,7 +74,7 @@ public:
         sizePolicy.setHeightForWidth(frame->sizePolicy().hasHeightForWidth());
         frame->setSizePolicy(sizePolicy);
         frame->setMinimumSize(QSize(512, 512));
-        frame->setFrameShape(QFrame::Box);
+        frame->setFrameShape(QFrame::Panel);
         frame->setFrameShadow(QFrame::Raised);
         frame->setMidLineWidth(0);
         gridLayout = new QGridLayout(frame);
@@ -82,6 +84,7 @@ public:
         formLayout = new QFormLayout();
         formLayout->setSpacing(6);
         formLayout->setObjectName(QStringLiteral("formLayout"));
+        formLayout->setContentsMargins(6, 6, 6, 6);
         lineEdit = new QLineEdit(frame);
         lineEdit->setObjectName(QStringLiteral("lineEdit"));
         QSizePolicy sizePolicy1(QSizePolicy::Expanding, QSizePolicy::Preferred);
@@ -94,6 +97,14 @@ public:
 
         formLayout->setWidget(0, QFormLayout::LabelRole, lineEdit);
 
+        pushButton = new QPushButton(frame);
+        pushButton->setObjectName(QStringLiteral("pushButton"));
+        sizePolicy.setHeightForWidth(pushButton->sizePolicy().hasHeightForWidth());
+        pushButton->setSizePolicy(sizePolicy);
+        pushButton->setAutoFillBackground(true);
+
+        formLayout->setWidget(1, QFormLayout::LabelRole, pushButton);
+
         checkBox = new QCheckBox(frame);
         checkBox->setObjectName(QStringLiteral("checkBox"));
         QSizePolicy sizePolicy2(QSizePolicy::Minimum, QSizePolicy::Fixed);
@@ -104,14 +115,6 @@ public:
         checkBox->setChecked(true);
 
         formLayout->setWidget(0, QFormLayout::FieldRole, checkBox);
-
-        pushButton = new QPushButton(frame);
-        pushButton->setObjectName(QStringLiteral("pushButton"));
-        sizePolicy.setHeightForWidth(pushButton->sizePolicy().hasHeightForWidth());
-        pushButton->setSizePolicy(sizePolicy);
-        pushButton->setAutoFillBackground(true);
-
-        formLayout->setWidget(1, QFormLayout::LabelRole, pushButton);
 
         checkBox_2 = new QCheckBox(frame);
         checkBox_2->setObjectName(QStringLiteral("checkBox_2"));
@@ -126,6 +129,11 @@ public:
 
 
         gridLayout->addLayout(formLayout, 0, 0, 1, 1);
+
+        graphicsView = new QGraphicsView(frame);
+        graphicsView->setObjectName(QStringLiteral("graphicsView"));
+
+        gridLayout->addWidget(graphicsView, 5, 0, 1, 1);
 
 
         gridLayout_2->addWidget(frame, 0, 0, 1, 1);
@@ -158,10 +166,10 @@ public:
         MainWindowClass->setWindowTitle(QApplication::translate("MainWindowClass", "Options", Q_NULLPTR));
         action_Open->setText(QApplication::translate("MainWindowClass", "&Open", Q_NULLPTR));
         action_Exit->setText(QApplication::translate("MainWindowClass", "&Exit", Q_NULLPTR));
-        checkBox->setText(QApplication::translate("MainWindowClass", "Adjust alpha", Q_NULLPTR));
         pushButton->setText(QApplication::translate("MainWindowClass", "Pick color", Q_NULLPTR));
+        checkBox->setText(QApplication::translate("MainWindowClass", "Adjust alpha", Q_NULLPTR));
         checkBox_2->setText(QApplication::translate("MainWindowClass", "Adjust color", Q_NULLPTR));
-        pushButton_2->setText(QApplication::translate("MainWindowClass", "QChart", Q_NULLPTR));
+        pushButton_2->setText(QApplication::translate("MainWindowClass", "Transfer function", Q_NULLPTR));
         menu_File->setTitle(QApplication::translate("MainWindowClass", "&File", Q_NULLPTR));
     } // retranslateUi
 

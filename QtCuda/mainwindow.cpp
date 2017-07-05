@@ -14,6 +14,8 @@ MainWindow::MainWindow(QWidget *parent)
 	this->move(this->pos() - QPoint(179, 260));
 	ui.setupUi(this);
 	update_color(QColor::fromRgbF(D_RGBA[0], D_RGBA[1], D_RGBA[2], D_RGBA[3]));
+	ui.graphicsView->setScene(&scene);
+	ui.gridLayout->addWidget(&chartView);
 }
 
 void MainWindow::on_pushButton_clicked()
@@ -45,48 +47,27 @@ void MainWindow::on_checkBox_2_clicked()
 
 void MainWindow::on_pushButton_2_clicked()
 {
+	QLineSeries *series = new QLineSeries();
+
+	scene.clear();
 	auto p = get_tf_array();
+	const qreal N = D_BIN_COUNT - 1;
 	for (int i = 0; i < D_BIN_COUNT; i++)
 	{
-		//std::cout << p[i].x << " " << p[i].y << " " << p[i].z << " " << p[i].w << std::endl;
-		//series->append(i, (qreal)p[i].w);
+		if (p[i].w>1.f/D_BIN_COUNT)
+		{
+			scene.addLine(i, N, i, N-(qreal)p[i].w*N, QPen(QColor::fromRgbF((qreal)p[i].x, (qreal)p[i].y, (qreal)p[i].z)));
+		}
+		series->append(i/N, (qreal)p[i].w);
 	}
-
-	QLineSeries *series0 = new QLineSeries();
-	QLineSeries *series1 = new QLineSeries();
-
-	*series0 << QPointF(1, 5) << QPointF(3, 7) << QPointF(7, 6) << QPointF(9, 7) << QPointF(12, 6)
-		<< QPointF(16, 7) << QPointF(18, 5);
-	*series1 << QPointF(1, 3) << QPointF(3, 4) << QPointF(7, 3) << QPointF(8, 2) << QPointF(12, 3)
-		<< QPointF(16, 4) << QPointF(18, 3);
-
-	QAreaSeries *series = new QAreaSeries(series0, series1);
-	series->setName("Batman");
-	QPen pen(0x059605);
-	pen.setWidth(3);
-	series->setPen(pen);
-
-	QLinearGradient gradient(QPointF(0, 0), QPointF(0, 1));
-	gradient.setColorAt(0.0, 0x3cc63c);
-	gradient.setColorAt(0.5, 0x0000ff);
-	gradient.setColorAt(1.0, 0x26f626);
-	gradient.setCoordinateMode(QGradient::ObjectBoundingMode);
-	series->setBrush(gradient);
+	ui.graphicsView->fitInView(0, 0, 255, 255, Qt::KeepAspectRatio);
 
 	QChart *chart = new QChart();
+	chart->legend()->hide();
 	chart->addSeries(series);
-	chart->setTitle("Simple areachart example");
 	chart->createDefaultAxes();
-	chart->axisX()->setRange(0, 20);
-	chart->axisY()->setRange(0, 10);
+	chart->setTitle("Transfer function");
 
-	if (!chartView)
-	{
-		chartView = new QChartView(chart);
-		chartView->setRenderHint(QPainter::Antialiasing);
-		ui.gridLayout->addWidget(chartView);
-	}else
-	{
-		chartView->setChart(chart);
-	}
+	chartView.setChart(chart);
+	chartView.setRenderHint(QPainter::Antialiasing);
 }

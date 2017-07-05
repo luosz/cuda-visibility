@@ -9,6 +9,8 @@
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QColorDialog>
+#include <QMessageBox>
+#include <QTextStream>
 #include "ui_mainwindow.h"
 #include "def.h"
 
@@ -41,25 +43,20 @@ public:
 		color = c;
 		auto c2 = QColor(255 - color.red(), 255 - color.green(), 255 - color.blue());
 		QPalette sample_palette;
-		//sample_palette.setColor(QPalette::Window, color);
 		sample_palette.setColor(QPalette::Button, color);
 		sample_palette.setColor(QPalette::Base, color);
-		//sample_palette.setColor(QPalette::WindowText, c2);
+		//sample_palette.setColor(QPalette::ButtonText, c2);
 		sample_palette.setColor(QPalette::Text, c2);
-		//ui.label->setPalette(sample_palette);
-		//ui.label->setText(color.name());
 		ui.pushButton->setPalette(sample_palette);
 		ui.lineEdit->setPalette(sample_palette);
 		ui.lineEdit->setText(color.name());
 	}
 
-	//void set_pointers(Pointer picked_color, bool *alpha, bool *color, float4 *tf_)
 	void set_pointers(Pointer picked_color, bool *alpha, bool *color)
 	{
 		color_array = picked_color;
 		apply_alpha = alpha;
 		apply_color = color;
-		//tf = tf_;
 	}
 
 private slots:
@@ -77,5 +74,6 @@ private:
 	Pointer color_array = NULL;
 	bool *apply_alpha = NULL;
 	bool *apply_color = NULL;
-	QChartView * chartView = NULL;
+	QGraphicsScene scene;
+	QChartView chartView;
 };
