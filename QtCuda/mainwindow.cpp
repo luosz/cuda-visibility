@@ -47,24 +47,47 @@ void MainWindow::on_checkBox_2_clicked()
 
 void MainWindow::on_pushButton_2_clicked()
 {
-	QLineSeries *series = new QLineSeries();
-
+	const qreal N = D_BIN_COUNT - 1;
+	QVector<QScatterSeries*> points;
+	QVector<QLineSeries*> lines;
 	scene.clear();
 	auto p = get_tf_array();
-	const qreal N = D_BIN_COUNT - 1;
 	for (int i = 0; i < D_BIN_COUNT; i++)
 	{
-		if (p[i].w>1.f/D_BIN_COUNT)
+		auto c = QColor::fromRgbF((qreal)p[i].x, (qreal)p[i].y, (qreal)p[i].z);
+		if (p[i].w>0.5f/D_BIN_COUNT)
 		{
-			scene.addLine(i, N, i, N-(qreal)p[i].w*N, QPen(QColor::fromRgbF((qreal)p[i].x, (qreal)p[i].y, (qreal)p[i].z)));
+			scene.addLine(i, N, i, N-(qreal)p[i].w*N, QPen(c));
 		}
-		series->append(i/N, (qreal)p[i].w);
+
+		if (i < N)
+		{
+			auto s2 = new QLineSeries();
+			s2->append(i / N, (qreal)p[i].w);
+			s2->append((i + 1) / N, (qreal)p[i + 1].w);
+			s2->setColor(c);
+			lines.append(s2);
+		}else
+		{
+			auto series = new QScatterSeries();
+			series->append(i / N, (qreal)p[i].w);
+			series->setColor(c);
+			series->setMarkerSize(4);
+			points.append(series);
+		}
 	}
 	ui.graphicsView->fitInView(0, 0, 255, 255, Qt::KeepAspectRatio);
 
 	QChart *chart = new QChart();
 	chart->legend()->hide();
-	chart->addSeries(series);
+	for (int i = 0; i < lines.size(); i++)
+	{
+		chart->addSeries(lines[i]);
+	}
+	for (int i = 0; i < points.size(); i++)
+	{
+		chart->addSeries(points[i]);
+	}
 	chart->createDefaultAxes();
 	chart->setTitle("Transfer function");
 

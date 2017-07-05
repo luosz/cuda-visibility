@@ -17,6 +17,7 @@
 #include <QtCharts/QChartView>
 #include <QtCharts/QLineSeries>
 #include <QtCharts/QAreaSeries>
+#include <QtCharts/QScatterSeries>
 QT_CHARTS_USE_NAMESPACE
 
 typedef float(*Pointer)[4];
