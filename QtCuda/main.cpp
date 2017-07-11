@@ -640,9 +640,11 @@ void mouse(int button, int state, int x, int y)
 	//	printf("mouse %d %d button %d state %d \n", x, y, button, state);
 	//}
 
-	auto n = get_region_size();
-	loc.x = x-n/2;
-	loc.y = height-y-n;
+	int n = get_region_size();
+	loc.x = x - n / 2;
+	//loc.y = height - y - n;
+	// put the tip of mouse cursor at the center of the selected region
+	loc.y = height - y - n * 4 / 3;
 
     if (state == GLUT_DOWN)
     {
