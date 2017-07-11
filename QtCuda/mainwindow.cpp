@@ -94,3 +94,23 @@ void MainWindow::on_pushButton_2_clicked()
 	chartView.setChart(chart);
 	chartView.setRenderHint(QPainter::Antialiasing);
 }
+
+void MainWindow::on_pushButton_3_clicked()
+{
+	const int n = 11;
+	int r = 2;
+	float d[n];
+	calc_gaussian_kernel(d, 2 * r + 1, sigma(r));
+	for (int i = 0; i < 2 * r + 1; i++)
+	{
+		std::cout << d[i] << std::ends;
+	}
+	std::cout << std::endl;
+	r = 4;
+	calc_gaussian_kernel(d, 2 * r + 1, sigma(r));
+	for (int i = 0; i < 2 * r + 1; i++)
+	{
+		std::cout << d[i] << std::ends;
+	}
+	std::cout << std::endl;
+}

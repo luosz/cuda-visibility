@@ -45,6 +45,9 @@ public:
     QCheckBox *checkBox;
     QCheckBox *checkBox_2;
     QPushButton *pushButton_2;
+    QGridLayout *gridLayout_3;
+    QPushButton *pushButton_3;
+    QPushButton *pushButton_4;
     QGraphicsView *graphicsView;
     QMenuBar *menuBar;
     QMenu *menu_File;
@@ -127,6 +130,22 @@ public:
 
         formLayout->setWidget(2, QFormLayout::LabelRole, pushButton_2);
 
+        gridLayout_3 = new QGridLayout();
+        gridLayout_3->setSpacing(6);
+        gridLayout_3->setObjectName(QStringLiteral("gridLayout_3"));
+        pushButton_3 = new QPushButton(frame);
+        pushButton_3->setObjectName(QStringLiteral("pushButton_3"));
+
+        gridLayout_3->addWidget(pushButton_3, 0, 0, 1, 1);
+
+        pushButton_4 = new QPushButton(frame);
+        pushButton_4->setObjectName(QStringLiteral("pushButton_4"));
+
+        gridLayout_3->addWidget(pushButton_4, 0, 1, 1, 1);
+
+
+        formLayout->setLayout(2, QFormLayout::FieldRole, gridLayout_3);
+
 
         gridLayout->addLayout(formLayout, 0, 0, 1, 1);
 
@@ -170,6 +189,8 @@ public:
         checkBox->setText(QApplication::translate("MainWindowClass", "Adjust alpha", Q_NULLPTR));
         checkBox_2->setText(QApplication::translate("MainWindowClass", "Adjust color", Q_NULLPTR));
         pushButton_2->setText(QApplication::translate("MainWindowClass", "Transfer function", Q_NULLPTR));
+        pushButton_3->setText(QApplication::translate("MainWindowClass", "PushButton", Q_NULLPTR));
+        pushButton_4->setText(QApplication::translate("MainWindowClass", "PushButton", Q_NULLPTR));
         menu_File->setTitle(QApplication::translate("MainWindowClass", "&File", Q_NULLPTR));
     } // retranslateUi
 
