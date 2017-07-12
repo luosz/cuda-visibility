@@ -2,6 +2,7 @@
 
 #include <string>
 #include <iostream>
+#include <fstream>
 #include <vector_types.h>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QLabel>
@@ -13,6 +14,7 @@
 #include <QTextStream>
 #include "ui_mainwindow.h"
 #include "def.h"
+#include "util.h"
 
 #include <QtCharts/QChartView>
 #include <QtCharts/QLineSeries>
@@ -70,6 +72,8 @@ private slots:
     void on_pushButton_2_clicked();
 
     void on_pushButton_3_clicked();
+
+    void on_pushButton_4_clicked();
 
 private:
 	Ui::MainWindowClass ui;

@@ -122,6 +122,7 @@ const char *volumes[] = { "nucleon.raw","vorts1.raw","CT-Knee.raw","E_1324.raw" 
 const int data_index = 0;
 const char *tfFile = tfs[data_index];
 const char *volumeFilename = volumes[data_index];
+
 /**
 41, 41, 41
 128, 128, 128
@@ -130,6 +131,9 @@ const char *volumeFilename = volumes[data_index];
 */
 cudaExtent volumeSize = make_cudaExtent(41, 41, 41);
 typedef unsigned char VolumeType;
+
+float gaussian5[R1*R1*R1] = { 0 };
+float gaussian9[R2*R2*R2] = { 0 };
 
 int2 loc = {0, 0};
 bool dragMode = false; // mouse tracking mode
@@ -899,6 +903,33 @@ void runSingleTest(const char *ref_file, const char *exec_path)
     exit(bTestResult ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 
+//// load Gaussian kernels from files
+//void load_gaussians()
+//{
+//	float a;
+//	std::ifstream g5("gaussian_5_5_5.txt");
+//	int number = R1*R1*R1;
+//	for (int i = 0; i < number; i++)
+//	{
+//		g5 >> a;
+//		gaussian5[i] = a;
+//		//std::cout << gaussian5[i] << std::ends;
+//	}
+//	//std::cout << std::endl;
+//	g5.close();
+//
+//	std::ifstream g9("gaussian_9_9_9.txt");
+//	number = R2*R2*R2;
+//	for (int i = 0; i < number; i++)
+//	{
+//		g9 >> a;
+//		gaussian9[i] = a;
+//		//std::cout << gaussian9[i] << std::ends;
+//	}
+//	//std::cout << std::endl;
+//	g9.close();
+//}
+
 ////////////////////////////////////////////////////////////////////////////////
 // Program main
 ////////////////////////////////////////////////////////////////////////////////
@@ -991,6 +1022,8 @@ gl_main(int argc, char **argv)
 	auto tf_path = sdkFindFilePath(tfFile, argv[0]);
 	printf("transfer function %s\n", tf_path);
 	openTransferFunctionFromVoreenXML(tf_path);
+
+	//load_gaussians();
 
     initCuda(h_volume, volumeSize);
     free(h_volume);

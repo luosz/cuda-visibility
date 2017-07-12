@@ -114,3 +114,22 @@ void MainWindow::on_pushButton_3_clicked()
 	}
 	std::cout << std::endl;
 }
+
+void MainWindow::on_pushButton_4_clicked()
+{
+	////float gaussian1[R1*R1*R1] = { 0 };
+	//float a;
+	//std::ifstream myfile;
+	//myfile.open("~gaussian_5_5_5.txt");
+	//myfile >> a;
+
+	//int n = R1*R1*R1;
+	//for (int i=0;i<n;i++)
+	//{
+	//	myfile >> a;
+	//	gaussian1[i] = a;
+	//	std::cout << gaussian1[i] << std::ends;
+	//}
+	//std::cout << std::endl;
+	//myfile.close();
+}

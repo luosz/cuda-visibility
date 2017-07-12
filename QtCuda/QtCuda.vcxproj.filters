@@ -101,6 +101,7 @@
     <ClInclude Include="def.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="define.cuh" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="QtCuda.rc" />

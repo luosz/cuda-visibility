@@ -3,6 +3,8 @@
 #ifndef UTIL_H
 #define UTIL_H
 
+#include "def.h"
+
 /// Re-maps a number from one range to another.
 inline float map_to_range(float val, float src_lower, float src_upper, float target_lower, float target_upper)
 {

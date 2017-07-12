@@ -11,6 +11,9 @@ const int D_HEIGHT = 1024;
 const int D_BIN_COUNT = 256;
 const int D_RADIUS = 16;
 
+const int R1 = 5;
+const int R2 = 9;
+
 #include <cmath>
 
 #ifndef M_PI

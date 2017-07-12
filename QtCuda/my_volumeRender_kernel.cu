@@ -16,10 +16,9 @@
 
 #include <helper_cuda.h>
 #include <helper_math.h>
-
-#include "gaussian.h"
-#include "def.h"
 #include <iostream>
+#include <stdio.h>
+#include "define.cuh"
 using namespace std;
 
 typedef unsigned int  uint;
@@ -57,6 +56,8 @@ __device__ __managed__ float histogram4[BIN_COUNT] = { 0 };
 __device__ __managed__ float4 tf_array[BIN_COUNT] = { 0 };
 __device__ __managed__ float4 tf_array0[BIN_COUNT] = { 0 };
 __device__ __managed__ int radius = D_RADIUS;
+__device__ __managed__ float g5[R1*R1*R1] = { 0 };
+__device__ __managed__ float g9[R2*R2*R2] = { 0 };
 
 // GUI settings
 //float g_SelectedColor[] = { 1.f,1.f,0.f,1.f };
@@ -869,6 +870,24 @@ void setTextureFilterMode(bool bLinearFilter)
     tex.filterMode = bLinearFilter ? cudaFilterModeLinear : cudaFilterModePoint;
 }
 
+inline void load_gaussians()
+{
+	FILE *gf1 = fopen("gaussian_5_5_5.txt", "r");
+	int n = R1*R1*R1;
+	for (int i = 0; i < n; i++)
+	{
+		fscanf(gf1, "%g", &g5[i]);
+	}
+	fclose(gf1);
+	FILE *gf2 = fopen("gaussian_9_9_9.txt", "r");
+	n = R2*R2*R2;
+	for (int i = 0; i < n; i++)
+	{
+		fscanf(gf2, "%g", &g9[i]);
+	}
+	fclose(gf2);
+}
+
 extern "C"
 void initCuda(void *h_volume, cudaExtent volumeSize)
 {
@@ -878,6 +897,8 @@ void initCuda(void *h_volume, cudaExtent volumeSize)
 	//auto cube = malloc(sizeof(float) * len);
 	//memset(cube, 0, sizeof(float) * len);
 	//printf("%g\n", *((float*)cube+len-1));
+
+	load_gaussians();
 
 	sizeOfVolume = volumeSize;
 	printf("volumeSize \t %d %d %d\n", sizeOfVolume.width, sizeOfVolume.height, sizeOfVolume.depth);
