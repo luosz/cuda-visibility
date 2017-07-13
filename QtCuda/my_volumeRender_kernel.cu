@@ -58,6 +58,7 @@ __device__ __managed__ float4 tf_array0[BIN_COUNT] = { 0 };
 __device__ __managed__ int radius = D_RADIUS;
 __device__ __managed__ float g5[R1*R1*R1] = { 0 };
 __device__ __managed__ float g9[R2*R2*R2] = { 0 };
+__device__ __managed__ float *saliencyVolume = NULL;
 
 // GUI settings
 //float g_SelectedColor[] = { 1.f,1.f,0.f,1.f };
@@ -888,6 +889,21 @@ inline void load_gaussians()
 	fclose(gf2);
 }
 
+__global__ void d_compute_saliency()
+{
+	uint x = blockIdx.x*blockDim.x + threadIdx.x;
+	uint y = blockIdx.y*blockDim.y + threadIdx.y;
+	uint z = blockIdx.z*blockDim.z + threadIdx.z;
+	printf("%d %d %d \n", x, y, z);
+}
+
+extern "C"
+void compute_saliency(dim3 gridSize, dim3 blockSize)
+{
+	d_compute_saliency<<<gridSize, blockSize>>>();
+	cudaDeviceSynchronize();
+}
+
 extern "C"
 void initCuda(void *h_volume, cudaExtent volumeSize)
 {
@@ -899,6 +915,8 @@ void initCuda(void *h_volume, cudaExtent volumeSize)
 	//printf("%g\n", *((float*)cube+len-1));
 
 	load_gaussians();
+	checkCudaErrors(cudaMallocManaged(&saliencyVolume, sizeof(float) * len));
+	checkCudaErrors(cudaMemset(saliencyVolume, 0, sizeof(float) * len));
 
 	sizeOfVolume = volumeSize;
 	printf("volumeSize \t %d %d %d\n", sizeOfVolume.width, sizeOfVolume.height, sizeOfVolume.depth);

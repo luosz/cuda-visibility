@@ -143,6 +143,9 @@ uint width = D_WIDTH, height = D_HEIGHT;
 dim3 blockSize(16, 16);
 dim3 gridSize;
 
+dim3 blockSize3(16, 16, 16);
+dim3 gridSize3;
+
 float3 viewRotation;
 float3 viewTranslation = make_float3(0.0, 0.0, -4.0f);
 float invViewMatrix[12];
@@ -195,6 +198,7 @@ extern "C" void set_backup(bool value);
 extern "C" void set_volume_file(const char *file, int n);
 extern "C" void backup_tf();
 extern "C" void restore_tf();
+extern "C" void compute_saliency(dim3 gridSize, dim3 blockSize);
 
 extern "C" void setTextureFilterMode(bool bLinearFilter);
 extern "C" void initCuda(void *h_volume, cudaExtent volumeSize);
@@ -1023,9 +1027,12 @@ gl_main(int argc, char **argv)
 	printf("transfer function %s\n", tf_path);
 	openTransferFunctionFromVoreenXML(tf_path);
 
-	//load_gaussians();
-
     initCuda(h_volume, volumeSize);
+	
+	// calculate new grid size for 3D saliency field
+	gridSize3 = dim3(iDivUp(volumeSize.width, blockSize3.x), iDivUp(volumeSize.height, blockSize3.y), iDivUp(volumeSize.depth, blockSize3.z));
+	compute_saliency(gridSize3, blockSize3);
+
     free(h_volume);
 
     sdkCreateTimer(&timer);
