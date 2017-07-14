@@ -132,8 +132,8 @@ const char *volumeFilename = volumes[data_index];
 cudaExtent volumeSize = make_cudaExtent(41, 41, 41);
 typedef unsigned char VolumeType;
 
-float gaussian5[R1*R1*R1] = { 0 };
-float gaussian9[R2*R2*R2] = { 0 };
+float gaussian5[R5*R5*R5] = { 0 };
+float gaussian9[R9*R9*R9] = { 0 };
 
 int2 loc = {0, 0};
 bool dragMode = false; // mouse tracking mode
@@ -198,7 +198,7 @@ extern "C" void set_backup(bool value);
 extern "C" void set_volume_file(const char *file, int n);
 extern "C" void backup_tf();
 extern "C" void restore_tf();
-extern "C" void compute_saliency(dim3 gridSize, dim3 blockSize);
+extern "C" void compute_saliency(void *h_volume, cudaExtent volumeSize, dim3 gridSize, dim3 blockSize);
 
 extern "C" void setTextureFilterMode(bool bLinearFilter);
 extern "C" void initCuda(void *h_volume, cudaExtent volumeSize);
@@ -1031,7 +1031,7 @@ gl_main(int argc, char **argv)
 	
 	// calculate new grid size for 3D saliency field
 	gridSize3 = dim3(iDivUp(volumeSize.width, blockSize3.x), iDivUp(volumeSize.height, blockSize3.y), iDivUp(volumeSize.depth, blockSize3.z));
-	compute_saliency(gridSize3, blockSize3);
+	compute_saliency(h_volume, volumeSize, gridSize3, blockSize3);
 
     free(h_volume);
 

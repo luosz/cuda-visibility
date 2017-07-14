@@ -56,8 +56,8 @@ __device__ __managed__ float histogram4[BIN_COUNT] = { 0 };
 __device__ __managed__ float4 tf_array[BIN_COUNT] = { 0 };
 __device__ __managed__ float4 tf_array0[BIN_COUNT] = { 0 };
 __device__ __managed__ int radius = D_RADIUS;
-__device__ __managed__ float g5[R1*R1*R1] = { 0 };
-__device__ __managed__ float g9[R2*R2*R2] = { 0 };
+__device__ __managed__ float g5[R5*R5*R5] = { 0 };
+__device__ __managed__ float g9[R9*R9*R9] = { 0 };
 __device__ __managed__ float *saliencyVolume = NULL;
 
 // GUI settings
@@ -874,14 +874,14 @@ void setTextureFilterMode(bool bLinearFilter)
 inline void load_gaussians()
 {
 	FILE *gf1 = fopen("gaussian_5_5_5.txt", "r");
-	int n = R1*R1*R1;
+	int n = R5*R5*R5;
 	for (int i = 0; i < n; i++)
 	{
 		fscanf(gf1, "%g", &g5[i]);
 	}
 	fclose(gf1);
 	FILE *gf2 = fopen("gaussian_9_9_9.txt", "r");
-	n = R2*R2*R2;
+	n = R9*R9*R9;
 	for (int i = 0; i < n; i++)
 	{
 		fscanf(gf2, "%g", &g9[i]);
@@ -898,10 +898,45 @@ __global__ void d_compute_saliency()
 }
 
 extern "C"
-void compute_saliency(dim3 gridSize, dim3 blockSize)
+void compute_saliency(void *h_volume, cudaExtent volumeSize, dim3 gridSize, dim3 blockSize)
 {
-	d_compute_saliency<<<gridSize, blockSize>>>();
-	cudaDeviceSynchronize();
+	//d_compute_saliency<<<gridSize, blockSize>>>();
+	//cudaDeviceSynchronize();
+
+	int w = volumeSize.width, h = volumeSize.height, d = volumeSize.depth;
+	const int r1 = R5 / 2;
+	const int r2 = R9 / 2;
+	int w2 = w - r2;
+	int h2 = h - r2;
+	int d2 = d - r2;
+	for (int z = r2; z < d2; z++)
+	{
+		for (int y = r2; y < h2; y++)
+		{
+			for (int x = r2; x < w2; x++)
+			{
+				int index = z*w*h + y*w + x;
+				float sum9 = 0, sum5 = 0;
+				for (int i = -r2; i <= r2; i++)
+				{
+					for (int j = -r2; j <= r2; j++)
+					{
+						int idx = z*w*h + (y+i)*w + (x+j);
+						sum9 += g9[i*R9 + j] * ((VolumeType*)h_volume)[idx];
+					}
+				}
+				for (int i = -r1; i <= r1; i++)
+				{
+					for (int j = -r1; j <= r1; j++)
+					{
+						int idx = z*w*h + (y + i)*w + (x + j);
+						sum5 += g5[i*R5 + j] * ((VolumeType*)h_volume)[idx];
+					}
+				}
+				saliencyVolume[index] = abs(sum5 - sum9);
+			}
+		}
+	}
 }
 
 extern "C"
