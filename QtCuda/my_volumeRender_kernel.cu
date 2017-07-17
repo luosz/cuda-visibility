@@ -59,6 +59,7 @@ __device__ __managed__ int radius = D_RADIUS;
 __device__ __managed__ float g5[R5*R5*R5] = { 0 };
 __device__ __managed__ float g9[R9*R9*R9] = { 0 };
 __device__ __managed__ float *saliencyVolume = NULL;
+__device__ __managed__ float *vwsVolume = NULL;
 
 // GUI settings
 //float g_SelectedColor[] = { 1.f,1.f,0.f,1.f };
@@ -900,6 +901,10 @@ __global__ void d_compute_saliency()
 extern "C"
 void compute_saliency(void *h_volume, cudaExtent volumeSize, dim3 gridSize, dim3 blockSize)
 {
+	auto len = volumeSize.width * volumeSize.height * volumeSize.depth;
+	checkCudaErrors(cudaMemset(saliencyVolume, 0, sizeof(float) * len));
+	checkCudaErrors(cudaMemset(vwsVolume, 0, sizeof(float) * len));
+
 	//d_compute_saliency<<<gridSize, blockSize>>>();
 	//cudaDeviceSynchronize();
 
@@ -921,22 +926,34 @@ void compute_saliency(void *h_volume, cudaExtent volumeSize, dim3 gridSize, dim3
 				{
 					for (int j = -r2; j <= r2; j++)
 					{
-						int idx = z*w*h + (y+i)*w + (x+j);
-						sum9 += g9[i*R9 + j] * ((VolumeType*)h_volume)[idx];
+						for (int k = -r2; k <= r2; k++)
+						{
+							int idx = (z+i)*w*h + (y+j)*w + (x+k);
+							sum9 += g9[(i+r2)*R9*R9 + (j + r2)*R9 + (k + r2)] * ((VolumeType*)h_volume)[idx];
+						}
 					}
 				}
 				for (int i = -r1; i <= r1; i++)
 				{
 					for (int j = -r1; j <= r1; j++)
 					{
-						int idx = z*w*h + (y + i)*w + (x + j);
-						sum5 += g5[i*R5 + j] * ((VolumeType*)h_volume)[idx];
+						for (int k = -r1; k <= r1; k++)
+						{
+							int idx = (z + i)*w*h + (y + j)*w + (x + k);
+							sum5 += g5[(i+r1)*R5*R5 + (j + r1)*R5 + (k + r1)] * ((VolumeType*)h_volume)[idx];
+						}
 					}
 				}
 				saliencyVolume[index] = abs(sum5 - sum9);
+				vwsVolume[index] = saliencyVolume[index] * visVolume[index];
 			}
 		}
 	}
+}
+
+extern "C" void vws()
+{
+
 }
 
 extern "C"
@@ -951,7 +968,7 @@ void initCuda(void *h_volume, cudaExtent volumeSize)
 
 	load_gaussians();
 	checkCudaErrors(cudaMallocManaged(&saliencyVolume, sizeof(float) * len));
-	checkCudaErrors(cudaMemset(saliencyVolume, 0, sizeof(float) * len));
+	checkCudaErrors(cudaMallocManaged(&vwsVolume, sizeof(float) * len));
 
 	sizeOfVolume = volumeSize;
 	printf("volumeSize \t %d %d %d\n", sizeOfVolume.width, sizeOfVolume.height, sizeOfVolume.depth);
@@ -1114,6 +1131,20 @@ void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, u
 		auto fp = fopen(buffer, "wb");
 		fwrite(visVolume, sizeof(VisibilityType), len, fp);
 		fclose(fp);
+
+		{
+			sprintf(buffer, "~%s.saliency.raw", volume_file);
+			auto fp = fopen(buffer, "wb");
+			fwrite(saliencyVolume, sizeof(float), len, fp);
+			fclose(fp);
+		}
+
+		{
+			sprintf(buffer, "~%s.vws.raw", volume_file);
+			auto fp = fopen(buffer, "wb");
+			fwrite(vwsVolume, sizeof(float), len, fp);
+			fclose(fp);
+		}
 
 		sprintf(buffer, "~%s.depth.raw", volume_file);
 		auto fp0 = fopen(buffer, "wb");
