@@ -44,6 +44,9 @@
     <Filter Include="cereal">
       <UniqueIdentifier>{8dcc83e2-aba3-44be-8f41-7be176917f52}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ColorSpace">
+      <UniqueIdentifier>{c4f473ce-7c55-4240-a190-e7634b8fa161}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mainwindow.cpp">
@@ -63,6 +66,12 @@
     </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ColorSpace\ColorSpace.cpp">
+      <Filter>ColorSpace</Filter>
+    </ClCompile>
+    <ClCompile Include="ColorSpace\Conversion.cpp">
+      <Filter>ColorSpace</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -102,6 +111,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="define.cuh" />
+    <ClInclude Include="ColorSpace\ColorSpace.h">
+      <Filter>ColorSpace</Filter>
+    </ClInclude>
+    <ClInclude Include="ColorSpace\Conversion.h">
+      <Filter>ColorSpace</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="QtCuda.rc" />

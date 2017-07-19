@@ -68,6 +68,8 @@
 // include cereal for serialization
 #include "cereal/archives/xml.hpp"
 
+#include "ColorSpace/ColorSpace.h"
+
 using namespace std;
 
 #include "mainwindow.h"
@@ -143,8 +145,8 @@ uint width = D_WIDTH, height = D_HEIGHT;
 dim3 blockSize(16, 16);
 dim3 gridSize;
 
-dim3 blockSize3(16, 16, 16);
-dim3 gridSize3;
+//dim3 blockSize3(16, 16, 16);
+//dim3 gridSize3;
 
 float3 viewRotation;
 float3 viewTranslation = make_float3(0.0, 0.0, -4.0f);
@@ -198,14 +200,22 @@ extern "C" void set_backup(bool value);
 extern "C" void set_volume_file(const char *file, int n);
 extern "C" void backup_tf();
 extern "C" void restore_tf();
-extern "C" void compute_saliency(void *h_volume, cudaExtent volumeSize, dim3 gridSize, dim3 blockSize);
-
+extern "C" void gaussian(float *lch_volume, cudaExtent volumeSize, float *out);
+extern "C" void compute_saliency(cudaExtent volumeSize);
 extern "C" void setTextureFilterMode(bool bLinearFilter);
 extern "C" void initCuda(void *h_volume, cudaExtent volumeSize);
 extern "C" void freeCudaBuffers();
 extern "C" void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, uint imageH,
                               float density, float brightness, float transferOffset, float transferScale, int2 loc);
 extern "C" void copyInvViewMatrix(float *invViewMatrix, size_t sizeofMatrix);
+
+extern "C" float4 rgb_to_lch(float4 rgba)
+{
+	ColorSpace::Rgb rgb(rgba.x, rgba.y, rgba.z);
+	ColorSpace::Lch lch;
+	ColorSpace::LchConverter::ToColorSpace(&rgb, &lch);
+	return make_float4(lch.l, lch.c, lch.h, rgba.w);
+}
 
 void initPixelBuffer();
 
@@ -702,7 +712,7 @@ void motion(int x, int y)
     glutPostRedisplay();
 }
 
-int iDivUp(int a, int b)
+extern "C" int iDivUp(int a, int b)
 {
     return (a % b != 0) ? (a / b + 1) : (a / b);
 }
@@ -1030,8 +1040,8 @@ gl_main(int argc, char **argv)
     initCuda(h_volume, volumeSize);
 	
 	// calculate new grid size for 3D saliency field
-	gridSize3 = dim3(iDivUp(volumeSize.width, blockSize3.x), iDivUp(volumeSize.height, blockSize3.y), iDivUp(volumeSize.depth, blockSize3.z));
-	compute_saliency(h_volume, volumeSize, gridSize3, blockSize3);
+	//gridSize3 = dim3(iDivUp(volumeSize.width, blockSize3.x), iDivUp(volumeSize.height, blockSize3.y), iDivUp(volumeSize.depth, blockSize3.z));
+	//compute_saliency(volumeSize);
 
     free(h_volume);
 

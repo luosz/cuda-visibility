@@ -74,6 +74,9 @@ bool save_histogram = false;
 bool gaussian_histogram = false;
 bool backup_table = false;
 
+extern "C" float4 rgb_to_lch(float4 rgba);
+extern "C" int iDivUp(int a, int b);
+
 typedef float(*Pointer)[4];
 extern "C" Pointer get_SelectedColor()
 {
@@ -899,15 +902,9 @@ __global__ void d_compute_saliency()
 }
 
 extern "C"
-void compute_saliency(void *h_volume, cudaExtent volumeSize, dim3 gridSize, dim3 blockSize)
+void gaussian(float *lch_volume, cudaExtent volumeSize, float *out)
 {
 	auto len = volumeSize.width * volumeSize.height * volumeSize.depth;
-	checkCudaErrors(cudaMemset(saliencyVolume, 0, sizeof(float) * len));
-	checkCudaErrors(cudaMemset(vwsVolume, 0, sizeof(float) * len));
-
-	//d_compute_saliency<<<gridSize, blockSize>>>();
-	//cudaDeviceSynchronize();
-
 	int w = volumeSize.width, h = volumeSize.height, d = volumeSize.depth;
 	const int r1 = R5 / 2;
 	const int r2 = R9 / 2;
@@ -928,8 +925,8 @@ void compute_saliency(void *h_volume, cudaExtent volumeSize, dim3 gridSize, dim3
 					{
 						for (int k = -r2; k <= r2; k++)
 						{
-							int idx = (z+i)*w*h + (y+j)*w + (x+k);
-							sum9 += g9[(i+r2)*R9*R9 + (j + r2)*R9 + (k + r2)] * ((VolumeType*)h_volume)[idx];
+							int idx = (z + i)*w*h + (y + j)*w + (x + k);
+							sum9 += g9[(i + r2)*R9*R9 + (j + r2)*R9 + (k + r2)] * ((float *)lch_volume)[idx];
 						}
 					}
 				}
@@ -940,20 +937,83 @@ void compute_saliency(void *h_volume, cudaExtent volumeSize, dim3 gridSize, dim3
 						for (int k = -r1; k <= r1; k++)
 						{
 							int idx = (z + i)*w*h + (y + j)*w + (x + k);
-							sum5 += g5[(i+r1)*R5*R5 + (j + r1)*R5 + (k + r1)] * ((VolumeType*)h_volume)[idx];
+							sum5 += g5[(i + r1)*R5*R5 + (j + r1)*R5 + (k + r1)] * ((float*)lch_volume)[idx];
 						}
 					}
 				}
-				saliencyVolume[index] = abs(sum5 - sum9);
-				vwsVolume[index] = saliencyVolume[index] * visVolume[index];
+				out[index] = abs(sum5 - sum9);
+				//vwsVolume[index] = saliencyVolume[index] * visVolume[index];
 			}
 		}
 	}
 }
 
-extern "C" void vws()
+extern "C"
+void compute_saliency(cudaExtent volumeSize)
 {
+	dim3 blockSize3(16, 16, 16);
+	dim3 gridSize3 = dim3(iDivUp(volumeSize.width, blockSize3.x), iDivUp(volumeSize.height, blockSize3.y), iDivUp(volumeSize.depth, blockSize3.z));
 
+	auto len = volumeSize.width * volumeSize.height * volumeSize.depth;
+	int w = volumeSize.width, h = volumeSize.height, d = volumeSize.depth;
+	//checkCudaErrors(cudaMemset(saliencyVolume, 0, sizeof(float) * len));
+	//checkCudaErrors(cudaMemset(vwsVolume, 0, sizeof(float) * len));
+	memset(saliencyVolume, 0, sizeof(float) * len);
+	memset(vwsVolume, 0, sizeof(float) * len);
+
+	float4 lch_array[BIN_COUNT] = { 0 };
+	for (int i = 0; i < BIN_COUNT; i++)
+	{
+		float4 lch=rgb_to_lch(tf_array[i]);
+		lch_array[i].x = lch.x;
+		lch_array[i].y = lch.y;
+		lch_array[i].z = lch.z;
+		lch_array[i].w = lch.w;
+	}
+
+	float *lightness = (float *)malloc(len * sizeof(float));
+	float *chroma = (float *)malloc(len * sizeof(float));
+	float *g1 = (float *)malloc(len * sizeof(float));
+	float *g2 = (float *)malloc(len * sizeof(float));
+	memset(g1, 0, len * sizeof(float));
+	memset(g2, 0, len * sizeof(float));
+	for (int z = 0; z < d; z++)
+	{
+		for (int y = 0; y < h; y++)
+		{
+			for (int x = 0; x < w; x++)
+			{
+				int index = z*w*h + y*w + x;
+				int intensity = (int)raw_volume[index];
+				lightness[index] = lch_array[intensity].x;
+				chroma[index] = lch_array[intensity].y;
+			}
+		}
+	}
+
+	gaussian(lightness, volumeSize, g1);
+	gaussian(chroma, volumeSize, g2);
+
+	for (int z = 0; z < d; z++)
+	{
+		for (int y = 0; y < h; y++)
+		{
+			for (int x = 0; x < w; x++)
+			{
+				int index = z*w*h + y*w + x;
+				saliencyVolume[index] = (g1[index] + g2[index]) / 2;
+				vwsVolume[index] = saliencyVolume[index] * visVolume[index];
+			}
+		}
+	}
+
+	free(g1);
+	free(g2);
+	free(lightness);
+	free(chroma);
+
+	//d_compute_saliency<<<gridSize3, blockSize3>>>();
+	//cudaDeviceSynchronize();
 }
 
 extern "C"
@@ -1138,6 +1198,8 @@ void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, u
 			fwrite(saliencyVolume, sizeof(float), len, fp);
 			fclose(fp);
 		}
+
+		compute_saliency(sizeOfVolume);
 
 		{
 			sprintf(buffer, "~%s.vws.raw", volume_file);
