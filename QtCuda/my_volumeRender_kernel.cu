@@ -60,6 +60,9 @@ __device__ __managed__ float g5[R5*R5*R5] = { 0 };
 __device__ __managed__ float g9[R9*R9*R9] = { 0 };
 __device__ __managed__ float *saliencyVolume = NULL;
 __device__ __managed__ float *vwsVolume = NULL;
+__device__ __managed__ int feature_number = 0;
+__device__ __managed__ float feature_array[BIN_COUNT] = { 0 };
+__device__ __managed__ float feature_vws_array[BIN_COUNT] = { 0 };
 
 // GUI settings
 //float g_SelectedColor[] = { 1.f,1.f,0.f,1.f };
@@ -76,6 +79,26 @@ bool backup_table = false;
 
 extern "C" float4 rgb_to_lch(float4 rgba);
 extern "C" int iDivUp(int a, int b);
+
+extern "C" int get_feature_number()
+{
+	return feature_number;
+}
+
+extern "C" void set_feature_number(int val)
+{
+	feature_number = val;
+}
+
+extern "C" float* get_feature_array()
+{
+	return feature_array;
+}
+
+extern "C" float* get_feature_vws_array()
+{
+	return feature_vws_array;
+}
 
 typedef float(*Pointer)[4];
 extern "C" Pointer get_SelectedColor()

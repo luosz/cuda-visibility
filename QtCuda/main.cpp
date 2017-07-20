@@ -133,6 +133,7 @@ const char *volumeFilename = volumes[data_index];
 */
 cudaExtent volumeSize = make_cudaExtent(41, 41, 41);
 typedef unsigned char VolumeType;
+std::shared_ptr<VolumeType> volume_data;
 
 float gaussian5[R5*R5*R5] = { 0 };
 float gaussian9[R9*R9*R9] = { 0 };
@@ -179,6 +180,11 @@ char **pArgv;
 #define MAX(a,b) ((a > b) ? a : b)
 #endif
 
+extern "C" int get_feature_number();
+extern "C" void set_feature_number(int val);
+extern "C" float* get_feature_array();
+extern "C" float* get_feature_vws_array();
+
 typedef float(*Pointer)[4];
 extern "C" Pointer get_SelectedColor();
 extern "C" void set_SelectedColor(float r, float g, float b);
@@ -219,8 +225,110 @@ extern "C" float4 rgb_to_lch(float4 rgba)
 
 void initPixelBuffer();
 
+//// A recursive binary search function. It returns location of x in
+//// given array arr[l..r] is present, otherwise -1
+//int binary_search(float arr[], int l, int r, float x)
+//{
+//	float epsilon = std::numeric_limits<float>::epsilon();
+//	if (r >= l)
+//	{
+//		int mid = l + (r - l) / 2;
+//
+//		// If the element is present at the middle itself
+//		if (abs(arr[mid] - x) < epsilon)
+//		{
+//			return mid;
+//		}
+//
+//		// If element is smaller than mid, then it can only be present
+//		// in left subarray
+//		if (x < arr[mid])
+//		{
+//			return binary_search(arr, l, mid - 1, x);
+//		}
+//
+//		// Else the element can only be present in right subarray
+//		return binary_search(arr, mid + 1, r, x);
+//	}
+//
+//	// We reach here when element is not present in array
+//	return -1;
+//}
+
+int binary_search(float arr[], int first, int last, float x)
+{
+	while (first < last)
+	{
+		int mid = first + (last - first) / 2;
+		if (mid == first)
+		{
+			break;
+		}
+		if (x < arr[mid])
+		{
+			last = mid;
+		}
+		else
+		{
+			first = mid;
+		}
+	}
+	return first;
+}
+
+void search_feature(float intensity = 0)
+{
+	cout << "features" << endl;
+	float *features = get_feature_array();
+	int count = get_feature_number();
+	int n = count << 1;
+	for (int i = 0; i < n; i += 2)
+	{
+		cout << features[i] << ends << features[i + 1] << endl;
+	}
+	cout << "--------" << endl;
+	cout << "binary search tests " << endl;
+	int i0 = binary_search(features, 0, n, intensity);
+	cout << intensity << ends << i0 << ends << features[i0] << endl;
+	for (int i=0;i<n;i++)
+	{
+		float x = features[i] + 0.01f;
+		int i1 = binary_search(features, 0, n, x);
+		cout << x << ends << i1 << ends << features[i1] << endl;
+	}
+	cout << "--------" << endl;
+}
+
+void compute_vws_array()
+{
+	auto p = volume_data.get();
+	float *vws = get_feature_vws_array();
+	int count = get_feature_number();
+	int w=volumeSize.width;
+	int h = volumeSize.height;
+	int d = volumeSize.depth;
+}
+
+void count_features(std::vector<float> intensity, std::vector<float4> rgba)
+{
+	float epsilon = std::numeric_limits<float>::epsilon();
+	float *features = get_feature_array();
+	int count = 0;
+	for (int i = 1; i < intensity.size() - 1; i++)
+	{
+		if (rgba[i].w > 0 && abs(rgba[i-1].w) < epsilon && abs(rgba[i+1].w) < epsilon)
+		{
+			features[count++] = intensity[i - 1];
+			features[count++] = intensity[i + 1];
+		}
+	}
+	set_feature_number(count>>1);
+}
+
 void load_lookuptable(std::vector<float> intensity, std::vector<float4> rgba)
 {
+	count_features(intensity, rgba);
+	search_feature();
 	auto n = get_bin_count();
 	float4 *tf = get_tf_array();
 	int last = (int)intensity.size() - 1;
@@ -948,7 +1056,7 @@ void runSingleTest(const char *ref_file, const char *exec_path)
 // Program main
 ////////////////////////////////////////////////////////////////////////////////
 int
-gl_main(int argc, char **argv)
+init_gl_main(int argc, char **argv)
 {
     pArgc = &argc;
     pArgv = argv;
@@ -1043,7 +1151,8 @@ gl_main(int argc, char **argv)
 	//gridSize3 = dim3(iDivUp(volumeSize.width, blockSize3.x), iDivUp(volumeSize.height, blockSize3.y), iDivUp(volumeSize.depth, blockSize3.z));
 	//compute_saliency(volumeSize);
 
-    free(h_volume);
+    //free(h_volume);
+	volume_data = std::make_shared<VolumeType>(*(VolumeType*)h_volume);
 
     sdkCreateTimer(&timer);
 
@@ -1103,7 +1212,7 @@ int main(int argc, char *argv[])
 
 	w.set_pointers(get_SelectedColor(), get_ApplyAlpha(), get_ApplyColor());
 
-	gl_main(argc, argv);
+	init_gl_main(argc, argv);
 
 	return a.exec();
 }
