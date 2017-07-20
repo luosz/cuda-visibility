@@ -112,7 +112,7 @@ const char *sSDKsample = "CUDA 3D Volume Render";
 
 const char *tfs[] = { "nucleon_naive_proportional_2.tfi","vortex_naive_proportional_2.tfi","CT-Knee_spectrum_6.tfi","E_1324_Rainbow6_even_2.tfi" };
 const char *volumes[] = { "nucleon.raw","vorts1.raw","CT-Knee.raw","E_1324.raw" };
-const int data_index = 1;
+const int data_index = 0;
 const char *tfFile = tfs[data_index];
 const char *volumeFilename = volumes[data_index];
 /**
@@ -121,7 +121,7 @@ const char *volumeFilename = volumes[data_index];
 379, 229, 305
 432, 432, 432
 */
-cudaExtent volumeSize = make_cudaExtent(128, 128, 128);
+cudaExtent volumeSize = make_cudaExtent(41, 41, 41);
 typedef unsigned char VolumeType;
 
 int2 loc = {0, 0};

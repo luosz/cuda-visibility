@@ -37,6 +37,7 @@ texture<float, cudaTextureType3D, cudaReadModeElementType>  volumeTexIn;
 surface<void, 3>                                    volumeTexOut;
 cudaArray *d_visibilityArray = 0;
 
+__device__ __managed__ VolumeType *raw_volume = NULL;
 __device__ __managed__ char *volume_file = NULL;
 __device__ __managed__ float *visVolume = NULL;
 __device__ __managed__ int *countVolume = NULL;
@@ -462,7 +463,11 @@ __device__ void addVisibility(float value, float3 pos, float depth)
 	
 	atomicAdd((countVolume + index), 1);
 	atomicAdd((visVolume + index), value);
-	atomicAdd((depthVolume + index), depth);
+	if (fabsf(depthVolume[index]) < 1e-6)
+	{
+		atomicAdd((depthVolume + index), depth);
+	}
+	
 	//printf("atomicAdd %d \t %g \n", countVolume[index], visVolume[index]);
 
 	float sample = tex3D(volTex, pos.x*0.5f + 0.5f, pos.y*0.5f + 0.5f, pos.z*0.5f + 0.5f);
@@ -655,7 +660,7 @@ d_visibility(uint *d_output, uint imageW, uint imageH,
 		float sumw = sum.w;
 		sum = sum + col*(1.0f - sum.w);
 
-		addVisibility(sum.w - sumw, pos, t);
+		addVisibility(sum.w - sumw, pos, t - tnear);
 
 		// exit early if opaque
 		if (sum.w > opacityThreshold)
@@ -736,7 +741,7 @@ d_visibilityLocal(uint *d_output, uint imageW, uint imageH,
 		float sumw = sum.w;
 		sum = sum + col*(1.0f - sum.w);
 
-		addVisibility(sum.w - sumw, pos, t);
+		addVisibility(sum.w - sumw, pos, t- tnear);
 		
 		// calculate visibility for selected region
 		if (fabsf(x - loc.x) <= radius && fabsf(y - loc.y) <= radius)
@@ -866,6 +871,8 @@ extern "C"
 void initCuda(void *h_volume, cudaExtent volumeSize)
 {
 	auto len = volumeSize.width * volumeSize.height * volumeSize.depth;
+	checkCudaErrors(cudaMallocManaged(&raw_volume, sizeof(VolumeType) * len));
+	memcpy(raw_volume, h_volume, sizeof(VolumeType) * len);
 	//auto cube = malloc(sizeof(float) * len);
 	//memset(cube, 0, sizeof(float) * len);
 	//printf("%g\n", *((float*)cube+len-1));
@@ -1031,6 +1038,26 @@ void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, u
 		auto fp = fopen(buffer, "wb");
 		fwrite(visVolume, sizeof(VisibilityType), len, fp);
 		fclose(fp);
+
+		sprintf(buffer, "~%s.depth.raw", volume_file);
+		auto fp0 = fopen(buffer, "wb");
+		fwrite(depthVolume, sizeof(float), len, fp0);
+		fclose(fp0);
+
+		sprintf(buffer, "~%s.data.txt", volume_file);
+		auto fp6 = fopen(buffer, "w");
+		for (int z = 0;z < sizeOfVolume.depth;z+=2)
+		{
+			for (int y = 0;y < sizeOfVolume.height;y+=2)
+			{
+				for (int x = 0;x < sizeOfVolume.width;x+=2)
+				{
+					int i = z*sizeOfVolume.width * sizeOfVolume.height + y*sizeOfVolume.width + x;
+					fprintf(fp6, "{%f,%f,%f}\n", raw_volume[i] / 255.f, depthVolume[i], visVolume[i]);
+				}
+			}
+		}
+		fclose(fp6);
 
 		sprintf(buffer, "~%s.txt", volume_file);
 		auto fp1 = fopen(buffer, "w");
