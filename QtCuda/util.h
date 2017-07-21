@@ -25,4 +25,73 @@ inline float normalise_rgba(int n)
 //	return a + t*(b - a);
 //}
 
+
+//// A recursive binary search function. It returns location of x in
+//// given array arr[l..r] is present, otherwise -1
+//int binary_search(float arr[], int l, int r, float x)
+//{
+//	float epsilon = std::numeric_limits<float>::epsilon();
+//	if (r >= l)
+//	{
+//		int mid = l + (r - l) / 2;
+//
+//		// If the element is present at the middle itself
+//		if (abs(arr[mid] - x) < epsilon)
+//		{
+//			return mid;
+//		}
+//
+//		// If element is smaller than mid, then it can only be present
+//		// in left subarray
+//		if (x < arr[mid])
+//		{
+//			return binary_search(arr, l, mid - 1, x);
+//		}
+//
+//		// Else the element can only be present in right subarray
+//		return binary_search(arr, mid + 1, r, x);
+//	}
+//
+//	// We reach here when element is not present in array
+//	return -1;
+//}
+
+int linear_search(float arr[], int first, int last, float x)
+{
+	int ans = -1;
+	for (int i = first; i < last; i++)
+	{
+		if (arr[i] < x)
+		{
+			ans = i;
+		}
+	}
+	return ans;
+}
+
+int binary_search(float arr[], int first, int last, float x)
+{
+	if (x < arr[first])
+	{
+		return -1;
+	}
+	while (first < last)
+	{
+		int mid = first + (last - first) / 2;
+		if (mid == first)
+		{
+			break;
+		}
+		if (x < arr[mid])
+		{
+			last = mid;
+		}
+		else
+		{
+			first = mid;
+		}
+	}
+	return first;
+}
+
 #endif // UTIL_H

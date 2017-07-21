@@ -14,7 +14,6 @@
 #include <QTextStream>
 #include "ui_mainwindow.h"
 #include "def.h"
-#include "util.h"
 
 #include <QtCharts/QChartView>
 #include <QtCharts/QLineSeries>

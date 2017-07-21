@@ -180,6 +180,7 @@ char **pArgv;
 #define MAX(a,b) ((a > b) ? a : b)
 #endif
 
+extern "C" float* get_vws_volume();
 extern "C" int get_feature_number();
 extern "C" void set_feature_number(int val);
 extern "C" float* get_feature_array();
@@ -215,6 +216,7 @@ extern "C" void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uin
                               float density, float brightness, float transferOffset, float transferScale, int2 loc);
 extern "C" void copyInvViewMatrix(float *invViewMatrix, size_t sizeofMatrix);
 
+/// RGB to LCH color conversion
 extern "C" float4 rgb_to_lch(float4 rgba)
 {
 	ColorSpace::Rgb rgb(rgba.x, rgba.y, rgba.z);
@@ -225,58 +227,8 @@ extern "C" float4 rgb_to_lch(float4 rgba)
 
 void initPixelBuffer();
 
-//// A recursive binary search function. It returns location of x in
-//// given array arr[l..r] is present, otherwise -1
-//int binary_search(float arr[], int l, int r, float x)
-//{
-//	float epsilon = std::numeric_limits<float>::epsilon();
-//	if (r >= l)
-//	{
-//		int mid = l + (r - l) / 2;
-//
-//		// If the element is present at the middle itself
-//		if (abs(arr[mid] - x) < epsilon)
-//		{
-//			return mid;
-//		}
-//
-//		// If element is smaller than mid, then it can only be present
-//		// in left subarray
-//		if (x < arr[mid])
-//		{
-//			return binary_search(arr, l, mid - 1, x);
-//		}
-//
-//		// Else the element can only be present in right subarray
-//		return binary_search(arr, mid + 1, r, x);
-//	}
-//
-//	// We reach here when element is not present in array
-//	return -1;
-//}
-
-int binary_search(float arr[], int first, int last, float x)
-{
-	while (first < last)
-	{
-		int mid = first + (last - first) / 2;
-		if (mid == first)
-		{
-			break;
-		}
-		if (x < arr[mid])
-		{
-			last = mid;
-		}
-		else
-		{
-			first = mid;
-		}
-	}
-	return first;
-}
-
-void search_feature(float intensity = 0)
+/// test cases for searching for features
+void search_feature_test(float intensity = 0)
 {
 	cout << "features" << endl;
 	float *features = get_feature_array();
@@ -289,7 +241,7 @@ void search_feature(float intensity = 0)
 	cout << "--------" << endl;
 	cout << "binary search tests " << endl;
 	int i0 = binary_search(features, 0, n, intensity);
-	cout << intensity << ends << i0 << ends << features[i0] << endl;
+	cout << intensity << ends << i0 << endl;
 	for (int i=0;i<n;i++)
 	{
 		float x = features[i] + 0.01f;
@@ -299,16 +251,53 @@ void search_feature(float intensity = 0)
 	cout << "--------" << endl;
 }
 
+/// Find what feature does intensity belong to.
+/// Return -1 if the intensity is not in a feature interval.
+int search_feature(float intensity = 0)
+{
+	float *features = get_feature_array();
+	int count = get_feature_number();
+	int n = count << 1;
+	int idx = binary_search(features, 0, n, intensity);
+	if (idx != -1 && (idx&1)==0)
+	{
+		return idx >> 1;
+	}
+	return -1;
+}
+
+/// Compute the array of feature Visibility-Weighted Saliency scores.
 void compute_vws_array()
 {
 	auto p = volume_data.get();
 	float *vws = get_feature_vws_array();
+	float *vws_volume = get_vws_volume();
 	int count = get_feature_number();
-	int w=volumeSize.width;
+	int w = volumeSize.width;
 	int h = volumeSize.height;
 	int d = volumeSize.depth;
+
+	memset(vws, 0, D_BIN_COUNT * sizeof(float));
+
+	for (int z = 0; z < d; z++)
+	{
+		for (int y = 0; y < h; y++)
+		{
+			for (int x = 0; x < w; x++)
+			{
+				int index = z*w*h + y*w + x;
+				int intensity = (int)p[index];
+				int idx=search_feature(intensity / 255.f);
+				if (idx != -1)
+				{
+					vws[idx] += vws_volume[index];
+				}
+			}
+		}
+	}
 }
 
+/// Count how many features are defined in the transfer function
 void count_features(std::vector<float> intensity, std::vector<float4> rgba)
 {
 	float epsilon = std::numeric_limits<float>::epsilon();
@@ -325,10 +314,11 @@ void count_features(std::vector<float> intensity, std::vector<float4> rgba)
 	set_feature_number(count>>1);
 }
 
+/// Load a transfer function into a lookup table for rendering
 void load_lookuptable(std::vector<float> intensity, std::vector<float4> rgba)
 {
 	count_features(intensity, rgba);
-	search_feature();
+	search_feature_test();
 	auto n = get_bin_count();
 	float4 *tf = get_tf_array();
 	int last = (int)intensity.size() - 1;
@@ -370,7 +360,7 @@ void load_lookuptable(std::vector<float> intensity, std::vector<float4> rgba)
 	backup_tf();
 }
 
-/// open Voreen transfer functions
+/// Open Voreen transfer functions
 void openTransferFunctionFromVoreenXML(const char *filename)
 {
 	//ui->statusBar->showMessage(QString(filename));

@@ -80,6 +80,11 @@ bool backup_table = false;
 extern "C" float4 rgb_to_lch(float4 rgba);
 extern "C" int iDivUp(int a, int b);
 
+extern "C" float* get_vws_volume()
+{
+	return vwsVolume;
+}
+
 extern "C" int get_feature_number()
 {
 	return feature_number;
