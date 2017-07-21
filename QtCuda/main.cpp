@@ -227,7 +227,7 @@ extern "C" float4 rgb_to_lch(float4 rgba)
 
 void initPixelBuffer();
 
-/// test cases for searching for features
+/// Test cases for searching for features
 void search_feature_test(float intensity = 0)
 {
 	cout << "features" << endl;
@@ -295,6 +295,12 @@ void compute_vws_array()
 			}
 		}
 	}
+}
+
+/// VWS transfer function optimization
+void vws_tf_optimization()
+{
+
 }
 
 /// Count how many features are defined in the transfer function
