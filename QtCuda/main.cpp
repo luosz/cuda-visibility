@@ -180,6 +180,7 @@ char **pArgv;
 #define MAX(a,b) ((a > b) ? a : b)
 #endif
 
+extern "C" int* get_feature_volume();
 extern "C" float* get_vws_volume();
 extern "C" int get_feature_number();
 extern "C" void set_feature_number(int val);
@@ -266,12 +267,45 @@ int search_feature(float intensity = 0)
 	return -1;
 }
 
+extern "C"
+void compute_feature_volume(cudaExtent volumeSize)
+{
+	auto featureVolume = get_feature_volume();
+	auto len = volumeSize.width * volumeSize.height * volumeSize.depth;
+	auto p = volume_data.get();
+	int w = volumeSize.width;
+	int h = volumeSize.height;
+	int d = volumeSize.depth;
+	memset(featureVolume, 0, sizeof(int) * len);
+	for (int z = 0; z < d; z++)
+	{
+		for (int y = 0; y < h; y++)
+		{
+			for (int x = 0; x < w; x++)
+			{
+				int index = z*w*h + y*w + x;
+				int intensity = (int)p[index];
+				int idx = search_feature(intensity / 255.f);
+				if (idx != -1)
+				{
+					featureVolume[index] = idx;
+				}
+				else
+				{
+					std::cerr << "Error: could not find which feature intensity " << intensity << " at " << index << " belongs to." << std::endl;
+				}
+			}
+		}
+	}
+}
+
 /// Compute the array of feature Visibility-Weighted Saliency scores.
 void compute_vws_array()
 {
 	auto p = volume_data.get();
 	float *vws = get_feature_vws_array();
 	float *vws_volume = get_vws_volume();
+	auto featureVolume = get_feature_volume();
 	int count = get_feature_number();
 	int w = volumeSize.width;
 	int h = volumeSize.height;
@@ -287,7 +321,7 @@ void compute_vws_array()
 			{
 				int index = z*w*h + y*w + x;
 				int intensity = (int)p[index];
-				int idx=search_feature(intensity / 255.f);
+				int idx = featureVolume[index];
 				if (idx != -1)
 				{
 					vws[idx] += vws_volume[index];
@@ -1149,6 +1183,7 @@ init_gl_main(int argc, char **argv)
 
     //free(h_volume);
 	volume_data = std::make_shared<VolumeType>(*(VolumeType*)h_volume);
+	compute_feature_volume(volumeSize);
 
     sdkCreateTimer(&timer);
 

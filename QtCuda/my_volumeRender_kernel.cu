@@ -60,6 +60,7 @@ __device__ __managed__ float g5[R5*R5*R5] = { 0 };
 __device__ __managed__ float g9[R9*R9*R9] = { 0 };
 __device__ __managed__ float *saliencyVolume = NULL;
 __device__ __managed__ float *vwsVolume = NULL;
+__device__ __managed__ int *featureVolume = NULL;
 __device__ __managed__ int feature_number = 0;
 __device__ __managed__ float feature_array[BIN_COUNT] = { 0 };
 __device__ __managed__ float feature_vws_array[BIN_COUNT] = { 0 };
@@ -79,6 +80,11 @@ bool backup_table = false;
 
 extern "C" float4 rgb_to_lch(float4 rgba);
 extern "C" int iDivUp(int a, int b);
+
+extern "C" int* get_feature_volume()
+{
+	return featureVolume;
+}
 
 extern "C" float* get_vws_volume()
 {
@@ -1057,6 +1063,7 @@ void initCuda(void *h_volume, cudaExtent volumeSize)
 	load_gaussians();
 	checkCudaErrors(cudaMallocManaged(&saliencyVolume, sizeof(float) * len));
 	checkCudaErrors(cudaMallocManaged(&vwsVolume, sizeof(float) * len));
+	checkCudaErrors(cudaMallocManaged(&featureVolume, sizeof(int) * len));
 
 	sizeOfVolume = volumeSize;
 	printf("volumeSize \t %d %d %d\n", sizeOfVolume.width, sizeOfVolume.height, sizeOfVolume.depth);
