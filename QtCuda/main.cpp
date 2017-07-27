@@ -260,11 +260,11 @@ int search_feature(float intensity = 0)
 	int count = get_feature_number();
 	int n = count << 1;
 	int idx = binary_search(features, 0, n, intensity);
-	if (idx != -1 && (idx&1)==0)
+	if (idx != -1 && (idx & 1) == 0)
 	{
-		return idx >> 1;
+		return idx / 2 + 1;
 	}
-	return -1;
+	return 0;
 }
 
 extern "C"
@@ -286,14 +286,15 @@ void compute_feature_volume(cudaExtent volumeSize)
 				int index = z*w*h + y*w + x;
 				int intensity = (int)p[index];
 				int idx = search_feature(intensity / 255.f);
-				if (idx != -1)
-				{
-					featureVolume[index] = idx;
-				}
-				else
-				{
-					std::cerr << "Error: could not find which feature intensity " << intensity << " at " << index << " belongs to." << std::endl;
-				}
+				featureVolume[index] = idx;
+				//if (idx != -1)
+				//{
+				//	featureVolume[index] = idx;
+				//}
+				//else
+				//{
+				//	std::cerr << "Error: could not find which feature intensity " << intensity << " at " << index << " belongs to." << std::endl;
+				//}
 			}
 		}
 	}
@@ -303,7 +304,7 @@ void compute_feature_volume(cudaExtent volumeSize)
 void compute_vws_array()
 {
 	auto p = volume_data.get();
-	float *vws = get_feature_vws_array();
+	float *feature_vws_array = get_feature_vws_array();
 	float *vws_volume = get_vws_volume();
 	auto featureVolume = get_feature_volume();
 	int count = get_feature_number();
@@ -311,7 +312,7 @@ void compute_vws_array()
 	int h = volumeSize.height;
 	int d = volumeSize.depth;
 
-	memset(vws, 0, D_BIN_COUNT * sizeof(float));
+	memset(feature_vws_array, 0, D_BIN_COUNT * sizeof(float));
 
 	for (int z = 0; z < d; z++)
 	{
@@ -322,19 +323,26 @@ void compute_vws_array()
 				int index = z*w*h + y*w + x;
 				int intensity = (int)p[index];
 				int idx = featureVolume[index];
-				if (idx != -1)
+				if (idx > 0)
 				{
-					vws[idx] += vws_volume[index];
+					feature_vws_array[idx - 1] += vws_volume[index];
 				}
 			}
 		}
 	}
+
+	std::cout << "compute_vws_array \n";
+	for (int i=0;i<count;i++)
+	{
+		std::cout << feature_vws_array[i] << std::ends;
+	}
+	std::cout << std::endl;
 }
 
 /// VWS transfer function optimization
 void vws_tf_optimization()
 {
-
+	float *feature_vws_array = get_feature_vws_array();
 }
 
 /// Count how many features are defined in the transfer function
@@ -1184,6 +1192,7 @@ init_gl_main(int argc, char **argv)
     //free(h_volume);
 	volume_data = std::make_shared<VolumeType>(*(VolumeType*)h_volume);
 	compute_feature_volume(volumeSize);
+	compute_vws_array();
 
     sdkCreateTimer(&timer);
 
