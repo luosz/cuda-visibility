@@ -56,6 +56,7 @@
 #include <helper_timer.h>
 
 #include <iostream>
+#include <fstream>
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
@@ -133,7 +134,7 @@ const char *volumeFilename = volumes[data_index];
 */
 cudaExtent volumeSize = make_cudaExtent(41, 41, 41);
 typedef unsigned char VolumeType;
-std::shared_ptr<VolumeType> volume_data;
+//std::shared_ptr<VolumeType> volume_data;
 
 float gaussian5[R5*R5*R5] = { 0 };
 float gaussian9[R9*R9*R9] = { 0 };
@@ -180,12 +181,15 @@ char **pArgv;
 #define MAX(a,b) ((a > b) ? a : b)
 #endif
 
-extern "C" int* get_feature_volume();
+extern "C" VolumeType * get_raw_volume();
+extern "C" unsigned char* get_feature_volume();
 extern "C" float* get_vws_volume();
 extern "C" int get_feature_number();
 extern "C" void set_feature_number(int val);
 extern "C" float* get_feature_array();
 extern "C" float* get_feature_vws_array();
+extern "C" void gaussian(float *lch_volume, cudaExtent volumeSize, float *out);
+extern "C" void compute_saliency();
 
 typedef float(*Pointer)[4];
 extern "C" Pointer get_SelectedColor();
@@ -208,8 +212,7 @@ extern "C" void set_backup(bool value);
 extern "C" void set_volume_file(const char *file, int n);
 extern "C" void backup_tf();
 extern "C" void restore_tf();
-extern "C" void gaussian(float *lch_volume, cudaExtent volumeSize, float *out);
-extern "C" void compute_saliency(cudaExtent volumeSize);
+
 extern "C" void setTextureFilterMode(bool bLinearFilter);
 extern "C" void initCuda(void *h_volume, cudaExtent volumeSize);
 extern "C" void freeCudaBuffers();
@@ -232,22 +235,22 @@ void initPixelBuffer();
 void search_feature_test(float intensity = 0)
 {
 	cout << "features" << endl;
-	float *features = get_feature_array();
+	float *feature_array = get_feature_array();
 	int count = get_feature_number();
 	int n = count << 1;
 	for (int i = 0; i < n; i += 2)
 	{
-		cout << features[i] << ends << features[i + 1] << endl;
+		cout << feature_array[i] << ends << feature_array[i + 1] << endl;
 	}
 	cout << "--------" << endl;
 	cout << "binary search tests " << endl;
-	int i0 = binary_search(features, 0, n, intensity);
+	int i0 = binary_search(feature_array, 0, n, intensity);
 	cout << intensity << ends << i0 << endl;
 	for (int i=0;i<n;i++)
 	{
-		float x = features[i] + 0.01f;
-		int i1 = binary_search(features, 0, n, x);
-		cout << x << ends << i1 << ends << features[i1] << endl;
+		float x = feature_array[i] + 0.01f;
+		int i1 = binary_search(feature_array, 0, n, x);
+		cout << x << ends << i1 << ends << feature_array[i1] << endl;
 	}
 	cout << "--------" << endl;
 }
@@ -259,6 +262,7 @@ int search_feature(float intensity = 0)
 	float *features = get_feature_array();
 	int count = get_feature_number();
 	int n = count << 1;
+	//int idx = linear_search(features, 0, n, intensity);
 	int idx = binary_search(features, 0, n, intensity);
 	if (idx != -1 && (idx & 1) == 0)
 	{
@@ -268,70 +272,86 @@ int search_feature(float intensity = 0)
 }
 
 extern "C"
-void compute_feature_volume(cudaExtent volumeSize)
+void compute_feature_volume()
 {
+	auto p = get_raw_volume();
+	if (!p)
+	{
+		std::cerr << "get_raw_volume() returns NULL!" << std::endl;
+		return;
+	}
+
 	auto featureVolume = get_feature_volume();
 	auto len = volumeSize.width * volumeSize.height * volumeSize.depth;
-	auto p = volume_data.get();
 	int w = volumeSize.width;
 	int h = volumeSize.height;
 	int d = volumeSize.depth;
-	memset(featureVolume, 0, sizeof(int) * len);
-	for (int z = 0; z < d; z++)
+	memset(featureVolume, 0, sizeof(unsigned char) * len);
+	int n = 0;
+	std::cout << w << std::ends << h << std::ends << d << std::ends << len << std::endl;
+	ofstream info("c:/work/log_feature.txt");
+	ofstream info2("c:/work/log_intensity.txt");
+	for (int i = 0; i < len; i++)
 	{
-		for (int y = 0; y < h; y++)
+		//int index = z*w*h + y*w + x;
+		//auto intensity = p[i];
+		float intensity = p[i] / (float)255;
+		auto idx = (unsigned char)search_feature(intensity);
+		info2 << i << " " << (int)p[i] << " " << (int)idx << std::endl;
+		featureVolume[i] = idx;
+		if (idx > 0)
 		{
-			for (int x = 0; x < w; x++)
-			{
-				int index = z*w*h + y*w + x;
-				int intensity = (int)p[index];
-				int idx = search_feature(intensity / 255.f);
-				featureVolume[index] = idx;
-				//if (idx != -1)
-				//{
-				//	featureVolume[index] = idx;
-				//}
-				//else
-				//{
-				//	std::cerr << "Error: could not find which feature intensity " << intensity << " at " << index << " belongs to." << std::endl;
-				//}
-			}
+			n++;
+			info << i << " " << intensity << " " << (int)idx << std::endl;
+			//std::cout << (int)intensity<<"["<<index<<"]=" << (int)idx << std::ends;
 		}
 	}
+	info.close();
+	info2.close();
+
+	std::cout << std::endl << n << std::endl;
 }
 
 /// Compute the array of feature Visibility-Weighted Saliency scores.
 void compute_vws_array()
 {
-	auto p = volume_data.get();
+	auto p = get_raw_volume();
+	if (!p)
+	{
+		std::cerr << "get_raw_volume() returns NULL!" << std::endl;
+		return;
+	}
 	float *feature_vws_array = get_feature_vws_array();
 	float *vws_volume = get_vws_volume();
 	auto featureVolume = get_feature_volume();
 	int count = get_feature_number();
+	auto len = volumeSize.width * volumeSize.height * volumeSize.depth;
 	int w = volumeSize.width;
 	int h = volumeSize.height;
 	int d = volumeSize.depth;
 
 	memset(feature_vws_array, 0, D_BIN_COUNT * sizeof(float));
 
-	for (int z = 0; z < d; z++)
+	std::cout << "compute_vws_array \n";
+	int n = 0;
+
+	ofstream info("c:/work/log_vws.txt");
+
+	for (int i=0;i<len;i++)
 	{
-		for (int y = 0; y < h; y++)
+		auto idx = featureVolume[i];
+		if (idx > 0)
 		{
-			for (int x = 0; x < w; x++)
-			{
-				int index = z*w*h + y*w + x;
-				int intensity = (int)p[index];
-				int idx = featureVolume[index];
-				if (idx > 0)
-				{
-					feature_vws_array[idx - 1] += vws_volume[index];
-				}
-			}
+			n++;
+			feature_vws_array[idx - 1] += vws_volume[i];
+			info << i << " " << (int)idx << " " << vws_volume[i] << std::endl;
 		}
 	}
 
-	std::cout << "compute_vws_array \n";
+	info.close();
+
+	std::cout << std::endl << n << std::endl;
+
 	for (int i=0;i<count;i++)
 	{
 		std::cout << feature_vws_array[i] << std::ends;
@@ -783,6 +803,11 @@ void keyboard(unsigned char key, int x, int y)
 			}
 			break;
 
+		case 'w':
+			compute_feature_volume();
+			compute_vws_array();
+			break;
+
 		default:
             break;
     }
@@ -1189,9 +1214,10 @@ init_gl_main(int argc, char **argv)
 	//gridSize3 = dim3(iDivUp(volumeSize.width, blockSize3.x), iDivUp(volumeSize.height, blockSize3.y), iDivUp(volumeSize.depth, blockSize3.z));
 	//compute_saliency(volumeSize);
 
-    //free(h_volume);
-	volume_data = std::make_shared<VolumeType>(*(VolumeType*)h_volume);
-	compute_feature_volume(volumeSize);
+    free(h_volume);
+	//volume_data = std::make_shared<VolumeType>(*(VolumeType*)h_volume);
+	compute_saliency();
+	compute_feature_volume();
 	compute_vws_array();
 
     sdkCreateTimer(&timer);

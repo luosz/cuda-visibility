@@ -60,7 +60,7 @@ __device__ __managed__ float g5[R5*R5*R5] = { 0 };
 __device__ __managed__ float g9[R9*R9*R9] = { 0 };
 __device__ __managed__ float *saliencyVolume = NULL;
 __device__ __managed__ float *vwsVolume = NULL;
-__device__ __managed__ int *featureVolume = NULL;
+__device__ __managed__ unsigned char *featureVolume = NULL;
 __device__ __managed__ int feature_number = 0;
 __device__ __managed__ float feature_array[BIN_COUNT] = { 0 };
 __device__ __managed__ float feature_vws_array[BIN_COUNT] = { 0 };
@@ -81,12 +81,17 @@ bool backup_table = false;
 extern "C" float4 rgb_to_lch(float4 rgba);
 extern "C" int iDivUp(int a, int b);
 
-extern "C" int* get_feature_volume()
+extern "C" VolumeType * get_raw_volume()
+{
+	return raw_volume;
+}
+
+extern "C" unsigned char * get_feature_volume()
 {
 	return featureVolume;
 }
 
-extern "C" float* get_vws_volume()
+extern "C" float * get_vws_volume()
 {
 	return vwsVolume;
 }
@@ -101,12 +106,12 @@ extern "C" void set_feature_number(int val)
 	feature_number = val;
 }
 
-extern "C" float* get_feature_array()
+extern "C" float * get_feature_array()
 {
 	return feature_array;
 }
 
-extern "C" float* get_feature_vws_array()
+extern "C" float * get_feature_vws_array()
 {
 	return feature_vws_array;
 }
@@ -976,22 +981,19 @@ void gaussian(float *lch_volume, cudaExtent volumeSize, float *out)
 					}
 				}
 				out[index] = abs(sum5 - sum9);
-				//vwsVolume[index] = saliencyVolume[index] * visVolume[index];
 			}
 		}
 	}
 }
 
 extern "C"
-void compute_saliency(cudaExtent volumeSize)
+void compute_saliency()
 {
 	dim3 blockSize3(16, 16, 16);
-	dim3 gridSize3 = dim3(iDivUp(volumeSize.width, blockSize3.x), iDivUp(volumeSize.height, blockSize3.y), iDivUp(volumeSize.depth, blockSize3.z));
+	dim3 gridSize3 = dim3(iDivUp(sizeOfVolume.width, blockSize3.x), iDivUp(sizeOfVolume.height, blockSize3.y), iDivUp(sizeOfVolume.depth, blockSize3.z));
 
-	auto len = volumeSize.width * volumeSize.height * volumeSize.depth;
-	int w = volumeSize.width, h = volumeSize.height, d = volumeSize.depth;
-	//checkCudaErrors(cudaMemset(saliencyVolume, 0, sizeof(float) * len));
-	//checkCudaErrors(cudaMemset(vwsVolume, 0, sizeof(float) * len));
+	auto len = sizeOfVolume.width * sizeOfVolume.height * sizeOfVolume.depth;
+	int w = sizeOfVolume.width, h = sizeOfVolume.height, d = sizeOfVolume.depth;
 	memset(saliencyVolume, 0, sizeof(float) * len);
 	memset(vwsVolume, 0, sizeof(float) * len);
 
@@ -1025,8 +1027,8 @@ void compute_saliency(cudaExtent volumeSize)
 		}
 	}
 
-	gaussian(lightness, volumeSize, g1);
-	gaussian(chroma, volumeSize, g2);
+	gaussian(lightness, sizeOfVolume, g1);
+	gaussian(chroma, sizeOfVolume, g2);
 
 	for (int z = 0; z < d; z++)
 	{
@@ -1045,9 +1047,6 @@ void compute_saliency(cudaExtent volumeSize)
 	free(g2);
 	free(lightness);
 	free(chroma);
-
-	//d_compute_saliency<<<gridSize3, blockSize3>>>();
-	//cudaDeviceSynchronize();
 }
 
 extern "C"
@@ -1063,7 +1062,7 @@ void initCuda(void *h_volume, cudaExtent volumeSize)
 	load_gaussians();
 	checkCudaErrors(cudaMallocManaged(&saliencyVolume, sizeof(float) * len));
 	checkCudaErrors(cudaMallocManaged(&vwsVolume, sizeof(float) * len));
-	checkCudaErrors(cudaMallocManaged(&featureVolume, sizeof(int) * len));
+	checkCudaErrors(cudaMallocManaged(&featureVolume, sizeof(unsigned char) * len));
 
 	sizeOfVolume = volumeSize;
 	printf("volumeSize \t %d %d %d\n", sizeOfVolume.width, sizeOfVolume.height, sizeOfVolume.depth);
@@ -1234,12 +1233,19 @@ void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, u
 			fclose(fp);
 		}
 
-		compute_saliency(sizeOfVolume);
+		compute_saliency();
 
 		{
 			sprintf(buffer, "~%s.vws.raw", volume_file);
 			auto fp = fopen(buffer, "wb");
 			fwrite(vwsVolume, sizeof(float), len, fp);
+			fclose(fp);
+		}
+
+		{
+			sprintf(buffer, "~%s.feature.raw", volume_file);
+			auto fp = fopen(buffer, "wb");
+			fwrite(featureVolume, sizeof(unsigned char), len, fp);
 			fclose(fp);
 		}
 
