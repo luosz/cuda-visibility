@@ -190,6 +190,7 @@ extern "C" float* get_feature_array();
 extern "C" float* get_feature_vws_array();
 extern "C" void gaussian(float *lch_volume, cudaExtent volumeSize, float *out);
 extern "C" void compute_saliency();
+extern "C" void compute_saliency_once();
 
 typedef float(*Pointer)[4];
 extern "C" Pointer get_SelectedColor();
@@ -804,6 +805,7 @@ void keyboard(unsigned char key, int x, int y)
 			break;
 
 		case 'w':
+			compute_saliency_once();
 			compute_feature_volume();
 			compute_vws_array();
 			break;
@@ -1212,13 +1214,9 @@ init_gl_main(int argc, char **argv)
 	
 	// calculate new grid size for 3D saliency field
 	//gridSize3 = dim3(iDivUp(volumeSize.width, blockSize3.x), iDivUp(volumeSize.height, blockSize3.y), iDivUp(volumeSize.depth, blockSize3.z));
-	//compute_saliency(volumeSize);
 
     free(h_volume);
 	//volume_data = std::make_shared<VolumeType>(*(VolumeType*)h_volume);
-	compute_saliency();
-	compute_feature_volume();
-	compute_vws_array();
 
     sdkCreateTimer(&timer);
 

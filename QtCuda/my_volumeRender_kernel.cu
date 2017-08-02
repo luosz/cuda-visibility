@@ -60,6 +60,7 @@ __device__ __managed__ float g5[R5*R5*R5] = { 0 };
 __device__ __managed__ float g9[R9*R9*R9] = { 0 };
 __device__ __managed__ float *saliencyVolume = NULL;
 __device__ __managed__ float *vwsVolume = NULL;
+bool saliency_once = false;
 __device__ __managed__ unsigned char *featureVolume = NULL;
 __device__ __managed__ int feature_number = 0;
 __device__ __managed__ float feature_array[BIN_COUNT] = { 0 };
@@ -989,6 +990,7 @@ void gaussian(float *lch_volume, cudaExtent volumeSize, float *out)
 extern "C"
 void compute_saliency()
 {
+	std::cout << "compute_saliency()" << std::endl;
 	dim3 blockSize3(16, 16, 16);
 	dim3 gridSize3 = dim3(iDivUp(sizeOfVolume.width, blockSize3.x), iDivUp(sizeOfVolume.height, blockSize3.y), iDivUp(sizeOfVolume.depth, blockSize3.z));
 
@@ -1050,6 +1052,16 @@ void compute_saliency()
 }
 
 extern "C"
+void compute_saliency_once()
+{
+	if (!saliency_once)
+	{
+		saliency_once = true;
+		compute_saliency();
+	}
+}
+
+extern "C"
 void initCuda(void *h_volume, cudaExtent volumeSize)
 {
 	auto len = volumeSize.width * volumeSize.height * volumeSize.depth;
@@ -1063,6 +1075,8 @@ void initCuda(void *h_volume, cudaExtent volumeSize)
 	checkCudaErrors(cudaMallocManaged(&saliencyVolume, sizeof(float) * len));
 	checkCudaErrors(cudaMallocManaged(&vwsVolume, sizeof(float) * len));
 	checkCudaErrors(cudaMallocManaged(&featureVolume, sizeof(unsigned char) * len));
+
+	compute_saliency();
 
 	sizeOfVolume = volumeSize;
 	printf("volumeSize \t %d %d %d\n", sizeOfVolume.width, sizeOfVolume.height, sizeOfVolume.depth);
@@ -1232,8 +1246,6 @@ void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, u
 			fwrite(saliencyVolume, sizeof(float), len, fp);
 			fclose(fp);
 		}
-
-		compute_saliency();
 
 		{
 			sprintf(buffer, "~%s.vws.raw", volume_file);
