@@ -290,28 +290,27 @@ void compute_feature_volume()
 	int d = volumeSize.depth;
 	memset(featureVolume, 0, sizeof(unsigned char) * len);
 	int n = 0;
-	std::cout << w << std::ends << h << std::ends << d << std::ends << len << std::endl;
-	ofstream info("c:/work/log_feature.txt");
-	ofstream info2("c:/work/log_intensity.txt");
+	//std::cout << w << std::ends << h << std::ends << d << std::ends << len << std::endl;
+	//ofstream info("c:/work/log_feature.txt");
+	//ofstream info2("c:/work/log_intensity.txt");
 	for (int i = 0; i < len; i++)
 	{
 		//int index = z*w*h + y*w + x;
 		//auto intensity = p[i];
 		float intensity = p[i] / (float)255;
 		auto idx = (unsigned char)search_feature(intensity);
-		info2 << i << " " << (int)p[i] << " " << (int)idx << std::endl;
+		//info2 << i << " " << (int)p[i] << " " << (int)idx << std::endl;
 		featureVolume[i] = idx;
-		if (idx > 0)
-		{
-			n++;
-			info << i << " " << intensity << " " << (int)idx << std::endl;
-			//std::cout << (int)intensity<<"["<<index<<"]=" << (int)idx << std::ends;
-		}
+		//if (idx > 0)
+		//{
+		//	n++;
+		//	//info << i << " " << intensity << " " << (int)idx << std::endl;
+		//}
 	}
-	info.close();
-	info2.close();
+	//info.close();
+	//info2.close();
 
-	std::cout << std::endl << n << std::endl;
+	//std::cout << std::endl << n << std::endl;
 }
 
 /// Compute the array of feature Visibility-Weighted Saliency scores.
@@ -334,10 +333,10 @@ void compute_vws_array()
 
 	memset(feature_vws_array, 0, D_BIN_COUNT * sizeof(float));
 
-	std::cout << "compute_vws_array \n";
+	//std::cout << "compute_vws_array \n";
 	int n = 0;
 
-	ofstream info("c:/work/log_vws.txt");
+	//ofstream info("c:/work/log_vws.txt");
 
 	for (int i=0;i<len;i++)
 	{
@@ -346,19 +345,19 @@ void compute_vws_array()
 		{
 			n++;
 			feature_vws_array[idx - 1] += vws_volume[i];
-			info << i << " " << (int)idx << " " << vws_volume[i] << std::endl;
+			//info << i << " " << (int)idx << " " << vws_volume[i] << std::endl;
 		}
 	}
 
-	info.close();
+	//info.close();
 
-	std::cout << std::endl << n << std::endl;
+	//std::cout << std::endl << n << std::endl;
 
-	for (int i=0;i<count;i++)
-	{
-		std::cout << feature_vws_array[i] << std::ends;
-	}
-	std::cout << std::endl;
+	//for (int i=0;i<count;i++)
+	//{
+	//	std::cout << feature_vws_array[i] << std::ends;
+	//}
+	//std::cout << std::endl;
 }
 
 void update_feature_saliency()
@@ -367,9 +366,21 @@ void update_feature_saliency()
 	compute_feature_volume();
 }
 
-void update_vws()
+void update_vws(std::vector<float> &feature_vws)
 {
 	compute_vws_array();
+	float *feature_vws_array = get_feature_vws_array();
+	int count = get_feature_number();
+	float sum = 0;
+	for (int i = 0;i < count;i++)
+	{
+		feature_vws[i] = feature_vws_array[i];
+		sum += feature_vws[i];
+	}
+	for (int i = 0;i < count;i++)
+	{
+		feature_vws[i] /= sum;
+	}
 }
 
 /// VWS transfer function optimization
@@ -382,6 +393,12 @@ void vws_tf_optimization()
 	std::cout << "update_feature_saliency() duration: " << duration << std::endl;
 
 	// gradient descent
+	int count = get_feature_number();
+
+	std::vector<float> feature_vws(count);
+	update_vws(feature_vws);
+
+	float gradient=
 }
 
 /// Count how many features are defined in the transfer function

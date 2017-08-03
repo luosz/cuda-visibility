@@ -990,7 +990,7 @@ void gaussian(float *lch_volume, cudaExtent volumeSize, float *out)
 extern "C"
 void compute_saliency()
 {
-	std::cout << "compute_saliency()" << std::endl;
+	//std::cout << "compute_saliency()" << std::endl;
 	dim3 blockSize3(16, 16, 16);
 	dim3 gridSize3 = dim3(iDivUp(sizeOfVolume.width, blockSize3.x), iDivUp(sizeOfVolume.height, blockSize3.y), iDivUp(sizeOfVolume.depth, blockSize3.z));
 
