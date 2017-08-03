@@ -380,6 +380,8 @@ void vws_tf_optimization()
 	update_feature_saliency();
 	auto duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
 	std::cout << "update_feature_saliency() duration: " << duration << std::endl;
+
+	// gradient descent
 }
 
 /// Count how many features are defined in the transfer function
