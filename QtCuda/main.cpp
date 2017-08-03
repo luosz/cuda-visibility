@@ -57,9 +57,10 @@
 
 #include <iostream>
 #include <fstream>
-#include <stdlib.h>
-#include <stdio.h>
-#include <math.h>
+#include <cstdlib>
+#include <cstdio>
+#include <cmath>
+#include <ctime>
 #include <helper_math.h>
 //#include <AntTweakBar.h>
 #include "tinyxml2.h"
@@ -360,10 +361,25 @@ void compute_vws_array()
 	std::cout << std::endl;
 }
 
+void update_feature_saliency()
+{
+	compute_saliency_once();
+	compute_feature_volume();
+}
+
+void update_vws()
+{
+	compute_vws_array();
+}
+
 /// VWS transfer function optimization
 void vws_tf_optimization()
 {
 	float *feature_vws_array = get_feature_vws_array();
+	auto start = std::clock();
+	update_feature_saliency();
+	auto duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
+	std::cout << "update_feature_saliency() duration: " << duration << std::endl;
 }
 
 /// Count how many features are defined in the transfer function
@@ -808,6 +824,10 @@ void keyboard(unsigned char key, int x, int y)
 			compute_saliency_once();
 			compute_feature_volume();
 			compute_vws_array();
+			break;
+
+		case 'o':
+			vws_tf_optimization();
 			break;
 
 		default:
