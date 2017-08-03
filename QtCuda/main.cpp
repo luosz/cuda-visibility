@@ -1233,12 +1233,8 @@ init_gl_main(int argc, char **argv)
 	openTransferFunctionFromVoreenXML(tf_path);
 
     initCuda(h_volume, volumeSize);
-	
-	// calculate new grid size for 3D saliency field
-	//gridSize3 = dim3(iDivUp(volumeSize.width, blockSize3.x), iDivUp(volumeSize.height, blockSize3.y), iDivUp(volumeSize.depth, blockSize3.z));
 
     free(h_volume);
-	//volume_data = std::make_shared<VolumeType>(*(VolumeType*)h_volume);
 
     sdkCreateTimer(&timer);
 
