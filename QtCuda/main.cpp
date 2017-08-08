@@ -384,7 +384,7 @@ void update_vws(std::vector<float> &feature_vws)
 }
 
 /// VWS transfer function optimization
-void vws_tf_optimization()
+void vws_tf_optimization(std::vector<float> target)
 {
 	float *feature_vws_array = get_feature_vws_array();
 	auto start = std::clock();
@@ -398,7 +398,17 @@ void vws_tf_optimization()
 	std::vector<float> feature_vws(count);
 	update_vws(feature_vws);
 
-	float gradient=
+	float rms = 0;
+	for (int i=0;i<count;i++)
+	{
+		rms += (feature_vws_array[i] - target[i])*(target[i] - feature_vws_array[i]);
+	}
+	rms /= count;
+	std::vector<float> gradient(count);
+	for (int i=0;i<count;i++)
+	{
+		gradient[i] = 2 * (feature_vws[i] - target[i]);
+	}
 }
 
 /// Count how many features are defined in the transfer function
