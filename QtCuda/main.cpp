@@ -409,6 +409,7 @@ void vws_tf_optimization(std::vector<float> target)
 	{
 		gradient[i] = 2 * (feature_vws[i] - target[i]);
 	}
+	// peaks, steps
 }
 
 /// Count how many features are defined in the transfer function
