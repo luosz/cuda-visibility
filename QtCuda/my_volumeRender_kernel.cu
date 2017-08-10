@@ -1168,6 +1168,25 @@ void freeCudaBuffers()
 	checkCudaErrors(cudaFree(countVolume));
 }
 
+extern "C"
+void render_visibility_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, uint imageH,
+	float density, float brightness, float transferOffset, float transferScale)
+{
+	auto len = sizeOfVolume.width * sizeOfVolume.height * sizeOfVolume.depth;
+	//auto cube = malloc(sizeof(float) * len);
+	//memset(visVolume, 0, sizeof(VisibilityType) * len);
+	cudaMemset(countVolume, 0, sizeof(int) * len);
+	cudaMemset(depthVolume, 0, sizeof(float) * len);
+	cudaMemset(visVolume, 0, sizeof(VisibilityType) * len);
+	cudaMemset(histogram, 0, sizeof(float)*BIN_COUNT);
+	cudaMemset(histogram2, 0, sizeof(float)*BIN_COUNT);
+
+	//d_visibility << <gridSize, blockSize >> >(d_output, imageW, imageH, density, brightness, transferOffset, transferScale);
+	//cudaDeviceSynchronize();
+
+	d_visibility<< <gridSize, blockSize >> >(d_output, imageW, imageH, density, brightness, transferOffset, transferScale);
+	cudaDeviceSynchronize();
+}
 
 extern "C"
 void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, uint imageH,

@@ -218,6 +218,8 @@ extern "C" void set_backup(bool value);
 extern "C" void set_volume_file(const char *file, int n);
 extern "C" void backup_tf();
 extern "C" void restore_tf();
+extern "C" void render_visibility_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, uint imageH,
+	float density, float brightness, float transferOffset, float transferScale);
 
 extern "C" void setTextureFilterMode(bool bLinearFilter);
 extern "C" void initCuda(void *h_volume, cudaExtent volumeSize);
@@ -362,6 +364,16 @@ void compute_vws_array()
 	//	std::cout << feature_vws_array[i] << std::ends;
 	//}
 	//std::cout << std::endl;
+	float sum = 0;
+	for (int i = 0;i < count;i++)
+	{
+		//feature_vws[i] = feature_vws_array[i];
+		sum += feature_vws_array[i];
+	}
+	for (int i = 0;i < count;i++)
+	{
+		feature_vws_array[i] /= sum;
+	}
 }
 
 void update_feature_saliency()
@@ -387,6 +399,9 @@ void update_vws(std::vector<float> &feature_vws)
 	}
 }
 
+void render_visibility();
+void load_lookuptable(std::vector<float> intensity, std::vector<float4> rgba);
+
 /// VWS transfer function optimization
 void vws_tf_optimization()
 {
@@ -407,8 +422,9 @@ void vws_tf_optimization()
 		target[i] = 1.f / count;
 	}
 
-	std::vector<float> feature_vws(count);
-	update_vws(feature_vws);
+	//std::vector<float> feature_vws(count);
+	//update_vws(feature_vws);
+	compute_vws_array();
 
 	// objective function
 	float rms = 0;
@@ -417,21 +433,27 @@ void vws_tf_optimization()
 		rms += (feature_vws_array[i] - target[i])*(target[i] - feature_vws_array[i]);
 	}
 	rms /= count;
-	std::vector<float> gradient(count);
-	for (int i=0;i<count;i++)
-	{
-		gradient[i] = 2 * (feature_vws[i] - target[i]);
-	}
+
+	//std::vector<float> gradient(count);
+	//for (int i=0;i<count;i++)
+	//{
+	//	gradient[i] = 2 * (feature_vws_array[i] - target[i]);
+	//}
 
 	// peaks, steps
 	// update alpha of peak control points with gradient*step
 	for (int i = 0; i < count; i++)
 	{
-		float step = -2 * (feature_vws_array[i] - target[i])*stepsize;
+		float gradient = 2 * (feature_vws_array[i] - target[i]);
+		float step = -gradient * stepsize;
 		float peak = rgba_list[peak_indices[i]].w + step;
 		peak = peak < 0 ? 0 : (peak > 1 ? 1 : peak);
 		rgba_list[i].w = peak;
 	}
+
+	// update visibility
+	load_lookuptable(intensity_list, rgba_list);
+	render_visibility();
 }
 
 /// Count how many features are defined in the transfer function
@@ -629,6 +651,30 @@ void computeFPS()
         fpsLimit = (int)MAX(1.f, ifps);
         sdkResetTimer(&timer);
     }
+}
+
+void render_visibility()
+{
+	copyInvViewMatrix(invViewMatrix, sizeof(float4) * 3);
+
+	// map PBO to get CUDA device pointer
+	uint *d_output;
+	// map PBO to get CUDA device pointer
+	checkCudaErrors(cudaGraphicsMapResources(1, &cuda_pbo_resource, 0));
+	size_t num_bytes;
+	checkCudaErrors(cudaGraphicsResourceGetMappedPointer((void **)&d_output, &num_bytes,
+		cuda_pbo_resource));
+	//printf("CUDA mapped PBO: May access %ld bytes\n", num_bytes);
+
+	// clear image
+	checkCudaErrors(cudaMemset(d_output, 0, width*height * 4));
+
+	// call CUDA kernel, writing results to PBO
+	render_visibility_kernel(gridSize, blockSize, d_output, width, height, density, brightness, transferOffset, transferScale);
+
+	getLastCudaError("kernel failed");
+
+	checkCudaErrors(cudaGraphicsUnmapResources(1, &cuda_pbo_resource, 0));
 }
 
 // render image using CUDA
