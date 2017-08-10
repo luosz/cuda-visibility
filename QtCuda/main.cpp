@@ -446,12 +446,27 @@ void vws_tf_optimization()
 			float step = -gradient * stepsize;
 			float peak = rgba_list[peak_indices[i]].w + step;
 			peak = peak < 0 ? 0 : (peak > 1 ? 1 : peak);
-			rgba_list[i].w = peak;
+			std::cout << "alpha at " << peak_indices[i] << "=" << rgba_list[peak_indices[i]].w << "\t" << peak << std::endl;
+			rgba_list[peak_indices[i]].w = peak;
 		}
+
+		std::cout << "feature_vws_array \n";
+		for (int i=0;i<count;i++)
+		{
+			std::cout << feature_vws_array[i] << "\t";
+		}
+		std::cout << std::endl;
 
 		load_lookuptable(intensity_list, rgba_list);
 		render_visibility();
 		compute_vws_array();
+
+		std::cout << "updated vws \n";
+		for (int i = 0; i < count; i++)
+		{
+			std::cout << feature_vws_array[i] << "\t";
+		}
+		std::cout << std::endl;
 
 		// objective function
 		float rms = 0;
