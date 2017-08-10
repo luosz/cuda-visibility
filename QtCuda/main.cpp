@@ -424,13 +424,13 @@ void vws_tf_optimization()
 	}
 
 	// peaks, steps
-	// update peaks with gradient*step
-
-	// alpha of peaks
-	std::vector<float> peaks;
-	for (auto i: peak_indices)
+	// update alpha of peak control points with gradient*step
+	for (int i = 0; i < count; i++)
 	{
-		peaks.push_back(rgba_list[i].w);
+		float step = -2 * (feature_vws_array[i] - target[i])*stepsize;
+		float peak = rgba_list[peak_indices[i]].w + step;
+		peak = peak < 0 ? 0 : (peak > 1 ? 1 : peak);
+		rgba_list[i].w = peak;
 	}
 }
 
