@@ -436,8 +436,8 @@ void vws_tf_optimization()
 	float rms = FLT_MAX;
 	while (rms>epsilon)
 	{
-		iteration++;
-
+		std::cout << "iteration " << ++iteration << std::endl;
+		
 		// peaks, steps
 		// update alpha of peak control points with gradient*step
 		for (int i = 0; i < count; i++)
