@@ -548,7 +548,7 @@ void load_lookuptable(std::vector<float> intensity, std::vector<float4> rgba)
 		}
 	}
 
-	backup_tf();
+	//backup_tf();
 }
 
 /// Open Voreen transfer functions
@@ -660,6 +660,7 @@ void openTransferFunctionFromVoreenXML(const char *filename)
 	count_features(intensity_list, rgba_list);
 	search_feature_test();
 	load_lookuptable(intensity_list, rgba_list);
+	backup_tf();
 }
 
 void computeFPS()
