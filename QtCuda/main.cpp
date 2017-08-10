@@ -137,6 +137,10 @@ cudaExtent volumeSize = make_cudaExtent(41, 41, 41);
 typedef unsigned char VolumeType;
 //std::shared_ptr<VolumeType> volume_data;
 
+std::vector<float> intensity_list;
+std::vector<float4> rgba_list;
+std::vector<int> peak_indices;
+
 float gaussian5[R5*R5*R5] = { 0 };
 float gaussian9[R9*R9*R9] = { 0 };
 
@@ -384,8 +388,10 @@ void update_vws(std::vector<float> &feature_vws)
 }
 
 /// VWS transfer function optimization
-void vws_tf_optimization(std::vector<float> target)
+void vws_tf_optimization()
 {
+	const float stepsize = 0.05;
+	const float epsilon = 0.0001;
 	float *feature_vws_array = get_feature_vws_array();
 	auto start = std::clock();
 	update_feature_saliency();
@@ -394,10 +400,17 @@ void vws_tf_optimization(std::vector<float> target)
 
 	// gradient descent
 	int count = get_feature_number();
+	std::vector <float> target(count);
+	// targets: equal weights e.g. 1/3, 1/3, 1/3
+	for (int i=0;i<count;i++)
+	{
+		target[i] = 1.f / count;
+	}
 
 	std::vector<float> feature_vws(count);
 	update_vws(feature_vws);
 
+	// objective function
 	float rms = 0;
 	for (int i=0;i<count;i++)
 	{
@@ -409,12 +422,23 @@ void vws_tf_optimization(std::vector<float> target)
 	{
 		gradient[i] = 2 * (feature_vws[i] - target[i]);
 	}
+
 	// peaks, steps
+	// update peaks with gradient*step
+
+	// alpha of peaks
+	std::vector<float> peaks;
+	for (auto i: peak_indices)
+	{
+		peaks.push_back(rgba_list[i].w);
+	}
 }
 
 /// Count how many features are defined in the transfer function
 void count_features(std::vector<float> intensity, std::vector<float4> rgba)
 {
+	//std::vector<int> peak_indices;
+	peak_indices.clear();
 	float epsilon = std::numeric_limits<float>::epsilon();
 	float *features = get_feature_array();
 	int count = 0;
@@ -424,6 +448,7 @@ void count_features(std::vector<float> intensity, std::vector<float4> rgba)
 		{
 			features[count++] = intensity[i - 1];
 			features[count++] = intensity[i + 1];
+			peak_indices.push_back(i);
 		}
 	}
 	set_feature_number(count>>1);
@@ -432,8 +457,8 @@ void count_features(std::vector<float> intensity, std::vector<float4> rgba)
 /// Load a transfer function into a lookup table for rendering
 void load_lookuptable(std::vector<float> intensity, std::vector<float4> rgba)
 {
-	count_features(intensity, rgba);
-	search_feature_test();
+	//count_features(intensity, rgba);
+	//search_feature_test();
 	auto n = get_bin_count();
 	float4 *tf = get_tf_array();
 	int last = (int)intensity.size() - 1;
@@ -522,11 +547,15 @@ void openTransferFunctionFromVoreenXML(const char *filename)
 	//float4 transferFunc[] = { 0 };
 	//std::vector<float> intensity_list;
 	//std::vector<float4> rgba_list;
-	std::vector<float> intensity_list;
-	std::vector<float4> rgba_list;
 	//intensity_list_clear();
 	//colour_list_clear();
 	//opacity_list_clear();
+
+	//std::vector<float> intensity_list;
+	//std::vector<float4> rgba_list;
+	intensity_list.clear();
+	rgba_list.clear();
+
 	do
 	{
 		auto intensity = (float)atof(key->FirstChildElement("intensity")->Attribute("value"));
@@ -577,6 +606,8 @@ void openTransferFunctionFromVoreenXML(const char *filename)
 	//{
 	//	printf("%g\n", intensity_list[i]);
 	//}
+	count_features(intensity_list, rgba_list);
+	search_feature_test();
 	load_lookuptable(intensity_list, rgba_list);
 }
 
