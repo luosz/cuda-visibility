@@ -344,7 +344,7 @@ void compute_vws_array()
 
 	//ofstream info("c:/work/log_vws.txt");
 
-	for (int i=0;i<len;i++)
+	for (int i = 0;i < len;i++)
 	{
 		auto idx = featureVolume[i];
 		if (idx > 0)
@@ -370,9 +370,12 @@ void compute_vws_array()
 		//feature_vws[i] = feature_vws_array[i];
 		sum += feature_vws_array[i];
 	}
-	for (int i = 0;i < count;i++)
+	if (abs(sum) > 0)
 	{
-		feature_vws_array[i] /= sum;
+		for (int i = 0;i < count;i++)
+		{
+			feature_vws_array[i] /= sum;
+		}
 	}
 }
 
@@ -382,22 +385,22 @@ void update_feature_saliency()
 	compute_feature_volume();
 }
 
-void update_vws(std::vector<float> &feature_vws)
-{
-	compute_vws_array();
-	float *feature_vws_array = get_feature_vws_array();
-	int count = get_feature_number();
-	float sum = 0;
-	for (int i = 0;i < count;i++)
-	{
-		feature_vws[i] = feature_vws_array[i];
-		sum += feature_vws[i];
-	}
-	for (int i = 0;i < count;i++)
-	{
-		feature_vws[i] /= sum;
-	}
-}
+//void update_vws(std::vector<float> &feature_vws)
+//{
+//	compute_vws_array();
+//	float *feature_vws_array = get_feature_vws_array();
+//	int count = get_feature_number();
+//	float sum = 0;
+//	for (int i = 0;i < count;i++)
+//	{
+//		feature_vws[i] = feature_vws_array[i];
+//		sum += feature_vws[i];
+//	}
+//	for (int i = 0;i < count;i++)
+//	{
+//		feature_vws[i] /= sum;
+//	}
+//}
 
 void render_visibility();
 void load_lookuptable(std::vector<float> intensity, std::vector<float4> rgba);
@@ -407,13 +410,7 @@ void vws_tf_optimization()
 {
 	const float stepsize = 0.05;
 	const float epsilon = 0.0001;
-	float *feature_vws_array = get_feature_vws_array();
-	auto start = std::clock();
-	update_feature_saliency();
-	auto duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
-	std::cout << "update_feature_saliency() duration: " << duration << std::endl;
 
-	// gradient descent
 	int count = get_feature_number();
 	std::vector <float> target(count);
 	// targets: equal weights e.g. 1/3, 1/3, 1/3
@@ -422,38 +419,55 @@ void vws_tf_optimization()
 		target[i] = 1.f / count;
 	}
 
+	float *feature_vws_array = get_feature_vws_array();
+	auto start = std::clock();
+	update_feature_saliency();
+	auto duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
+	std::cout << "update_feature_saliency() duration: " << duration << std::endl;
+
+	int iteration = 0;
+
 	//std::vector<float> feature_vws(count);
 	//update_vws(feature_vws);
+	// update visibility
+
 	compute_vws_array();
 
-	// objective function
-	float rms = 0;
-	for (int i=0;i<count;i++)
+	float rms = FLT_MAX;
+	while (rms>epsilon)
 	{
-		rms += (feature_vws_array[i] - target[i])*(target[i] - feature_vws_array[i]);
+		iteration++;
+
+		// peaks, steps
+		// update alpha of peak control points with gradient*step
+		for (int i = 0; i < count; i++)
+		{
+			float gradient = 2 * (feature_vws_array[i] - target[i]);
+			float step = -gradient * stepsize;
+			float peak = rgba_list[peak_indices[i]].w + step;
+			peak = peak < 0 ? 0 : (peak > 1 ? 1 : peak);
+			rgba_list[i].w = peak;
+		}
+
+		load_lookuptable(intensity_list, rgba_list);
+		render_visibility();
+		compute_vws_array();
+
+		// objective function
+		float rms = 0;
+		for (int i = 0;i < count;i++)
+		{
+			rms += (feature_vws_array[i] - target[i])*(target[i] - feature_vws_array[i]);
+		}
+		if (abs(rms) > 0)
+		{
+			rms /= count;
+		}
+		else
+		{
+			std::cerr << "Error: rms=0" << std::endl;
+		}
 	}
-	rms /= count;
-
-	//std::vector<float> gradient(count);
-	//for (int i=0;i<count;i++)
-	//{
-	//	gradient[i] = 2 * (feature_vws_array[i] - target[i]);
-	//}
-
-	// peaks, steps
-	// update alpha of peak control points with gradient*step
-	for (int i = 0; i < count; i++)
-	{
-		float gradient = 2 * (feature_vws_array[i] - target[i]);
-		float step = -gradient * stepsize;
-		float peak = rgba_list[peak_indices[i]].w + step;
-		peak = peak < 0 ? 0 : (peak > 1 ? 1 : peak);
-		rgba_list[i].w = peak;
-	}
-
-	// update visibility
-	load_lookuptable(intensity_list, rgba_list);
-	render_visibility();
 }
 
 /// Count how many features are defined in the transfer function
