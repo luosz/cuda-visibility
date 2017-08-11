@@ -433,7 +433,27 @@ void vws_tf_optimization()
 
 	compute_vws_array();
 
-	float rms = FLT_MAX;
+	std::cout << "target \n";
+	for (int i = 0; i < count; i++)
+	{
+		std::cout << target[i] << "\t";
+	}
+	std::cout << std::endl;
+	std::cout << "feature_vws_array \n";
+	for (int i = 0; i < count; i++)
+	{
+		std::cout << feature_vws_array[i] << "\t";
+	}
+	std::cout << std::endl;
+
+	float rms = 0;
+	for (int i = 0; i < count; i++)
+	{
+		rms += (feature_vws_array[i] - target[i])*(feature_vws_array[i] - target[i]);
+	}
+
+	std::cout << "rms=" << rms << std::endl;
+
 	while (rms>epsilon)
 	{
 		std::cout << "iteration " << ++iteration <<"\t rms="<<rms<< std::endl;
@@ -469,10 +489,10 @@ void vws_tf_optimization()
 		std::cout << std::endl;
 
 		// objective function
-		float rms = 0;
+		rms = 0;
 		for (int i = 0;i < count;i++)
 		{
-			rms += (feature_vws_array[i] - target[i])*(target[i] - feature_vws_array[i]);
+			rms += (feature_vws_array[i] - target[i])*(feature_vws_array[i] - target[i]);
 		}
 		if (abs(rms) > 0)
 		{
