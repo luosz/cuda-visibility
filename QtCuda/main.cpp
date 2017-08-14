@@ -186,6 +186,7 @@ char **pArgv;
 #define MAX(a,b) ((a > b) ? a : b)
 #endif
 
+extern "C" void bind_tf_texture();
 extern "C" VolumeType * get_raw_volume();
 extern "C" unsigned char* get_feature_volume();
 extern "C" float* get_vws_volume();
@@ -427,6 +428,7 @@ void vws_tf_optimization()
 	std::cout << "update_feature_saliency() duration: " << duration << std::endl;
 
 	int iteration = 0;
+	const int MAX_LOOP = 20;
 
 	//std::vector<float> feature_vws(count);
 	//update_vws(feature_vws);
@@ -455,10 +457,19 @@ void vws_tf_optimization()
 
 	std::cout << "rms=" << rms << std::endl;
 
-	while (rms>epsilon)
+	ofstream out("~log.txt");
+
+	while (rms>epsilon && iteration<MAX_LOOP)
 	{
-		std::cout << "iteration " << ++iteration <<"\t rms="<<rms<< std::endl;
+		out << "iteration " << ++iteration <<"\t rms="<<rms<< std::endl;
 		
+		out << "feature vws";
+		for (int i=0;i<count;i++)
+		{
+			out <<"\t"<< feature_vws_array[i];
+		}
+		out << std::endl;
+
 		// peaks, steps
 		// update alpha of peak control points with gradient*step
 		for (int i = 0; i < count; i++)
@@ -467,28 +478,29 @@ void vws_tf_optimization()
 			float step = -gradient * stepsize;
 			float peak = rgba_list[peak_indices[i]].w + step;
 			peak = peak < 0 ? 0 : (peak > 1 ? 1 : peak);
-			std::cout << "alpha at " << peak_indices[i] << "=" << rgba_list[peak_indices[i]].w << "\t" << peak << std::endl;
+			out << "alpha at " << peak_indices[i] << "=" << rgba_list[peak_indices[i]].w << "\t" << peak << "\t" << step << std::endl;
 			rgba_list[peak_indices[i]].w = peak;
 		}
 
-		std::cout << "feature_vws_array \n";
-		for (int i=0;i<count;i++)
-		{
-			std::cout << feature_vws_array[i] << "\t";
-		}
-		std::cout << std::endl;
+		//std::cout << "feature_vws_array \n";
+		//for (int i=0;i<count;i++)
+		//{
+		//	std::cout << feature_vws_array[i] << "\t";
+		//}
+		//std::cout << std::endl;
 
 		load_lookuptable(intensity_list, rgba_list);
-		//render_visibility();
-		render();
+		bind_tf_texture();
+		render_visibility();
+		//render();
 		compute_vws_array();
 
-		std::cout << "updated vws \n";
-		for (int i = 0; i < count; i++)
-		{
-			std::cout << feature_vws_array[i] << "\t";
-		}
-		std::cout << std::endl;
+		//std::cout << "updated vws \n";
+		//for (int i = 0; i < count; i++)
+		//{
+		//	std::cout << feature_vws_array[i] << "\t";
+		//}
+		//std::cout << std::endl;
 
 		// objective function
 		rms = 0;
@@ -505,6 +517,8 @@ void vws_tf_optimization()
 			std::cerr << "Error: rms=0" << std::endl;
 		}
 	}
+
+	out.close();
 }
 
 /// Count how many features are defined in the transfer function
