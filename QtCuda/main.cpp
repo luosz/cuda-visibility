@@ -402,6 +402,7 @@ void update_feature_saliency()
 //	}
 //}
 
+void render();
 void render_visibility();
 void load_lookuptable(std::vector<float> intensity, std::vector<float4> rgba);
 
@@ -478,7 +479,8 @@ void vws_tf_optimization()
 		std::cout << std::endl;
 
 		load_lookuptable(intensity_list, rgba_list);
-		render_visibility();
+		//render_visibility();
+		render();
 		compute_vws_array();
 
 		std::cout << "updated vws \n";
