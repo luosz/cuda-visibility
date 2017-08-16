@@ -386,23 +386,6 @@ void update_feature_saliency()
 	compute_feature_volume();
 }
 
-//void update_vws(std::vector<float> &feature_vws)
-//{
-//	compute_vws_array();
-//	float *feature_vws_array = get_feature_vws_array();
-//	int count = get_feature_number();
-//	float sum = 0;
-//	for (int i = 0;i < count;i++)
-//	{
-//		feature_vws[i] = feature_vws_array[i];
-//		sum += feature_vws[i];
-//	}
-//	for (int i = 0;i < count;i++)
-//	{
-//		feature_vws[i] /= sum;
-//	}
-//}
-
 void render();
 void render_visibility();
 void load_lookuptable(std::vector<float> intensity, std::vector<float4> rgba);
@@ -429,10 +412,6 @@ void vws_tf_optimization()
 
 	int iteration = 0;
 	const int MAX_LOOP = 20;
-
-	//std::vector<float> feature_vws(count);
-	//update_vws(feature_vws);
-	// update visibility
 
 	compute_vws_array();
 
@@ -482,25 +461,11 @@ void vws_tf_optimization()
 			rgba_list[peak_indices[i]].w = peak;
 		}
 
-		//std::cout << "feature_vws_array \n";
-		//for (int i=0;i<count;i++)
-		//{
-		//	std::cout << feature_vws_array[i] << "\t";
-		//}
-		//std::cout << std::endl;
-
 		load_lookuptable(intensity_list, rgba_list);
 		bind_tf_texture();
 		render_visibility();
 		//render();
 		compute_vws_array();
-
-		//std::cout << "updated vws \n";
-		//for (int i = 0; i < count; i++)
-		//{
-		//	std::cout << feature_vws_array[i] << "\t";
-		//}
-		//std::cout << std::endl;
 
 		// objective function
 		rms = 0;
