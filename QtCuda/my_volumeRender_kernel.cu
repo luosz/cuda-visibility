@@ -997,7 +997,6 @@ void compute_saliency()
 	auto len = sizeOfVolume.width * sizeOfVolume.height * sizeOfVolume.depth;
 	int w = sizeOfVolume.width, h = sizeOfVolume.height, d = sizeOfVolume.depth;
 	memset(saliencyVolume, 0, sizeof(float) * len);
-	memset(vwsVolume, 0, sizeof(float) * len);
 
 	float4 lch_array[BIN_COUNT] = { 0 };
 	for (int i = 0; i < BIN_COUNT; i++)
@@ -1015,40 +1014,64 @@ void compute_saliency()
 	float *g2 = (float *)malloc(len * sizeof(float));
 	memset(g1, 0, len * sizeof(float));
 	memset(g2, 0, len * sizeof(float));
-	for (int z = 0; z < d; z++)
+
+	//for (int z = 0; z < d; z++)
+	//{
+	//	for (int y = 0; y < h; y++)
+	//	{
+	//		for (int x = 0; x < w; x++)
+	//		{
+	//			int index = z*w*h + y*w + x;
+	//			int intensity = (int)raw_volume[index];
+	//			lightness[index] = lch_array[intensity].x;
+	//			chroma[index] = lch_array[intensity].y;
+	//		}
+	//	}
+	//}
+	for (int i = 0; i < len; i++)
 	{
-		for (int y = 0; y < h; y++)
-		{
-			for (int x = 0; x < w; x++)
-			{
-				int index = z*w*h + y*w + x;
-				int intensity = (int)raw_volume[index];
-				lightness[index] = lch_array[intensity].x;
-				chroma[index] = lch_array[intensity].y;
-			}
-		}
+		int intensity = (int)raw_volume[i];
+		lightness[i] = lch_array[intensity].x;
+		chroma[i] = lch_array[intensity].y;
 	}
 
 	gaussian(lightness, sizeOfVolume, g1);
 	gaussian(chroma, sizeOfVolume, g2);
 
-	for (int z = 0; z < d; z++)
+	//for (int z = 0; z < d; z++)
+	//{
+	//	for (int y = 0; y < h; y++)
+	//	{
+	//		for (int x = 0; x < w; x++)
+	//		{
+	//			int index = z*w*h + y*w + x;
+	//			saliencyVolume[index] = (g1[index] + g2[index]) / 2;
+	//			vwsVolume[index] = saliencyVolume[index] * visVolume[index];
+	//		}
+	//	}
+	//}
+	for (int i = 0; i < len; i++)
 	{
-		for (int y = 0; y < h; y++)
-		{
-			for (int x = 0; x < w; x++)
-			{
-				int index = z*w*h + y*w + x;
-				saliencyVolume[index] = (g1[index] + g2[index]) / 2;
-				vwsVolume[index] = saliencyVolume[index] * visVolume[index];
-			}
-		}
+		saliencyVolume[i] = (g1[i] + g2[i]) / 2;
+		//vwsVolume[i] = saliencyVolume[i] * visVolume[i];
 	}
 
 	free(g1);
 	free(g2);
 	free(lightness);
 	free(chroma);
+}
+
+extern "C"
+void compute_vws()
+{
+	auto len = sizeOfVolume.width * sizeOfVolume.height * sizeOfVolume.depth;
+	int w = sizeOfVolume.width, h = sizeOfVolume.height, d = sizeOfVolume.depth;
+	memset(vwsVolume, 0, sizeof(float) * len);
+	for (int i = 0; i < len; i++)
+	{
+		vwsVolume[i] = saliencyVolume[i] * visVolume[i];
+	}
 }
 
 extern "C"
@@ -1077,6 +1100,7 @@ void initCuda(void *h_volume, cudaExtent volumeSize)
 	checkCudaErrors(cudaMallocManaged(&featureVolume, sizeof(unsigned char) * len));
 
 	compute_saliency();
+	compute_vws();
 
 	sizeOfVolume = volumeSize;
 	printf("volumeSize \t %d %d %d\n", sizeOfVolume.width, sizeOfVolume.height, sizeOfVolume.depth);

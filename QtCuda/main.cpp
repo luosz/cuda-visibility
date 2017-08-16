@@ -196,6 +196,7 @@ extern "C" float* get_feature_array();
 extern "C" float* get_feature_vws_array();
 extern "C" void gaussian(float *lch_volume, cudaExtent volumeSize, float *out);
 extern "C" void compute_saliency();
+extern "C" void compute_vws();
 extern "C" void compute_saliency_once();
 
 typedef float(*Pointer)[4];
@@ -380,12 +381,6 @@ void compute_vws_array()
 	}
 }
 
-void update_feature_saliency()
-{
-	compute_saliency_once();
-	compute_feature_volume();
-}
-
 void render();
 void render_visibility();
 void load_lookuptable(std::vector<float> intensity, std::vector<float4> rgba);
@@ -406,14 +401,15 @@ void vws_tf_optimization()
 
 	float *feature_vws_array = get_feature_vws_array();
 	auto start = std::clock();
-	update_feature_saliency();
+	compute_saliency_once();
+	compute_feature_volume();
+	compute_vws();
+	compute_vws_array();
 	auto duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
 	std::cout << "update_feature_saliency() duration: " << duration << std::endl;
 
 	int iteration = 0;
 	const int MAX_LOOP = 20;
-
-	compute_vws_array();
 
 	std::cout << "target \n";
 	for (int i = 0; i < count; i++)
@@ -465,6 +461,7 @@ void vws_tf_optimization()
 		bind_tf_texture();
 		render_visibility();
 		//render();
+		compute_vws();
 		compute_vws_array();
 
 		// objective function
@@ -833,6 +830,7 @@ void keyboard(unsigned char key, int x, int y)
 	printf("keyboard %d %d key %d \n", x, y, (int)key);
 	auto c = get_SelectedColor();
 	bool *p1 = get_ApplyAlpha(), *p2 = get_ApplyColor();
+	clock_t start, end;
     switch (key)
     {
         case 27:
@@ -959,9 +957,14 @@ void keyboard(unsigned char key, int x, int y)
 			break;
 
 		case 'w':
-			compute_saliency_once();
+			start = std::clock();
+			//compute_saliency_once();
+			compute_saliency();
 			compute_feature_volume();
+			compute_vws();
 			compute_vws_array();
+			end = std::clock();
+			std::cout << "update saliency, visibility and vws duration (seconds): " << (end - start) / (double)CLOCKS_PER_SEC << std::endl;
 			break;
 
 		case 'o':
