@@ -388,8 +388,11 @@ void load_lookuptable(std::vector<float> intensity, std::vector<float4> rgba);
 /// VWS transfer function optimization
 void vws_tf_optimization()
 {
-	const float stepsize = 0.05;
-	const float epsilon = 0.0001;
+	const float stepsize = 0.05f;
+	const float epsilon = 0.0001f;
+	int margin = 4;
+	float mrms = 0;
+	int mindex = 0;
 
 	int count = get_feature_number();
 	std::vector <float> target(count);
@@ -399,17 +402,107 @@ void vws_tf_optimization()
 		target[i] = 1.f / count;
 	}
 
+	float sum = 0;
+	for (int i=0;i<count;i++)
+	{
+		target[i] = intensity_list[peak_indices[i]];
+		sum += target[i];
+	}
+	if (sum>0)
+	{
+		for (int i = 0; i < count; i++)
+		{
+			target[i] /= sum;
+		}
+	}
+	else
+	{
+		std::cerr << "Error: sum of targets is zero" << std::endl;
+	}
+
+	target[0] = 0.1f;
+	target[1] = 0.3f;
+	target[2] = 0.6f;
+
 	float *feature_vws_array = get_feature_vws_array();
 	auto start = std::clock();
-	compute_saliency_once();
+	//compute_saliency_once();
+	compute_saliency();
 	compute_feature_volume();
 	compute_vws();
 	compute_vws_array();
-	auto duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
-	std::cout << "update_feature_saliency() duration: " << duration << std::endl;
-
+	auto end = std::clock();
+	std::cout << "compute saliency, visibility and vws duration (seconds): " << (end - start) / (double)CLOCKS_PER_SEC << std::endl;
 	int iteration = 0;
-	const int MAX_LOOP = 20;
+	const int MAX_LOOP = 40;
+
+	float rms = 0;
+	for (int i = 0; i < count; i++)
+	{
+		rms += (feature_vws_array[i] - target[i])*(feature_vws_array[i] - target[i]);
+	}
+	mrms = rms;
+
+	//ofstream out("~log.txt");
+	start = std::clock();
+
+	while (rms > epsilon && iteration < MAX_LOOP && mindex + margin >= iteration)
+	{
+		++iteration;
+
+		//out << "iteration " << iteration <<"\t rms="<<rms<< std::endl;
+		//
+		//out << "feature vws";
+		//for (int i=0;i<count;i++)
+		//{
+		//	out <<"\t"<< feature_vws_array[i];
+		//}
+		//out << std::endl;
+
+		// peaks, steps
+		// update alpha of peak control points with gradient*step
+		for (int i = 0; i < count; i++)
+		{
+			float gradient = 2 * (feature_vws_array[i] - target[i]);
+			float step = -gradient * stepsize;
+			float peak = rgba_list[peak_indices[i]].w + step;
+			peak = peak < 0 ? 0 : (peak > 1 ? 1 : peak);
+			//out << "alpha at " << peak_indices[i] << "=" << rgba_list[peak_indices[i]].w << "\t" << peak << "\t" << step << std::endl;
+			rgba_list[peak_indices[i]].w = peak;
+		}
+
+		load_lookuptable(intensity_list, rgba_list);
+		bind_tf_texture();
+		render_visibility();
+		//render();
+		compute_vws();
+		compute_vws_array();
+
+		// objective function
+		rms = 0;
+		for (int i = 0; i < count; i++)
+		{
+			rms += (feature_vws_array[i] - target[i])*(feature_vws_array[i] - target[i]);
+		}
+		if (abs(rms) > 0)
+		{
+			rms /= count;
+		}
+		else
+		{
+			std::cerr << "Error: rms=0" << std::endl;
+		}
+		if (rms < mrms)
+		{
+			mrms = rms;
+			mindex = iteration;
+		}
+	}
+
+	end = std::clock();
+	std::cout << "optimization duration (seconds): " << (end - start) / (double)CLOCKS_PER_SEC << std::endl;
+
+	//out.close();
 
 	std::cout << "target \n";
 	for (int i = 0; i < count; i++)
@@ -424,63 +517,7 @@ void vws_tf_optimization()
 	}
 	std::cout << std::endl;
 
-	float rms = 0;
-	for (int i = 0; i < count; i++)
-	{
-		rms += (feature_vws_array[i] - target[i])*(feature_vws_array[i] - target[i]);
-	}
-
-	std::cout << "rms=" << rms << std::endl;
-
-	ofstream out("~log.txt");
-
-	while (rms>epsilon && iteration<MAX_LOOP)
-	{
-		out << "iteration " << ++iteration <<"\t rms="<<rms<< std::endl;
-		
-		out << "feature vws";
-		for (int i=0;i<count;i++)
-		{
-			out <<"\t"<< feature_vws_array[i];
-		}
-		out << std::endl;
-
-		// peaks, steps
-		// update alpha of peak control points with gradient*step
-		for (int i = 0; i < count; i++)
-		{
-			float gradient = 2 * (feature_vws_array[i] - target[i]);
-			float step = -gradient * stepsize;
-			float peak = rgba_list[peak_indices[i]].w + step;
-			peak = peak < 0 ? 0 : (peak > 1 ? 1 : peak);
-			out << "alpha at " << peak_indices[i] << "=" << rgba_list[peak_indices[i]].w << "\t" << peak << "\t" << step << std::endl;
-			rgba_list[peak_indices[i]].w = peak;
-		}
-
-		load_lookuptable(intensity_list, rgba_list);
-		bind_tf_texture();
-		render_visibility();
-		//render();
-		compute_vws();
-		compute_vws_array();
-
-		// objective function
-		rms = 0;
-		for (int i = 0;i < count;i++)
-		{
-			rms += (feature_vws_array[i] - target[i])*(feature_vws_array[i] - target[i]);
-		}
-		if (abs(rms) > 0)
-		{
-			rms /= count;
-		}
-		else
-		{
-			std::cerr << "Error: rms=0" << std::endl;
-		}
-	}
-
-	out.close();
+	std::cout << "iteration " << iteration << "\t rms=" << rms << std::endl;
 }
 
 /// Count how many features are defined in the transfer function
@@ -964,7 +1001,7 @@ void keyboard(unsigned char key, int x, int y)
 			compute_vws();
 			compute_vws_array();
 			end = std::clock();
-			std::cout << "update saliency, visibility and vws duration (seconds): " << (end - start) / (double)CLOCKS_PER_SEC << std::endl;
+			std::cout << "compute saliency, visibility and vws duration (seconds): " << (end - start) / (double)CLOCKS_PER_SEC << std::endl;
 			break;
 
 		case 'o':
