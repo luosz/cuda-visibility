@@ -56,6 +56,7 @@
 #include <helper_timer.h>
 
 #include <iostream>
+#include <sstream>
 #include <fstream>
 #include <cstdlib>
 #include <cstdio>
@@ -446,6 +447,8 @@ void vws_tf_optimization()
 	//ofstream out("~log.txt");
 	start = std::clock();
 
+	std::stringstream ss;
+
 	while (rms > epsilon && iteration < MAX_LOOP && mindex + margin >= iteration)
 	{
 		++iteration;
@@ -497,12 +500,21 @@ void vws_tf_optimization()
 			mrms = rms;
 			mindex = iteration;
 		}
+
+		ss << iteration << "\t" << rms << "\t" << count;
+		for (int i=0;i<count;i++)
+		{
+			ss << "\t" << feature_vws_array[i];
+		}
+		ss << std::endl;
 	}
 
 	end = std::clock();
 	std::cout << "optimization duration (seconds): " << (end - start) / (double)CLOCKS_PER_SEC << std::endl;
 
-	//out.close();
+	ofstream out("~log.txt");
+	out << ss.str();
+	out.close();
 
 	std::cout << "target \n";
 	for (int i = 0; i < count; i++)
