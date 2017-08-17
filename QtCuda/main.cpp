@@ -122,7 +122,8 @@ const char *sSDKsample = "CUDA 3D Volume Render";
 //cudaExtent volumeSize = make_cudaExtent(416, 512, 112);
 //typedef unsigned short VolumeType;
 
-const char *tfs[] = { "nucleon_naive_proportional_2.tfi","vortex_naive_proportional_2.tfi","CT-Knee_spectrum_6.tfi","E_1324_Rainbow6_even_2.tfi" };
+//const char *tfs[] = { "nucleon_naive_proportional_2.tfi","vortex_naive_proportional_2.tfi","CT-Knee_spectrum_6.tfi","E_1324_Rainbow6_even_2.tfi" };
+const char *tfs[] = { "nucleon_naive_proportional.tfi","vortex_naive_proportional.tfi","CT-Knee_spectrum_6.tfi","E_1324_Rainbow6_even.tfi" };
 const char *volumes[] = { "nucleon.raw","vorts1.raw","CT-Knee.raw","E_1324.raw" };
 const int data_index = 0;
 const char *tfFile = tfs[data_index];
@@ -397,33 +398,34 @@ void vws_tf_optimization()
 
 	int count = get_feature_number();
 	std::vector <float> target(count);
+
 	// targets: equal weights e.g. 1/3, 1/3, 1/3
 	for (int i=0;i<count;i++)
 	{
 		target[i] = 1.f / count;
 	}
 
-	float sum = 0;
-	for (int i=0;i<count;i++)
-	{
-		target[i] = intensity_list[peak_indices[i]];
-		sum += target[i];
-	}
-	if (sum>0)
-	{
-		for (int i = 0; i < count; i++)
-		{
-			target[i] /= sum;
-		}
-	}
-	else
-	{
-		std::cerr << "Error: sum of targets is zero" << std::endl;
-	}
-
 	target[0] = 0.1f;
 	target[1] = 0.3f;
 	target[2] = 0.6f;
+
+	//float sum = 0;
+	//for (int i=0;i<count;i++)
+	//{
+	//	target[i] = intensity_list[peak_indices[i]];
+	//	sum += target[i];
+	//}
+	//if (sum>0)
+	//{
+	//	for (int i = 0; i < count; i++)
+	//	{
+	//		target[i] /= sum;
+	//	}
+	//}
+	//else
+	//{
+	//	std::cerr << "Error: sum of targets is zero" << std::endl;
+	//}
 
 	float *feature_vws_array = get_feature_vws_array();
 	auto start = std::clock();
@@ -437,12 +439,15 @@ void vws_tf_optimization()
 	int iteration = 0;
 	const int MAX_LOOP = 40;
 
+	std::cout << "count=" << count << std::endl;
 	float rms = 0;
 	for (int i = 0; i < count; i++)
 	{
 		rms += (feature_vws_array[i] - target[i])*(feature_vws_array[i] - target[i]);
+		std::cout << feature_vws_array[i] << "\t" << target[i] << std::endl;
 	}
 	mrms = rms;
+	std::cout << "rms=" << rms << std::endl;
 
 	//ofstream out("~log.txt");
 	start = std::clock();
