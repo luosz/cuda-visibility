@@ -881,39 +881,61 @@ void openTransferFunctionFromVoreenXML(const char *filename)
 	//	printf("%g\n", intensity_list[i]);
 	//}
 	count_features(intensity_list, rgba_list);
-	search_feature_test();
+	//search_feature_test();
 	load_lookuptable(intensity_list, rgba_list);
 	backup_tf();
+}
+
+inline std::vector<string> get_volume_files()
+{
+	std::vector<string> vs;
+	char file[_MAX_PATH];
+	for (int i=1;i<100;i++)
+	{
+		sprintf(file, "vorts%d.raw", i);
+		vs.push_back(file);
+	}
+	for (auto i:vs)
+	{
+		std::cout << i << endl;
+	}
+	return vs;
 }
 
 void *loadRawFile(char *filename, size_t size);
 
 void load_another_volume()
 {
-	volumeFilename = "vorts99.raw";
-	set_volume_file(volumeFilename, strlen(volumeFilename));
-
-	// load volume data
-	char *path = sdkFindFilePath(volumeFilename, program_path.c_str());
-	printf("volume %s\n", path);
-
-	if (path == 0)
+	auto list = get_volume_files();
+	for (auto &i : list)
 	{
-		printf("Error finding file '%s'\n", volumeFilename);
-		exit(EXIT_FAILURE);
+		volumeFilename = i.c_str();
+
+		//volumeFilename = "vorts99.raw";
+		set_volume_file(volumeFilename, strlen(volumeFilename));
+
+		// load volume data
+		char *path = sdkFindFilePath(volumeFilename, program_path.c_str());
+		printf("volume %s\n", path);
+
+		if (path == 0)
+		{
+			printf("Error finding file '%s'\n", volumeFilename);
+			exit(EXIT_FAILURE);
+		}
+
+		size_t size = volumeSize.width*volumeSize.height*volumeSize.depth * sizeof(VolumeType);
+		void *h_volume = loadRawFile(path, size);
+
+		// load transfer function
+		auto tf_path = sdkFindFilePath(tfFile, program_path.c_str());
+		printf("transfer function %s\n", tf_path);
+		openTransferFunctionFromVoreenXML(tf_path);
+
+		initCuda(h_volume, volumeSize);
+
+		free(h_volume);
 	}
-
-	size_t size = volumeSize.width*volumeSize.height*volumeSize.depth * sizeof(VolumeType);
-	void *h_volume = loadRawFile(path, size);
-
-	// load transfer function
-	auto tf_path = sdkFindFilePath(tfFile, program_path.c_str());
-	printf("transfer function %s\n", tf_path);
-	openTransferFunctionFromVoreenXML(tf_path);
-
-	initCuda(h_volume, volumeSize);
-
-	free(h_volume);
 }
 
 void computeFPS()
