@@ -128,6 +128,7 @@ const char *volumes[] = { "nucleon.raw","vorts1.raw","CT-Knee.raw","E_1324.raw" 
 const int data_index = 1;
 const char *tfFile = tfs[data_index];
 const char *volumeFilename = volumes[data_index];
+char volumeFilename_buffer[_MAX_PATH];
 
 /**
 41, 41, 41
@@ -143,6 +144,7 @@ std::vector<float> intensity_list;
 std::vector<float4> rgba_list;
 std::vector<int> peak_indices;
 std::string program_path;
+std::vector<string> volume_list;
 
 float gaussian5[R5*R5*R5] = { 0 };
 float gaussian9[R9*R9*R9] = { 0 };
@@ -189,6 +191,7 @@ char **pArgv;
 #define MAX(a,b) ((a > b) ? a : b)
 #endif
 
+extern "C" void update_volume(void *h_volume, cudaExtent volumeSize);
 extern "C" void bind_tf_texture();
 extern "C" VolumeType * get_raw_volume();
 extern "C" unsigned char* get_feature_volume();
@@ -886,37 +889,34 @@ void openTransferFunctionFromVoreenXML(const char *filename)
 	backup_tf();
 }
 
-inline std::vector<string> get_volume_files()
+inline void add_volume_to_list_for_update()
 {
-	std::vector<string> vs;
+	volume_list.clear();
 	char file[_MAX_PATH];
-	for (int i=1;i<100;i++)
+	for (int i=99;i>=1;i--)
 	{
 		sprintf(file, "vorts%d.raw", i);
-		vs.push_back(file);
+		volume_list.push_back(file);
 	}
-	for (auto i:vs)
-	{
-		std::cout << i << endl;
-	}
-	return vs;
+	//for (auto i: volume_list)
+	//{
+	//	std::cout << i << endl;
+	//}
 }
 
 void *loadRawFile(char *filename, size_t size);
 
-void load_another_volume()
+void load_a_volume()
 {
-	auto list = get_volume_files();
-	for (auto &i : list)
+	if (!volume_list.empty())
 	{
-		volumeFilename = i.c_str();
-
-		//volumeFilename = "vorts99.raw";
+		strcpy(volumeFilename_buffer, volume_list.back().c_str());
+		volumeFilename = volumeFilename_buffer;
 		set_volume_file(volumeFilename, strlen(volumeFilename));
 
 		// load volume data
 		char *path = sdkFindFilePath(volumeFilename, program_path.c_str());
-		printf("volume %s\n", path);
+		//printf("volume %s\n", path);
 
 		if (path == 0)
 		{
@@ -927,14 +927,11 @@ void load_another_volume()
 		size_t size = volumeSize.width*volumeSize.height*volumeSize.depth * sizeof(VolumeType);
 		void *h_volume = loadRawFile(path, size);
 
-		// load transfer function
-		auto tf_path = sdkFindFilePath(tfFile, program_path.c_str());
-		printf("transfer function %s\n", tf_path);
-		openTransferFunctionFromVoreenXML(tf_path);
-
-		initCuda(h_volume, volumeSize);
+		//initCuda(h_volume, volumeSize);
+		update_volume(h_volume, volumeSize);
 
 		free(h_volume);
+		volume_list.pop_back();
 	}
 }
 
@@ -998,6 +995,9 @@ void render()
 
     // clear image
     checkCudaErrors(cudaMemset(d_output, 0, width*height*4));
+
+	// update volume for time-varying data
+	load_a_volume();
 
     // call CUDA kernel, writing results to PBO
     render_kernel(gridSize, blockSize, d_output, width, height, density, brightness, transferOffset, transferScale, loc);
@@ -1253,7 +1253,7 @@ void keyboard(unsigned char key, int x, int y)
 			break;
 
 		case 'i':
-			load_another_volume();
+			add_volume_to_list_for_update();
 			break;
 		default:
             break;

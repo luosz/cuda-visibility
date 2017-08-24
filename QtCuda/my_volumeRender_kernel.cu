@@ -236,7 +236,7 @@ extern "C" void set_volume_file(const char *file, int n)
 	n = n + 1;
 	if (!volume_file)
 	{
-		checkCudaErrors(cudaMallocManaged(&volume_file, sizeof(float) * n));
+		checkCudaErrors(cudaMallocManaged(&volume_file, sizeof(char) * n));
 	}
 	memcpy(volume_file, file, n);
 }
@@ -1084,6 +1084,44 @@ void compute_saliency_once()
 	}
 }
 
+extern "C" void update_volume(void *h_volume, cudaExtent volumeSize)
+{
+	auto len = volumeSize.width * volumeSize.height * volumeSize.depth;
+	memcpy(raw_volume, h_volume, sizeof(VolumeType) * len);
+	sizeOfVolume = volumeSize;
+
+	// create 3D array
+	cudaChannelFormatDesc channelDesc = cudaCreateChannelDesc<VolumeType>();
+	checkCudaErrors(cudaMalloc3DArray(&d_volumeArray, &channelDesc, volumeSize));
+
+	// copy data to 3D array
+	cudaMemcpy3DParms copyParams = { 0 };
+	copyParams.srcPtr = make_cudaPitchedPtr(h_volume, volumeSize.width * sizeof(VolumeType), volumeSize.width, volumeSize.height);
+	copyParams.dstArray = d_volumeArray;
+	copyParams.extent = volumeSize;
+	copyParams.kind = cudaMemcpyHostToDevice;
+	checkCudaErrors(cudaMemcpy3D(&copyParams));
+
+	// set texture parameters
+	tex.normalized = true;                      // access with normalized texture coordinates
+	tex.filterMode = cudaFilterModeLinear;      // linear interpolation
+	tex.addressMode[0] = cudaAddressModeClamp;  // clamp texture coordinates
+	tex.addressMode[1] = cudaAddressModeClamp;
+
+	// bind array to 3D texture
+	checkCudaErrors(cudaBindTextureToArray(tex, d_volumeArray, channelDesc));
+
+	// set texture parameters
+	volTex.normalized = true;                      // access with normalized texture coordinates
+												   //volTex.filterMode = cudaFilterModeLinear;      // linear interpolation
+	volTex.filterMode = cudaFilterModePoint;      // nearest-neighbor interpolation
+	volTex.addressMode[0] = cudaAddressModeClamp;  // clamp texture coordinates
+	volTex.addressMode[1] = cudaAddressModeClamp;
+
+	// bind array to 3D texture
+	checkCudaErrors(cudaBindTextureToArray(volTex, d_volumeArray, channelDesc));
+}
+
 extern "C"
 void initCuda(void *h_volume, cudaExtent volumeSize)
 {
@@ -1099,8 +1137,8 @@ void initCuda(void *h_volume, cudaExtent volumeSize)
 	checkCudaErrors(cudaMallocManaged(&vwsVolume, sizeof(float) * len));
 	checkCudaErrors(cudaMallocManaged(&featureVolume, sizeof(unsigned char) * len));
 
-	compute_saliency();
-	compute_vws();
+	//compute_saliency();
+	//compute_vws();
 
 	sizeOfVolume = volumeSize;
 	printf("volumeSize \t %d %d %d\n", sizeOfVolume.width, sizeOfVolume.height, sizeOfVolume.depth);
