@@ -735,8 +735,6 @@ void count_features(std::vector<float> intensity, std::vector<float4> rgba)
 /// Load a transfer function into a lookup table for rendering
 void load_lookuptable(std::vector<float> intensity, std::vector<float4> rgba)
 {
-	//count_features(intensity, rgba);
-	//search_feature_test();
 	auto n = get_bin_count();
 	float4 *tf = get_tf_array();
 	int last = (int)intensity.size() - 1;
@@ -774,8 +772,6 @@ void load_lookuptable(std::vector<float> intensity, std::vector<float4> rgba)
 			}
 		}
 	}
-
-	//backup_tf();
 }
 
 /// Open Voreen transfer functions
