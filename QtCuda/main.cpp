@@ -142,6 +142,7 @@ typedef unsigned char VolumeType;
 std::vector<float> intensity_list;
 std::vector<float4> rgba_list;
 std::vector<int> peak_indices;
+std::string program_path;
 
 float gaussian5[R5*R5*R5] = { 0 };
 float gaussian9[R9*R9*R9] = { 0 };
@@ -889,6 +890,36 @@ void openTransferFunctionFromVoreenXML(const char *filename)
 	backup_tf();
 }
 
+void *loadRawFile(char *filename, size_t size);
+
+void load_another_volume()
+{
+	volumeFilename = "vorts99.raw";
+	set_volume_file(volumeFilename, strlen(volumeFilename));
+
+	// load volume data
+	char *path = sdkFindFilePath(volumeFilename, program_path.c_str());
+	printf("volume %s\n", path);
+
+	if (path == 0)
+	{
+		printf("Error finding file '%s'\n", volumeFilename);
+		exit(EXIT_FAILURE);
+	}
+
+	size_t size = volumeSize.width*volumeSize.height*volumeSize.depth * sizeof(VolumeType);
+	void *h_volume = loadRawFile(path, size);
+
+	// load transfer function
+	auto tf_path = sdkFindFilePath(tfFile, program_path.c_str());
+	printf("transfer function %s\n", tf_path);
+	openTransferFunctionFromVoreenXML(tf_path);
+
+	initCuda(h_volume, volumeSize);
+
+	free(h_volume);
+}
+
 void computeFPS()
 {
     frameCount++;
@@ -1203,6 +1234,9 @@ void keyboard(unsigned char key, int x, int y)
 			vws_tf_optimization_linesearch();
 			break;
 
+		case 'i':
+			load_another_volume();
+			break;
 		default:
             break;
     }
@@ -1584,6 +1618,7 @@ init_gl_main(int argc, char **argv)
     }
 
 	set_volume_file(volumeFilename, strlen(volumeFilename));
+	program_path = argv[0];
 
     // load volume data
     char *path = sdkFindFilePath(volumeFilename, argv[0]);
