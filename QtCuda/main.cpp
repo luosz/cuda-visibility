@@ -392,7 +392,7 @@ void vws_tf_optimization()
 {
 	const float stepsize = 0.05f;
 	const float epsilon = 0.0001f;
-	int margin = 4;
+	const int margin = 4;
 	float mrms = 0;
 	int mindex = 0;
 
@@ -409,27 +409,8 @@ void vws_tf_optimization()
 	target[1] = 0.3f;
 	target[2] = 0.6f;
 
-	//float sum = 0;
-	//for (int i=0;i<count;i++)
-	//{
-	//	target[i] = intensity_list[peak_indices[i]];
-	//	sum += target[i];
-	//}
-	//if (sum>0)
-	//{
-	//	for (int i = 0; i < count; i++)
-	//	{
-	//		target[i] /= sum;
-	//	}
-	//}
-	//else
-	//{
-	//	std::cerr << "Error: sum of targets is zero" << std::endl;
-	//}
-
 	float *feature_vws_array = get_feature_vws_array();
 	auto start = std::clock();
-	//compute_saliency_once();
 	compute_saliency();
 	compute_feature_volume();
 	compute_vws();
@@ -449,23 +430,12 @@ void vws_tf_optimization()
 	mrms = rms;
 	std::cout << "rms=" << rms << std::endl;
 
-	//ofstream out("~log.txt");
-	start = std::clock();
-
 	std::stringstream ss;
+	start = std::clock();
 
 	while (rms > epsilon && iteration < MAX_LOOP && mindex + margin >= iteration)
 	{
 		++iteration;
-
-		//out << "iteration " << iteration <<"\t rms="<<rms<< std::endl;
-		//
-		//out << "feature vws";
-		//for (int i=0;i<count;i++)
-		//{
-		//	out <<"\t"<< feature_vws_array[i];
-		//}
-		//out << std::endl;
 
 		// peaks, steps
 		// update alpha of peak control points with gradient*step
@@ -475,14 +445,12 @@ void vws_tf_optimization()
 			float step = -gradient * stepsize;
 			float peak = rgba_list[peak_indices[i]].w + step;
 			peak = peak < 0 ? 0 : (peak > 1 ? 1 : peak);
-			//out << "alpha at " << peak_indices[i] << "=" << rgba_list[peak_indices[i]].w << "\t" << peak << "\t" << step << std::endl;
 			rgba_list[peak_indices[i]].w = peak;
 		}
 
 		load_lookuptable(intensity_list, rgba_list);
 		bind_tf_texture();
 		render_visibility();
-		//render();
 		compute_vws();
 		compute_vws_array();
 
@@ -542,7 +510,7 @@ void vws_tf_optimization_linesearch()
 {
 	const float stepsize = 0.05f;
 	const float epsilon = 0.0001f;
-	int margin = 4;
+	const int margin = 4;
 	float mrms = 0;
 	int mindex = 0;
 
@@ -562,9 +530,10 @@ void vws_tf_optimization_linesearch()
 	//float sum = 0;
 	//for (int i=0;i<count;i++)
 	//{
+	//	//target[i] = rgba_list[peak_indices[i]].w;
 	//	target[i] = intensity_list[peak_indices[i]];
 	//	sum += target[i];
-	//}
+	//}	
 	//if (sum>0)
 	//{
 	//	for (int i = 0; i < count; i++)
@@ -579,7 +548,6 @@ void vws_tf_optimization_linesearch()
 
 	float *feature_vws_array = get_feature_vws_array();
 	auto start = std::clock();
-	//compute_saliency_once();
 	compute_saliency();
 	compute_feature_volume();
 	compute_vws();
@@ -599,25 +567,14 @@ void vws_tf_optimization_linesearch()
 	mrms = rms;
 	std::cout << "rms=" << rms << std::endl;
 
-	//ofstream out("~log.txt");
-	start = std::clock();
-
 	std::stringstream ss;
+	start = std::clock();
 
 	while (rms > epsilon && iteration < MAX_LOOP && mindex + margin >= iteration)
 	{
 		++iteration;
-
-		//out << "iteration " << iteration <<"\t rms="<<rms<< std::endl;
-		//
-		//out << "feature vws";
-		//for (int i=0;i<count;i++)
-		//{
-		//	out <<"\t"<< feature_vws_array[i];
-		//}
-		//out << std::endl;
-
 		std::vector<float> gradients;
+		std::vector<float> peak_list;
 
 		// peaks, steps
 		// update alpha of peak control points with gradient*step
@@ -628,8 +585,8 @@ void vws_tf_optimization_linesearch()
 			float step = -gradient * stepsize;
 			float peak = rgba_list[peak_indices[i]].w + step;
 			peak = peak < 0 ? 0 : (peak > 1 ? 1 : peak);
-			//out << "alpha at " << peak_indices[i] << "=" << rgba_list[peak_indices[i]].w << "\t" << peak << "\t" << step << std::endl;
 			rgba_list[peak_indices[i]].w = peak;
+			peak_list.push_back(peak);
 		}
 
 		load_lookuptable(intensity_list, rgba_list);
@@ -653,9 +610,7 @@ void vws_tf_optimization_linesearch()
 			std::cerr << "Error: rms=0" << std::endl;
 		}
 
-		std::vector<float> rms_list;
-		rms_list.push_back(rms);
-
+		// line search
 		std::vector<int> multipliers = {2, 4, 8};
 		for (int i : multipliers)
 		{
@@ -688,12 +643,23 @@ void vws_tf_optimization_linesearch()
 			{
 				std::cerr << "Error: rms=0" << std::endl;
 			}
-			rms_list.push_back(rms2);
+
+			// update minimum rms and peak list
+			if (rms2 < rms)
+			{
+				rms = rms2;
+				for (int i = 0; i < count; i++)
+				{
+					peak_list[i] = rgba_list[peak_indices[i]].w;
+				}
+			}
 		}
 
-
-
-
+		// after line search, set peaks to the best step along the gradient
+		for (int i = 0; i < count; i++)
+		{
+			rgba_list[peak_indices[i]].w = peak_list[i];
+		}
 
 		if (rms < mrms)
 		{
@@ -1218,6 +1184,10 @@ void keyboard(unsigned char key, int x, int y)
 
 		case 'o':
 			vws_tf_optimization();
+			break;
+
+		case 'p':
+			vws_tf_optimization_linesearch();
 			break;
 
 		default:
