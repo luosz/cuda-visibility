@@ -125,7 +125,7 @@ const char *sSDKsample = "CUDA 3D Volume Render";
 //const char *tfs[] = { "nucleon_naive_proportional_2.tfi","vortex_naive_proportional_2.tfi","CT-Knee_spectrum_6.tfi","E_1324_Rainbow6_even_2.tfi" };
 const char *tfs[] = { "nucleon_naive_proportional.tfi","vortex_naive_proportional.tfi","CT-Knee_spectrum_6.tfi","E_1324_Rainbow6_even.tfi" };
 const char *volumes[] = { "nucleon.raw","vorts1.raw","CT-Knee.raw","E_1324.raw" };
-const int data_index = 0;
+const int data_index = 1;
 const char *tfFile = tfs[data_index];
 const char *volumeFilename = volumes[data_index];
 
@@ -135,7 +135,7 @@ const char *volumeFilename = volumes[data_index];
 379, 229, 305
 432, 432, 432
 */
-cudaExtent volumeSize = make_cudaExtent(41, 41, 41);
+cudaExtent volumeSize = make_cudaExtent(128, 128, 128);
 typedef unsigned char VolumeType;
 //std::shared_ptr<VolumeType> volume_data;
 
@@ -405,9 +405,9 @@ void vws_tf_optimization()
 		target[i] = 1.f / count;
 	}
 
-	target[0] = 0.1f;
-	target[1] = 0.3f;
-	target[2] = 0.6f;
+	//target[0] = 0.1f;
+	//target[1] = 0.3f;
+	//target[2] = 0.6f;
 
 	float *feature_vws_array = get_feature_vws_array();
 	auto start = std::clock();
@@ -431,6 +431,13 @@ void vws_tf_optimization()
 	std::cout << "rms=" << rms << std::endl;
 
 	std::stringstream ss;
+	ss << iteration << "\t" << rms << "\t" << count;
+	for (int i = 0; i < count; i++)
+	{
+		ss << "\t" << feature_vws_array[i];
+	}
+	ss << std::endl;
+
 	start = std::clock();
 
 	while (rms > epsilon && iteration < MAX_LOOP && mindex + margin >= iteration)
@@ -483,7 +490,7 @@ void vws_tf_optimization()
 	}
 
 	end = std::clock();
-	std::cout << "optimization duration (seconds): " << (end - start) / (double)CLOCKS_PER_SEC << std::endl;
+	std::cout << "gradient descent optimization duration (seconds): " << (end - start) / (double)CLOCKS_PER_SEC << std::endl;
 
 	ofstream out("~log.txt");
 	out << ss.str();
@@ -523,9 +530,9 @@ void vws_tf_optimization_linesearch()
 		target[i] = 1.f / count;
 	}
 
-	target[0] = 0.1f;
-	target[1] = 0.3f;
-	target[2] = 0.6f;
+	//target[0] = 0.1f;
+	//target[1] = 0.3f;
+	//target[2] = 0.6f;
 
 	//float sum = 0;
 	//for (int i=0;i<count;i++)
@@ -568,6 +575,13 @@ void vws_tf_optimization_linesearch()
 	std::cout << "rms=" << rms << std::endl;
 
 	std::stringstream ss;
+	ss << iteration << "\t" << rms << "\t" << count;
+	for (int i = 0; i < count; i++)
+	{
+		ss << "\t" << feature_vws_array[i];
+	}
+	ss << std::endl;
+
 	start = std::clock();
 
 	while (rms > epsilon && iteration < MAX_LOOP && mindex + margin >= iteration)
@@ -619,7 +633,6 @@ void vws_tf_optimization_linesearch()
 				float step = -gradients[i] * stepsize * i;
 				float peak = rgba_list[peak_indices[i]].w + step;
 				peak = peak < 0 ? 0 : (peak > 1 ? 1 : peak);
-				//out << "alpha at " << peak_indices[i] << "=" << rgba_list[peak_indices[i]].w << "\t" << peak << "\t" << step << std::endl;
 				rgba_list[peak_indices[i]].w = peak;
 			}
 
@@ -676,7 +689,7 @@ void vws_tf_optimization_linesearch()
 	}
 
 	end = std::clock();
-	std::cout << "optimization duration (seconds): " << (end - start) / (double)CLOCKS_PER_SEC << std::endl;
+	std::cout << "gradient descent with line search optimization duration (seconds): " << (end - start) / (double)CLOCKS_PER_SEC << std::endl;
 
 	ofstream out("~log.txt");
 	out << ss.str();
