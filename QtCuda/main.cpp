@@ -392,7 +392,7 @@ void render_visibility();
 void load_lookuptable(std::vector<float> intensity, std::vector<float4> rgba);
 
 /// VWS transfer function optimization
-void vws_tf_optimization()
+float vws_tf_optimization()
 {
 	const float stepsize = 0.05f;
 	const float epsilon = 0.0001f;
@@ -494,7 +494,8 @@ void vws_tf_optimization()
 	}
 
 	end = std::clock();
-	std::cout << "gradient descent optimization duration (seconds): " << (end - start) / (double)CLOCKS_PER_SEC << std::endl;
+	float duration = (end - start) / (float)CLOCKS_PER_SEC;
+	std::cout << "gradient descent optimization duration (seconds): " << duration << std::endl;
 
 	ofstream out("~log.txt");
 	out << ss.str();
@@ -514,10 +515,12 @@ void vws_tf_optimization()
 	std::cout << std::endl;
 
 	std::cout << "iteration " << iteration << "\t rms=" << rms << std::endl;
+
+	return duration;
 }
 
 /// VWS transfer function optimization
-void vws_tf_optimization_linesearch()
+float vws_tf_optimization_linesearch()
 {
 	const float stepsize = 0.05f;
 	const float epsilon = 0.0001f;
@@ -693,7 +696,8 @@ void vws_tf_optimization_linesearch()
 	}
 
 	end = std::clock();
-	std::cout << "gradient descent with line search optimization duration (seconds): " << (end - start) / (double)CLOCKS_PER_SEC << std::endl;
+	float duration = (end - start) / (float)CLOCKS_PER_SEC;
+	std::cout << "gradient descent with line search optimization duration (seconds): " << duration << std::endl;
 
 	ofstream out("~log.txt");
 	out << ss.str();
@@ -713,12 +717,13 @@ void vws_tf_optimization_linesearch()
 	std::cout << std::endl;
 
 	std::cout << "iteration " << iteration << "\t rms=" << rms << std::endl;
+
+	return duration;
 }
 
 /// Count how many features are defined in the transfer function
 void count_features(std::vector<float> intensity, std::vector<float4> rgba)
 {
-	//std::vector<int> peak_indices;
 	peak_indices.clear();
 	float epsilon = std::numeric_limits<float>::epsilon();
 	float *features = get_feature_array();
@@ -902,11 +907,32 @@ inline void add_volume_to_list_for_update()
 	//{
 	//	std::cout << i << endl;
 	//}
+	ofstream out("~log_time-varying.txt");
+	out.close();
+}
+
+float optimize_for_a_frame()
+{
+	int count = get_feature_number();
+	std::vector<float> peaks;
+	for (int i = 0; i < count; i++)
+	{
+		peaks.push_back(rgba_list[peak_indices[i]].w);
+	}
+	auto duration = vws_tf_optimization();
+
+	//// reset peak control points of the transfer function
+	//for (int i = 0; i < count; i++)
+	//{
+	//	rgba_list[peak_indices[i]].w = peaks[i];
+	//}
+
+	return duration;
 }
 
 void *loadRawFile(char *filename, size_t size);
 
-void load_a_volume()
+void load_a_volume_and_optimize()
 {
 	if (!volume_list.empty())
 	{
@@ -929,6 +955,14 @@ void load_a_volume()
 
 		//initCuda(h_volume, volumeSize);
 		update_volume(h_volume, volumeSize);
+
+		auto duration = optimize_for_a_frame();
+		std::cout << volumeFilename << "\t" << duration << std::endl << std::endl;
+		std::stringstream ss;
+		ofstream out("~log_time-varying.txt", std::ios_base::app);
+		out << volumeFilename << "\t" << duration << std::endl;
+		out << ss.str();
+		out.close();
 
 		free(h_volume);
 		volume_list.pop_back();
@@ -982,6 +1016,9 @@ void render_visibility()
 // render image using CUDA
 void render()
 {
+	// update volume for time-varying data
+	load_a_volume_and_optimize();
+
     copyInvViewMatrix(invViewMatrix, sizeof(float4)*3);
 
     // map PBO to get CUDA device pointer
@@ -995,9 +1032,6 @@ void render()
 
     // clear image
     checkCudaErrors(cudaMemset(d_output, 0, width*height*4));
-
-	// update volume for time-varying data
-	load_a_volume();
 
     // call CUDA kernel, writing results to PBO
     render_kernel(gridSize, blockSize, d_output, width, height, density, brightness, transferOffset, transferScale, loc);
