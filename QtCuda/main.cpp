@@ -142,6 +142,7 @@ typedef unsigned char VolumeType;
 
 std::vector<float> intensity_list;
 std::vector<float4> rgba_list;
+std::vector<float4> rgba_list_backup;
 std::vector<int> peak_indices;
 std::string program_path;
 std::vector<string> volume_list;
@@ -243,6 +244,11 @@ extern "C" float4 rgb_to_lch(float4 rgba)
 	ColorSpace::Lch lch;
 	ColorSpace::LchConverter::ToColorSpace(&rgb, &lch);
 	return make_float4(lch.l, lch.c, lch.h, rgba.w);
+}
+
+std::string log_filename()
+{
+	return "~log_time-varying.txt";
 }
 
 void initPixelBuffer();
@@ -392,7 +398,7 @@ void render_visibility();
 void load_lookuptable(std::vector<float> intensity, std::vector<float4> rgba);
 
 /// VWS transfer function optimization
-float vws_tf_optimization()
+std::vector<float> vws_tf_optimization()
 {
 	const float stepsize = 0.05f;
 	const float epsilon = 0.0001f;
@@ -434,13 +440,14 @@ float vws_tf_optimization()
 	mrms = rms;
 	std::cout << "rms=" << rms << std::endl;
 
-	std::stringstream ss;
-	ss << iteration << "\t" << rms << "\t" << count;
-	for (int i = 0; i < count; i++)
-	{
-		ss << "\t" << feature_vws_array[i];
-	}
-	ss << std::endl;
+	//// string to be saved to log file
+	//std::stringstream ss;
+	//ss << iteration << "\t" << rms << "\t" << count;
+	//for (int i = 0; i < count; i++)
+	//{
+	//	ss << "\t" << feature_vws_array[i];
+	//}
+	//ss << std::endl;
 
 	start = std::clock();
 
@@ -485,21 +492,21 @@ float vws_tf_optimization()
 			mindex = iteration;
 		}
 
-		ss << iteration << "\t" << rms << "\t" << count;
-		for (int i=0;i<count;i++)
-		{
-			ss << "\t" << feature_vws_array[i];
-		}
-		ss << std::endl;
+		//ss << iteration << "\t" << rms << "\t" << count;
+		//for (int i=0;i<count;i++)
+		//{
+		//	ss << "\t" << feature_vws_array[i];
+		//}
+		//ss << std::endl;
 	}
 
 	end = std::clock();
 	float duration = (end - start) / (float)CLOCKS_PER_SEC;
 	std::cout << "gradient descent optimization duration (seconds): " << duration << std::endl;
 
-	ofstream out("~log.txt");
-	out << ss.str();
-	out.close();
+	//ofstream out("~log.txt");
+	//out << ss.str();
+	//out.close();
 
 	std::cout << "target \n";
 	for (int i = 0; i < count; i++)
@@ -516,11 +523,12 @@ float vws_tf_optimization()
 
 	std::cout << "iteration " << iteration << "\t rms=" << rms << std::endl;
 
-	return duration;
+	std::vector<float> ans = { duration, (float)iteration, rms };
+	return ans;
 }
 
 /// VWS transfer function optimization
-float vws_tf_optimization_linesearch()
+std::vector<float> vws_tf_optimization_linesearch()
 {
 	const float stepsize = 0.05f;
 	const float epsilon = 0.0001f;
@@ -718,7 +726,8 @@ float vws_tf_optimization_linesearch()
 
 	std::cout << "iteration " << iteration << "\t rms=" << rms << std::endl;
 
-	return duration;
+	std::vector<float> ans = { duration, (float)iteration, rms };
+	return ans;
 }
 
 /// Count how many features are defined in the transfer function
@@ -888,6 +897,7 @@ void openTransferFunctionFromVoreenXML(const char *filename)
 	//{
 	//	printf("%g\n", intensity_list[i]);
 	//}
+
 	count_features(intensity_list, rgba_list);
 	//search_feature_test();
 	load_lookuptable(intensity_list, rgba_list);
@@ -903,31 +913,22 @@ inline void add_volume_to_list_for_update()
 		sprintf(file, "vorts%d.raw", i);
 		volume_list.push_back(file);
 	}
-	//for (auto i: volume_list)
-	//{
-	//	std::cout << i << endl;
-	//}
-	ofstream out("~log_time-varying.txt");
+	rgba_list_backup = rgba_list;
+	ofstream out(log_filename());
 	out.close();
 }
 
-float optimize_for_a_frame()
+std::vector<float> optimize_for_a_frame()
 {
 	int count = get_feature_number();
-	std::vector<float> peaks;
-	for (int i = 0; i < count; i++)
+	std::vector<float> ans = vws_tf_optimization();
+	std::cout << "Peak control points\n";
+	for (auto i:peak_indices)
 	{
-		peaks.push_back(rgba_list[peak_indices[i]].w);
+		std::cout << rgba_list[i].w << "\t" << rgba_list_backup[i].w << std::endl;
 	}
-	auto duration = vws_tf_optimization();
-
-	//// reset peak control points of the transfer function
-	//for (int i = 0; i < count; i++)
-	//{
-	//	rgba_list[peak_indices[i]].w = peaks[i];
-	//}
-
-	return duration;
+	rgba_list = rgba_list_backup;
+	return ans;
 }
 
 void *loadRawFile(char *filename, size_t size);
@@ -956,11 +957,18 @@ void load_a_volume_and_optimize()
 		//initCuda(h_volume, volumeSize);
 		update_volume(h_volume, volumeSize);
 
-		auto duration = optimize_for_a_frame();
-		std::cout << volumeFilename << "\t" << duration << std::endl << std::endl;
+		auto ans = optimize_for_a_frame();
 		std::stringstream ss;
-		ofstream out("~log_time-varying.txt", std::ios_base::app);
-		out << volumeFilename << "\t" << duration << std::endl;
+		std::cout << volumeFilename;
+		ss << volumeFilename;
+		for (auto i:ans)
+		{
+			std::cout << "\t" << i;
+			ss << "\t" << i;
+		}
+		std::cout << std::endl;
+		ss << std::endl;
+		ofstream out(log_filename(), std::ios_base::app);
 		out << ss.str();
 		out.close();
 
