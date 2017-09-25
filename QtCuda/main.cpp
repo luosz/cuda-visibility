@@ -123,7 +123,7 @@ const char *sSDKsample = "CUDA 3D Volume Render";
 //typedef unsigned short VolumeType;
 
 //const char *tfs[] = { "nucleon_naive_proportional_2.tfi","vortex_naive_proportional_2.tfi","CT-Knee_spectrum_6.tfi","E_1324_Rainbow6_even_2.tfi" };
-const char *tfs[] = { "nucleon_naive_proportional.tfi","vortex_naive_proportional.tfi","CT-Knee_spectrum_6.tfi","E_1324_Rainbow6_even.tfi" };
+const char *tfs[] = { "nucleon_naive_proportional.tfi","vortex_naive_proportional.tfi","CT-Knee_spectrum_6.tfi","Rainbow3_even.tfi" };
 const char *volumes[] = { "nucleon.raw","vorts1.raw","CT-Knee.raw","E_1324.raw" };
 const int data_index = 1;
 const char *tfFile = tfs[data_index];
@@ -136,9 +136,9 @@ char volumeFilename_buffer[_MAX_PATH];
 379, 229, 305
 432, 432, 432
 */
+
 cudaExtent volumeSize = make_cudaExtent(128, 128, 128);
 typedef unsigned char VolumeType;
-//std::shared_ptr<VolumeType> volume_data;
 
 std::vector<float> intensity_list;
 std::vector<float4> rgba_list;
@@ -236,6 +236,18 @@ extern "C" void freeCudaBuffers();
 extern "C" void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, uint imageH,
                               float density, float brightness, float transferOffset, float transferScale, int2 loc);
 extern "C" void copyInvViewMatrix(float *invViewMatrix, size_t sizeofMatrix);
+
+void apply_blending_operation()
+{
+	std::cout << "apply_blending_operation()" << std::endl;
+	set_gaussian(true);
+}
+
+void reset_transfer_function()
+{
+	std::cout << "reset_transfer_function()" << std::endl;
+	set_discard(true);
+}
 
 /// RGB to LCH color conversion
 extern "C" float4 rgb_to_lch(float4 rgba)

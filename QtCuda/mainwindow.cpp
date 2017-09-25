@@ -97,26 +97,30 @@ void MainWindow::on_pushButton_2_clicked()
 
 void MainWindow::on_pushButton_3_clicked()
 {
-	const int n = 11;
-	int r = 2;
-	float d[n];
-	calc_gaussian_kernel(d, 2 * r + 1, sigma(r));
-	for (int i = 0; i < 2 * r + 1; i++)
-	{
-		std::cout << d[i] << std::ends;
-	}
-	std::cout << std::endl;
-	r = 4;
-	calc_gaussian_kernel(d, 2 * r + 1, sigma(r));
-	for (int i = 0; i < 2 * r + 1; i++)
-	{
-		std::cout << d[i] << std::ends;
-	}
-	std::cout << std::endl;
+	apply_blending_operation();
+
+	//const int n = 11;
+	//int r = 2;
+	//float d[n];
+	//calc_gaussian_kernel(d, 2 * r + 1, sigma(r));
+	//for (int i = 0; i < 2 * r + 1; i++)
+	//{
+	//	std::cout << d[i] << std::ends;
+	//}
+	//std::cout << std::endl;
+	//r = 4;
+	//calc_gaussian_kernel(d, 2 * r + 1, sigma(r));
+	//for (int i = 0; i < 2 * r + 1; i++)
+	//{
+	//	std::cout << d[i] << std::ends;
+	//}
+	//std::cout << std::endl;
 }
 
 void MainWindow::on_pushButton_4_clicked()
 {
+	reset_transfer_function();
+
 	////float gaussian1[R1*R1*R1] = { 0 };
 	//float a;
 	//std::ifstream myfile;

@@ -24,6 +24,9 @@ QT_CHARTS_USE_NAMESPACE
 typedef float(*Pointer)[4];
 extern "C" float4* get_tf_array();
 
+extern "C" void apply_blending_operation();
+extern "C" void reset_transfer_function();
+
 class MainWindow : public QMainWindow
 {
 	Q_OBJECT
