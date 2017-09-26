@@ -81,7 +81,7 @@ void MainWindow::on_pushButton_2_clicked()
 		chart2->addSeries(line);
 	}
 	chart2->createDefaultAxes();
-	chart2->setTitle("Smoothed relative visibility histogram");
+	chart2->setTitle("Relative visibility histogram");
 	chartView2.setRenderHint(QPainter::Antialiasing);
 }
 
