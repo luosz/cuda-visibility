@@ -213,7 +213,7 @@ extern "C" bool* get_ApplyColor();
 extern "C" bool* get_ApplyAlpha();
 extern "C" int get_region_size();
 extern "C" float4* get_tf_array();
-extern "C" float* get_relative_visibility_histogram();
+//extern "C" float* get_relative_visibility_histogram();
 extern "C" int get_bin_count();
 extern "C" bool get_apply();
 extern "C" void set_apply(bool value);
