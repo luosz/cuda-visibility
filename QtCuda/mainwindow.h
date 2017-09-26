@@ -23,6 +23,7 @@ QT_CHARTS_USE_NAMESPACE
 
 typedef float(*Pointer)[4];
 extern "C" float4* get_tf_array();
+extern "C" float* get_relative_visibility_histogram();
 
 extern "C" void apply_blending_operation();
 extern "C" void reset_transfer_function();
@@ -83,6 +84,7 @@ private:
 	Pointer color_array = NULL;
 	bool *apply_alpha = NULL;
 	bool *apply_color = NULL;
-	QGraphicsScene scene;
+	//QGraphicsScene scene;
 	QChartView chartView;
+	QChartView chartView2;
 };

@@ -14,8 +14,9 @@ MainWindow::MainWindow(QWidget *parent)
 	this->move(this->pos() - QPoint(179, 260));
 	ui.setupUi(this);
 	update_color(QColor::fromRgbF(D_RGBA[0], D_RGBA[1], D_RGBA[2], D_RGBA[3]));
-	ui.graphicsView->setScene(&scene);
-	ui.gridLayout->addWidget(&chartView);
+	//ui.graphicsView->setScene(&scene);
+	ui.verticalLayout->addWidget(&chartView);
+	ui.verticalLayout->addWidget(&chartView2);
 }
 
 void MainWindow::on_pushButton_clicked()
@@ -47,52 +48,41 @@ void MainWindow::on_checkBox_2_clicked()
 
 void MainWindow::on_pushButton_2_clicked()
 {
-	const qreal N = D_BIN_COUNT - 1;
-	QVector<QScatterSeries*> points;
-	QVector<QLineSeries*> lines;
-	scene.clear();
 	auto p = get_tf_array();
+	const qreal N = D_BIN_COUNT - 1;
+
+	auto chart = chartView.chart();
+	chart->removeAllSeries();
+	chart->legend()->hide();
 	for (int i = 0; i < D_BIN_COUNT; i++)
 	{
 		auto c = QColor::fromRgbF((qreal)p[i].x, (qreal)p[i].y, (qreal)p[i].z);
-		if (p[i].w>0.5f/D_BIN_COUNT)
-		{
-			scene.addLine(i, N, i, N-(qreal)p[i].w*N, QPen(c));
-		}
-
-		if (i < N)
-		{
-			auto s2 = new QLineSeries();
-			s2->append(i / N, (qreal)p[i].w);
-			s2->append((i + 1) / N, (qreal)p[i + 1].w);
-			s2->setColor(c);
-			lines.append(s2);
-		}else
-		{
-			auto series = new QScatterSeries();
-			series->append(i / N, (qreal)p[i].w);
-			series->setColor(c);
-			series->setMarkerSize(4);
-			points.append(series);
-		}
-	}
-	ui.graphicsView->fitInView(0, 0, 255, 255, Qt::KeepAspectRatio);
-
-	QChart *chart = new QChart();
-	chart->legend()->hide();
-	for (int i = 0; i < lines.size(); i++)
-	{
-		chart->addSeries(lines[i]);
-	}
-	for (int i = 0; i < points.size(); i++)
-	{
-		chart->addSeries(points[i]);
+		auto line = new QLineSeries();
+		line->append(i / N, (qreal)p[i].w);
+		line->append(i / N, 0);
+		line->setColor(c);
+		chart->addSeries(line);
 	}
 	chart->createDefaultAxes();
 	chart->setTitle("Transfer function");
-
-	chartView.setChart(chart);
 	chartView.setRenderHint(QPainter::Antialiasing);
+
+	auto p2 = get_relative_visibility_histogram();
+	auto chart2 = chartView2.chart();
+	chart2->removeAllSeries();
+	chart2->legend()->hide();
+	for (int i = 0; i < D_BIN_COUNT; i++)
+	{
+		auto c = QColor::fromRgbF(0.5, 0.5, 0.5);
+		auto line = new QLineSeries();
+		line->append(i / N, 0);
+		line->append(i / N, (qreal)p2[i]);
+		line->setColor(c);
+		chart2->addSeries(line);
+	}
+	chart2->createDefaultAxes();
+	chart2->setTitle("Smoothed relative visibility histogram");
+	chartView2.setRenderHint(QPainter::Antialiasing);
 }
 
 void MainWindow::on_pushButton_3_clicked()

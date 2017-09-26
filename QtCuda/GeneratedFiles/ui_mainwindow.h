@@ -16,7 +16,6 @@
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QFormLayout>
 #include <QtWidgets/QFrame>
-#include <QtWidgets/QGraphicsView>
 #include <QtWidgets/QGridLayout>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLineEdit>
@@ -26,6 +25,7 @@
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QToolBar>
+#include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -39,6 +39,8 @@ public:
     QGridLayout *gridLayout_2;
     QFrame *frame;
     QGridLayout *gridLayout;
+    QFrame *frame_2;
+    QVBoxLayout *verticalLayout;
     QFormLayout *formLayout;
     QLineEdit *lineEdit;
     QPushButton *pushButton;
@@ -48,7 +50,6 @@ public:
     QGridLayout *gridLayout_3;
     QPushButton *pushButton_3;
     QPushButton *pushButton_4;
-    QGraphicsView *graphicsView;
     QMenuBar *menuBar;
     QMenu *menu_File;
     QToolBar *mainToolBar;
@@ -84,17 +85,33 @@ public:
         gridLayout->setSpacing(6);
         gridLayout->setContentsMargins(11, 11, 11, 11);
         gridLayout->setObjectName(QStringLiteral("gridLayout"));
+        frame_2 = new QFrame(frame);
+        frame_2->setObjectName(QStringLiteral("frame_2"));
+        QSizePolicy sizePolicy1(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        sizePolicy1.setHorizontalStretch(0);
+        sizePolicy1.setVerticalStretch(0);
+        sizePolicy1.setHeightForWidth(frame_2->sizePolicy().hasHeightForWidth());
+        frame_2->setSizePolicy(sizePolicy1);
+        frame_2->setFrameShape(QFrame::StyledPanel);
+        frame_2->setFrameShadow(QFrame::Raised);
+        verticalLayout = new QVBoxLayout(frame_2);
+        verticalLayout->setSpacing(6);
+        verticalLayout->setContentsMargins(11, 11, 11, 11);
+        verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
+
+        gridLayout->addWidget(frame_2, 1, 0, 1, 1);
+
         formLayout = new QFormLayout();
         formLayout->setSpacing(6);
         formLayout->setObjectName(QStringLiteral("formLayout"));
         formLayout->setContentsMargins(6, 6, 6, 6);
         lineEdit = new QLineEdit(frame);
         lineEdit->setObjectName(QStringLiteral("lineEdit"));
-        QSizePolicy sizePolicy1(QSizePolicy::Expanding, QSizePolicy::Preferred);
-        sizePolicy1.setHorizontalStretch(0);
-        sizePolicy1.setVerticalStretch(0);
-        sizePolicy1.setHeightForWidth(lineEdit->sizePolicy().hasHeightForWidth());
-        lineEdit->setSizePolicy(sizePolicy1);
+        QSizePolicy sizePolicy2(QSizePolicy::Expanding, QSizePolicy::Preferred);
+        sizePolicy2.setHorizontalStretch(0);
+        sizePolicy2.setVerticalStretch(0);
+        sizePolicy2.setHeightForWidth(lineEdit->sizePolicy().hasHeightForWidth());
+        lineEdit->setSizePolicy(sizePolicy2);
         lineEdit->setAutoFillBackground(true);
         lineEdit->setReadOnly(true);
 
@@ -110,11 +127,11 @@ public:
 
         checkBox = new QCheckBox(frame);
         checkBox->setObjectName(QStringLiteral("checkBox"));
-        QSizePolicy sizePolicy2(QSizePolicy::Minimum, QSizePolicy::Fixed);
-        sizePolicy2.setHorizontalStretch(0);
-        sizePolicy2.setVerticalStretch(0);
-        sizePolicy2.setHeightForWidth(checkBox->sizePolicy().hasHeightForWidth());
-        checkBox->setSizePolicy(sizePolicy2);
+        QSizePolicy sizePolicy3(QSizePolicy::Minimum, QSizePolicy::Fixed);
+        sizePolicy3.setHorizontalStretch(0);
+        sizePolicy3.setVerticalStretch(0);
+        sizePolicy3.setHeightForWidth(checkBox->sizePolicy().hasHeightForWidth());
+        checkBox->setSizePolicy(sizePolicy3);
         checkBox->setChecked(true);
 
         formLayout->setWidget(0, QFormLayout::FieldRole, checkBox);
@@ -148,11 +165,6 @@ public:
 
 
         gridLayout->addLayout(formLayout, 0, 0, 1, 1);
-
-        graphicsView = new QGraphicsView(frame);
-        graphicsView->setObjectName(QStringLiteral("graphicsView"));
-
-        gridLayout->addWidget(graphicsView, 5, 0, 1, 1);
 
 
         gridLayout_2->addWidget(frame, 0, 0, 1, 1);

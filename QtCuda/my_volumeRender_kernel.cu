@@ -150,6 +150,11 @@ extern "C" float4* get_tf_array()
 	return tf_array;
 }
 
+extern "C" float* get_relative_visibility_histogram()
+{
+	return histogram4;
+}
+
 extern "C" void backup_tf()
 {
 	memcpy(tf_array0, tf_array, sizeof(tf_array));
