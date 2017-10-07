@@ -219,7 +219,7 @@ public:
         pushButton_2->setText(QApplication::translate("MainWindowClass", "Show transfer function", Q_NULLPTR));
         pushButton_3->setText(QApplication::translate("MainWindowClass", "Apply alpha/color editing", Q_NULLPTR));
         pushButton_4->setText(QApplication::translate("MainWindowClass", "Reset transfer function", Q_NULLPTR));
-        checkBox_3->setText(QApplication::translate("MainWindowClass", "Apply tf editing to frames", Q_NULLPTR));
+        checkBox_3->setText(QApplication::translate("MainWindowClass", "Apply time-varying TF", Q_NULLPTR));
         menu_File->setTitle(QApplication::translate("MainWindowClass", "&File", Q_NULLPTR));
     } // retranslateUi
 

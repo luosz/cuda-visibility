@@ -170,7 +170,7 @@
            <item>
             <widget class="QCheckBox" name="checkBox_3">
              <property name="text">
-              <string>Apply tf editing to frames</string>
+              <string>Apply time-varying TF</string>
              </property>
              <property name="checked">
               <bool>true</bool>
