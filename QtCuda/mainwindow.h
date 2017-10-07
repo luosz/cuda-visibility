@@ -25,7 +25,7 @@ typedef float(*Pointer)[4];
 extern "C" float4* get_tf_array();
 extern "C" float* get_relative_visibility_histogram();
 
-extern "C" void apply_blending_operation();
+extern "C" void apply_tf_editing();
 extern "C" void reset_transfer_function();
 
 class MainWindow : public QMainWindow

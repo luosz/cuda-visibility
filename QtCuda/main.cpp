@@ -238,9 +238,9 @@ extern "C" void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uin
                               float density, float brightness, float transferOffset, float transferScale, int2 loc);
 extern "C" void copyInvViewMatrix(float *invViewMatrix, size_t sizeofMatrix);
 
-void apply_blending_operation()
+void apply_tf_editing()
 {
-	std::cout << "apply_blending_operation()" << std::endl;
+	std::cout << "apply_tf_editing()" << std::endl;
 	set_gaussian(true);
 }
 
@@ -931,6 +931,20 @@ inline void add_volume_to_list_for_update()
 	out.close();
 }
 
+inline void add_volume_to_list_for_update2()
+{
+	volume_list.clear();
+	char file[_MAX_PATH];
+	for (int i = 1354; i >= 1295; i--)
+	{
+		sprintf(file, "E_%d.raw", i);
+		volume_list.push_back(file);
+	}
+	rgba_list_backup = rgba_list;
+	ofstream out(log_filename());
+	out.close();
+}
+
 std::vector<float> optimize_for_a_frame()
 {
 	int count = get_feature_number();
@@ -970,20 +984,25 @@ void load_a_volume_and_optimize()
 		//initCuda(h_volume, volumeSize);
 		update_volume(h_volume, volumeSize);
 
-		auto ans = optimize_for_a_frame();
-		std::stringstream ss;
-		std::cout << volumeFilename;
-		ss << volumeFilename;
-		for (auto i:ans)
-		{
-			std::cout << "\t" << i;
-			ss << "\t" << i;
-		}
-		std::cout << std::endl;
-		ss << std::endl;
-		ofstream out(log_filename(), std::ios_base::app);
-		out << ss.str();
-		out.close();
+		//// optimize for a frame
+		//auto ans = optimize_for_a_frame();
+		//std::stringstream ss;
+		//std::cout << volumeFilename;
+		//ss << volumeFilename;
+		//for (auto i:ans)
+		//{
+		//	std::cout << "\t" << i;
+		//	ss << "\t" << i;
+		//}
+		//std::cout << std::endl;
+		//ss << std::endl;
+		//ofstream out(log_filename(), std::ios_base::app);
+		//out << ss.str();
+		//out.close();
+
+		// apply tf editing
+		//reset_transfer_function();
+		apply_tf_editing();
 
 		free(h_volume);
 		volume_list.pop_back();
@@ -1310,6 +1329,11 @@ void keyboard(unsigned char key, int x, int y)
 		case 'i':
 			add_volume_to_list_for_update();
 			break;
+
+		case 'j':
+			add_volume_to_list_for_update2();
+			break;
+
 		default:
             break;
     }

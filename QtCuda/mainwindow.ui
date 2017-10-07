@@ -140,7 +140,7 @@
            <item row="0" column="0">
             <widget class="QPushButton" name="pushButton_3">
              <property name="text">
-              <string>Apply blending operation</string>
+              <string>Apply alpha/color editing</string>
              </property>
             </widget>
            </item>

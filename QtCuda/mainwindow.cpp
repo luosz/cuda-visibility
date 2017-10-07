@@ -87,7 +87,7 @@ void MainWindow::on_pushButton_2_clicked()
 
 void MainWindow::on_pushButton_3_clicked()
 {
-	apply_blending_operation();
+	apply_tf_editing();
 
 	//const int n = 11;
 	//int r = 2;
