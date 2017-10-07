@@ -10,6 +10,7 @@ const int D_WIDTH = 1024;
 const int D_HEIGHT = 1024;
 const int D_BIN_COUNT = 256;
 const int D_RADIUS = 16;
+const bool D_TIME_VARYING_TF = true;
 
 const int R5 = 5;
 const int R9 = 9;

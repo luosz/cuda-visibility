@@ -58,11 +58,12 @@ public:
 		ui.lineEdit->setText(color.name());
 	}
 
-	void set_pointers(Pointer picked_color, bool *alpha, bool *color)
+	void set_pointers(Pointer picked_color, bool *alpha, bool *color, bool *time_varying_tf)
 	{
 		color_array = picked_color;
 		apply_alpha = alpha;
 		apply_color = color;
+		apply_time_varying_tf = time_varying_tf;
 	}
 
 private slots:
@@ -84,6 +85,7 @@ private:
 	Pointer color_array = NULL;
 	bool *apply_alpha = NULL;
 	bool *apply_color = NULL;
+	bool *apply_time_varying_tf = NULL;
 	//QGraphicsScene scene;
 	QChartView chartView;
 	QChartView chartView2;

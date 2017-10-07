@@ -153,6 +153,7 @@ float gaussian9[R9*R9*R9] = { 0 };
 int2 loc = {0, 0};
 int2 loc2 = {0, 0};
 bool dragMode = false; // mouse tracking mode
+bool time_varying_tf = D_TIME_VARYING_TF;
 
 //uint width = 512, height = 512;
 uint width = D_WIDTH, height = D_HEIGHT;
@@ -1003,7 +1004,10 @@ void load_a_volume_and_optimize()
 
 		// apply tf editing
 		//reset_transfer_function();
-		apply_tf_editing();
+		if (time_varying_tf)
+		{
+			apply_tf_editing();
+		}
 
 		free(h_volume);
 		volume_list.pop_back();
@@ -1809,7 +1813,7 @@ int main(int argc, char *argv[])
 	MainWindow w;
 	w.show();
 
-	w.set_pointers(get_SelectedColor(), get_ApplyAlpha(), get_ApplyColor());
+	w.set_pointers(get_SelectedColor(), get_ApplyAlpha(), get_ApplyColor(), &time_varying_tf);
 
 	init_gl_main(argc, argv);
 
