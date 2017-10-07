@@ -79,6 +79,8 @@ private slots:
 
     void on_pushButton_4_clicked();
 
+    void on_checkBox_3_clicked();
+
 private:
 	Ui::MainWindowClass ui;
 	QColor color;

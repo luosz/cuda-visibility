@@ -127,3 +127,12 @@ void MainWindow::on_pushButton_4_clicked()
 	//std::cout << std::endl;
 	//myfile.close();
 }
+
+void MainWindow::on_checkBox_3_clicked()
+{
+    if (apply_time_varying_tf)
+    {
+        *apply_time_varying_tf = ui.checkBox_3->isChecked();
+        std::cout << "Apply time-varying TF: " << (*apply_time_varying_tf ? "true" : "false") << std::endl;
+    }
+}
