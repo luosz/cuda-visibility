@@ -1003,7 +1003,7 @@ void load_a_volume_and_optimize()
 		//out.close();
 
 		// apply tf editing
-		//reset_transfer_function();
+		reset_transfer_function();
 		if (time_varying_tf)
 		{
 			apply_tf_editing();

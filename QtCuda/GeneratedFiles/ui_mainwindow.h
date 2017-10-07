@@ -172,6 +172,7 @@ public:
         horizontalLayout->setContentsMargins(9, 9, 9, 9);
         checkBox_3 = new QCheckBox(frame);
         checkBox_3->setObjectName(QStringLiteral("checkBox_3"));
+        checkBox_3->setChecked(true);
 
         horizontalLayout->addWidget(checkBox_3);
 
@@ -187,7 +188,7 @@ public:
         MainWindowClass->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindowClass);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 600, 17));
+        menuBar->setGeometry(QRect(0, 0, 600, 26));
         menu_File = new QMenu(menuBar);
         menu_File->setObjectName(QStringLiteral("menu_File"));
         MainWindowClass->setMenuBar(menuBar);

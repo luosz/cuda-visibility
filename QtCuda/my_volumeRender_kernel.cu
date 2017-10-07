@@ -1300,6 +1300,18 @@ void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, u
 
 	cudaDeviceSynchronize();
 
+	if (get_discard())
+	{
+		set_discard(false);
+		restore_tf();
+	}
+
+	if (get_backup())
+	{
+		set_backup(false);
+		backup_tf();
+	}
+
 	if (get_apply())
 	{
 		set_apply(false);
@@ -1407,18 +1419,6 @@ void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, u
 			fprintf(fp5, "{%f,%f,%f,%f}\n", tf_array[i].x, tf_array[i].y, tf_array[i].z, tf_array[i].w);
 		}
 		fclose(fp5);
-	}
-
-	if (get_discard())
-	{
-		set_discard(false);
-		restore_tf();
-	}
-
-	if (get_backup())
-	{
-		set_backup(false);
-		backup_tf();
 	}
 }
 
