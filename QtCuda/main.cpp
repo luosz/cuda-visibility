@@ -151,6 +151,7 @@ float gaussian5[R5*R5*R5] = { 0 };
 float gaussian9[R9*R9*R9] = { 0 };
 
 int2 loc = {0, 0};
+int2 loc2 = {0, 0};
 bool dragMode = false; // mouse tracking mode
 
 //uint width = 512, height = 512;
@@ -1356,10 +1357,23 @@ void mouse(int button, int state, int x, int y)
 	//}
 
 	int n = get_region_size();
-	loc.x = x - n / 2;
-	//loc.y = height - y - n;
-	// put the tip of mouse cursor at the center of the selected region
-	loc.y = height - y - n * 4 / 3;
+
+	if (button == GLUT_LEFT_BUTTON)
+	{
+		loc.x = x - n / 2;
+		//loc.y = height - y - n;
+		// put the tip of mouse cursor at the center of the selected region
+		loc.y = height - y - n * 4 / 3;
+	} 
+	else
+	{
+		loc2.x = x - n / 2;
+		loc2.y = height - y - n * 4 / 3;
+		if (state == GLUT_DOWN)
+		{
+			std::cout<<"loc="<<loc.x<<","<<loc.y<<"\t loc2="<<loc2.x<<"," <<loc2.y<<std::endl;
+		}
+	}
 
     if (state == GLUT_DOWN)
     {
