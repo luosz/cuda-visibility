@@ -17,6 +17,7 @@
 #include <QtWidgets/QFormLayout>
 #include <QtWidgets/QFrame>
 #include <QtWidgets/QGridLayout>
+#include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMainWindow>
@@ -50,6 +51,8 @@ public:
     QGridLayout *gridLayout_3;
     QPushButton *pushButton_3;
     QPushButton *pushButton_4;
+    QHBoxLayout *horizontalLayout;
+    QCheckBox *checkBox_3;
     QMenuBar *menuBar;
     QMenu *menu_File;
     QToolBar *mainToolBar;
@@ -163,6 +166,18 @@ public:
 
         formLayout->setLayout(2, QFormLayout::FieldRole, gridLayout_3);
 
+        horizontalLayout = new QHBoxLayout();
+        horizontalLayout->setSpacing(6);
+        horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
+        horizontalLayout->setContentsMargins(9, 9, 9, 9);
+        checkBox_3 = new QCheckBox(frame);
+        checkBox_3->setObjectName(QStringLiteral("checkBox_3"));
+
+        horizontalLayout->addWidget(checkBox_3);
+
+
+        formLayout->setLayout(3, QFormLayout::LabelRole, horizontalLayout);
+
 
         gridLayout->addLayout(formLayout, 0, 0, 1, 1);
 
@@ -203,6 +218,7 @@ public:
         pushButton_2->setText(QApplication::translate("MainWindowClass", "Show transfer function", Q_NULLPTR));
         pushButton_3->setText(QApplication::translate("MainWindowClass", "Apply alpha/color editing", Q_NULLPTR));
         pushButton_4->setText(QApplication::translate("MainWindowClass", "Reset transfer function", Q_NULLPTR));
+        checkBox_3->setText(QApplication::translate("MainWindowClass", "Apply tf editing to frames", Q_NULLPTR));
         menu_File->setTitle(QApplication::translate("MainWindowClass", "&File", Q_NULLPTR));
     } // retranslateUi
 
