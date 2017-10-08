@@ -932,8 +932,8 @@ inline void add_volume_to_list_for_update()
 		volume_list.push_back(file);
 	}
 	rgba_list_backup = rgba_list;
-	ofstream out(log_filename());
-	out.close();
+	//ofstream out(log_filename());
+	//out.close();
 	diff.x = ((float)loc2.x - loc.x) / volume_list.size();
 	diff.y = ((float)loc2.y - loc.y) / volume_list.size();
 }
@@ -948,8 +948,22 @@ inline void add_volume_to_list_for_update2()
 		volume_list.push_back(file);
 	}
 	rgba_list_backup = rgba_list;
-	ofstream out(log_filename());
-	out.close();
+	//ofstream out(log_filename());
+	//out.close();
+	diff.x = ((float)loc2.x - loc.x) / volume_list.size();
+	diff.y = ((float)loc2.y - loc.y) / volume_list.size();
+}
+
+extern "C" void add_volume_to_list_for_update_from_vector(std::vector<std::string> filelist)
+{
+	volume_list.clear();
+	for (auto rit = filelist.rbegin(); rit != filelist.rend(); ++rit)
+	{
+		volume_list.push_back(*rit);
+	}
+	rgba_list_backup = rgba_list;
+	//ofstream out(log_filename());
+	//out.close();
 	diff.x = ((float)loc2.x - loc.x) / volume_list.size();
 	diff.y = ((float)loc2.y - loc.y) / volume_list.size();
 }

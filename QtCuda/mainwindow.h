@@ -13,6 +13,7 @@
 #include <QMessageBox>
 #include <QTextStream>
 #include <QFileDialog>
+#include <QDebug>
 #include "ui_mainwindow.h"
 #include "def.h"
 
@@ -25,9 +26,9 @@ QT_CHARTS_USE_NAMESPACE
 typedef float(*Pointer)[4];
 extern "C" float4* get_tf_array();
 extern "C" float* get_relative_visibility_histogram();
-
 extern "C" void apply_tf_editing();
 extern "C" void reset_transfer_function();
+extern "C" void add_volume_to_list_for_update_from_vector(std::vector<std::string> filelist);
 
 class MainWindow : public QMainWindow
 {
