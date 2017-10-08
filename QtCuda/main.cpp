@@ -981,6 +981,11 @@ std::vector<float> optimize_for_a_frame()
 	return ans;
 }
 
+extern "C" void load_mhd_header(std::string filename)
+{
+
+}
+
 void *loadRawFile(char *filename, size_t size);
 
 void load_a_volume_and_optimize()

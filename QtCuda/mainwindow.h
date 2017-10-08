@@ -29,6 +29,7 @@ extern "C" float* get_relative_visibility_histogram();
 extern "C" void apply_tf_editing();
 extern "C" void reset_transfer_function();
 extern "C" void add_volume_to_list_for_update_from_vector(std::vector<std::string> filelist);
+extern "C" void load_mhd_header(std::string filename);
 
 class MainWindow : public QMainWindow
 {

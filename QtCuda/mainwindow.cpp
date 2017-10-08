@@ -163,7 +163,7 @@ void MainWindow::on_action_Open_triggered()
 	{
 		auto str = QFileInfo(filename).fileName();
 		qDebug() << str;
-		std::cout<<str.toStdString()<<std::endl;
+		load_mhd_header(str.toStdString());
 	}
 }
 
