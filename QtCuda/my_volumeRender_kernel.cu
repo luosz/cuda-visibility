@@ -238,7 +238,7 @@ extern "C" void set_backup(bool value)
 
 extern "C" void set_volume_file(const char *file, int n)
 {
-	n = max(n+1, D_PATH_LENGTH);
+	n = max(n+1, D_PATH_MAX);
 	if (!volume_file)
 	{
 		checkCudaErrors(cudaMallocManaged(&volume_file, sizeof(char) * n));

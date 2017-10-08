@@ -230,10 +230,10 @@ public:
     void retranslateUi(QMainWindow *MainWindowClass)
     {
         MainWindowClass->setWindowTitle(QApplication::translate("MainWindowClass", "Options", Q_NULLPTR));
-        action_Open->setText(QApplication::translate("MainWindowClass", "&Open", Q_NULLPTR));
+        action_Open->setText(QApplication::translate("MainWindowClass", "Open &Mhd file", Q_NULLPTR));
         action_Exit->setText(QApplication::translate("MainWindowClass", "&Exit", Q_NULLPTR));
         action_About->setText(QApplication::translate("MainWindowClass", "&About", Q_NULLPTR));
-        actionOpen_Files->setText(QApplication::translate("MainWindowClass", "Open &Files", Q_NULLPTR));
+        actionOpen_Files->setText(QApplication::translate("MainWindowClass", "Open &Raw files", Q_NULLPTR));
         pushButton->setText(QApplication::translate("MainWindowClass", "Pick color", Q_NULLPTR));
         checkBox->setText(QApplication::translate("MainWindowClass", "Adjust alpha", Q_NULLPTR));
         checkBox_2->setText(QApplication::translate("MainWindowClass", "Adjust color", Q_NULLPTR));

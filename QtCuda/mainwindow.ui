@@ -233,7 +233,7 @@
   <widget class="QStatusBar" name="statusBar"/>
   <action name="action_Open">
    <property name="text">
-    <string>&amp;Open</string>
+    <string>Open &amp;Mhd file</string>
    </property>
   </action>
   <action name="action_Exit">
@@ -248,7 +248,7 @@
   </action>
   <action name="actionOpen_Files">
    <property name="text">
-    <string>Open &amp;Files</string>
+    <string>Open &amp;Raw files</string>
    </property>
   </action>
  </widget>

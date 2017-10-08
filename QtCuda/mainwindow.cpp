@@ -153,7 +153,7 @@ void MainWindow::on_action_About_triggered()
 
 void MainWindow::on_action_Exit_triggered()
 {
-	qApp->quit();
+	QApplication::quit();
 }
 
 void MainWindow::on_action_Open_triggered()
@@ -162,8 +162,8 @@ void MainWindow::on_action_Open_triggered()
 	if (!filename.isNull())
 	{
 		auto str = QFileInfo(filename).fileName();
-		qDebug() << str;
-		load_mhd_header(str.toStdString());
+		//qDebug() << str;
+		load_mhd_file(str.toStdString());
 	}
 }
 
@@ -176,7 +176,7 @@ void MainWindow::on_actionOpen_Files_triggered()
 		for (int i = 0;i < filenames.count();i++)
 		{
 			auto filename = QFileInfo(filenames.at(i)).fileName();
-			qDebug()<< filename;
+			//qDebug()<< filename;
 			filelist.push_back(filename.toStdString());
 		}
 		add_volume_to_list_for_update_from_vector(filelist);

@@ -981,12 +981,72 @@ std::vector<float> optimize_for_a_frame()
 	return ans;
 }
 
-extern "C" void load_mhd_header(std::string filename)
+void *loadRawFile(const char *filename, size_t size);
+
+extern "C" void load_mhd_file(std::string filename)
 {
+	strcpy(volumeFilename_buffer, filename.c_str());
+	volumeFilename = volumeFilename_buffer;
+	set_volume_file(volumeFilename, strlen(volumeFilename));
 
+	// load volume data
+	char *path = sdkFindFilePath(volumeFilename, program_path.c_str());
+	//printf("volume %s\n", path);
+
+	if (path == 0)
+	{
+		printf("Error finding file '%s'\n", volumeFilename);
+		exit(EXIT_FAILURE);
+	}
+
+	std::cout<<path<<std::endl;
+
+	int w=-1, h=-1, d=-1;
+	std::string raw_file;
+	std::string path2 = path;
+	std::ifstream infile(path);
+	if (infile.is_open())
+	{
+		std::string line;
+		while (std::getline(infile, line))
+		{
+			std::size_t found = line.find("DimSize");
+			if (found != std::string::npos)
+			{
+				std::size_t equal = line.find("=");
+				if (equal != std::string::npos)
+				{
+					stringstream ss(line.substr(equal+1));
+					ss>>w>>h>>d;
+					volumeSize = make_cudaExtent(w, h, d);
+				}
+			}
+
+			found = line.find("ElementDataFile");
+			if (found != std::string::npos)
+			{
+				std::size_t equal = line.find("=");
+				if (equal != std::string::npos)
+				{
+					stringstream ss(line.substr(equal + 1));
+					ss>>raw_file;
+					auto pos = path2.find(volumeFilename);
+					if (pos != std::string::npos)
+					{
+						path2.replace(pos, strlen(volumeFilename), raw_file);
+						std::cout<<path2<<std::endl;
+					}
+				}
+			}
+		}
+	}
+	infile.close();
+
+	size_t size = volumeSize.width*volumeSize.height*volumeSize.depth * sizeof(VolumeType);
+	void *h_volume = loadRawFile(path2.c_str(), size);
+	initCuda(h_volume, volumeSize);
+	free(h_volume);
 }
-
-void *loadRawFile(char *filename, size_t size);
 
 void load_a_volume_and_optimize()
 {
@@ -1559,7 +1619,7 @@ void initPixelBuffer()
 }
 
 // Load raw data from disk
-void *loadRawFile(char *filename, size_t size)
+void *loadRawFile(const char *filename, size_t size)
 {
     FILE *fp = fopen(filename, "rb");
 
