@@ -248,7 +248,7 @@
   </action>
   <action name="actionOpen_Files">
    <property name="text">
-    <string>Open &amp;Raw files</string>
+    <string>Open &amp;Raw files (time-varying)</string>
    </property>
   </action>
  </widget>
