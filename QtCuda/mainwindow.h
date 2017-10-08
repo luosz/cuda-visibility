@@ -84,6 +84,8 @@ private slots:
 
     void on_checkBox_4_clicked();
 
+    void on_action_About_triggered();
+
 private:
 	Ui::MainWindowClass ui;
 	QColor color;

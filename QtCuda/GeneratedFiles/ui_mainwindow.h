@@ -36,6 +36,7 @@ class Ui_MainWindowClass
 public:
     QAction *action_Open;
     QAction *action_Exit;
+    QAction *action_About;
     QWidget *centralWidget;
     QGridLayout *gridLayout_2;
     QFrame *frame;
@@ -56,6 +57,7 @@ public:
     QPushButton *pushButton_2;
     QMenuBar *menuBar;
     QMenu *menu_File;
+    QMenu *menu_Help;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
 
@@ -68,6 +70,8 @@ public:
         action_Open->setObjectName(QStringLiteral("action_Open"));
         action_Exit = new QAction(MainWindowClass);
         action_Exit->setObjectName(QStringLiteral("action_Exit"));
+        action_About = new QAction(MainWindowClass);
+        action_About->setObjectName(QStringLiteral("action_About"));
         centralWidget = new QWidget(MainWindowClass);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         gridLayout_2 = new QGridLayout(centralWidget);
@@ -198,6 +202,8 @@ public:
         menuBar->setGeometry(QRect(0, 0, 600, 26));
         menu_File = new QMenu(menuBar);
         menu_File->setObjectName(QStringLiteral("menu_File"));
+        menu_Help = new QMenu(menuBar);
+        menu_Help->setObjectName(QStringLiteral("menu_Help"));
         MainWindowClass->setMenuBar(menuBar);
         mainToolBar = new QToolBar(MainWindowClass);
         mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
@@ -207,8 +213,10 @@ public:
         MainWindowClass->setStatusBar(statusBar);
 
         menuBar->addAction(menu_File->menuAction());
+        menuBar->addAction(menu_Help->menuAction());
         menu_File->addAction(action_Open);
         menu_File->addAction(action_Exit);
+        menu_Help->addAction(action_About);
 
         retranslateUi(MainWindowClass);
 
@@ -220,6 +228,7 @@ public:
         MainWindowClass->setWindowTitle(QApplication::translate("MainWindowClass", "Options", Q_NULLPTR));
         action_Open->setText(QApplication::translate("MainWindowClass", "&Open", Q_NULLPTR));
         action_Exit->setText(QApplication::translate("MainWindowClass", "&Exit", Q_NULLPTR));
+        action_About->setText(QApplication::translate("MainWindowClass", "&About", Q_NULLPTR));
         pushButton->setText(QApplication::translate("MainWindowClass", "Pick color", Q_NULLPTR));
         checkBox->setText(QApplication::translate("MainWindowClass", "Adjust alpha", Q_NULLPTR));
         checkBox_2->setText(QApplication::translate("MainWindowClass", "Adjust color", Q_NULLPTR));
@@ -229,6 +238,7 @@ public:
         pushButton_4->setText(QApplication::translate("MainWindowClass", "Reset transfer function", Q_NULLPTR));
         pushButton_2->setText(QApplication::translate("MainWindowClass", "Show transfer function", Q_NULLPTR));
         menu_File->setTitle(QApplication::translate("MainWindowClass", "&File", Q_NULLPTR));
+        menu_Help->setTitle(QApplication::translate("MainWindowClass", "&Help", Q_NULLPTR));
     } // retranslateUi
 
 };

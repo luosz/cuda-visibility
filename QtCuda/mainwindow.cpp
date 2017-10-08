@@ -145,3 +145,8 @@ void MainWindow::on_checkBox_4_clicked()
         std::cout << "apply_time_varying_tf_reset=" << (*apply_time_varying_tf_reset ? "true" : "false") << std::endl;
     }
 }
+
+void MainWindow::on_action_About_triggered()
+{
+    std::cout<<((float)5/2)<<std::endl;
+}

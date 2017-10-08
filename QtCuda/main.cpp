@@ -152,6 +152,7 @@ float gaussian9[R9*R9*R9] = { 0 };
 
 int2 loc = {0, 0};
 int2 loc2 = {0, 0};
+float2 diff = {0,0};
 bool dragMode = false; // mouse tracking mode
 bool time_varying_tf_editing = D_TIME_VARYING_TF_EDITING;
 bool time_varying_tf_reset = D_TIME_VARYING_TF_RESET;
@@ -932,6 +933,8 @@ inline void add_volume_to_list_for_update()
 	rgba_list_backup = rgba_list;
 	ofstream out(log_filename());
 	out.close();
+	diff.x = ((float)loc2.x - loc.x) / volume_list.size();
+	diff.y = ((float)loc2.y - loc.y) / volume_list.size();
 }
 
 inline void add_volume_to_list_for_update2()
@@ -1010,6 +1013,8 @@ void load_a_volume_and_optimize()
 		}
 		if (time_varying_tf_editing)
 		{
+			loc.x += diff.x;
+			loc.y += diff.y;
 			apply_tf_editing();
 		}
 
