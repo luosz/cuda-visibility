@@ -58,12 +58,13 @@ public:
 		ui.lineEdit->setText(color.name());
 	}
 
-	void set_pointers(Pointer picked_color, bool *alpha, bool *color, bool *time_varying_tf)
+	void set_pointers(Pointer picked_color, bool *alpha, bool *color, bool *time_varying_tf, bool *time_varying_tf_reset)
 	{
 		color_array = picked_color;
 		apply_alpha = alpha;
 		apply_color = color;
-		apply_time_varying_tf = time_varying_tf;
+		apply_time_varying_tf_editing = time_varying_tf;
+		apply_time_varying_tf_reset = time_varying_tf_reset;
 	}
 
 private slots:
@@ -81,13 +82,16 @@ private slots:
 
     void on_checkBox_3_clicked();
 
+    void on_checkBox_4_clicked();
+
 private:
 	Ui::MainWindowClass ui;
 	QColor color;
 	Pointer color_array = NULL;
 	bool *apply_alpha = NULL;
 	bool *apply_color = NULL;
-	bool *apply_time_varying_tf = NULL;
+	bool *apply_time_varying_tf_editing = NULL;
+	bool *apply_time_varying_tf_reset = NULL;
 	//QGraphicsScene scene;
 	QChartView chartView;
 	QChartView chartView2;

@@ -47,12 +47,13 @@ public:
     QPushButton *pushButton;
     QCheckBox *checkBox;
     QCheckBox *checkBox_2;
-    QPushButton *pushButton_2;
+    QHBoxLayout *horizontalLayout;
+    QCheckBox *checkBox_3;
+    QCheckBox *checkBox_4;
     QGridLayout *gridLayout_3;
     QPushButton *pushButton_3;
     QPushButton *pushButton_4;
-    QHBoxLayout *horizontalLayout;
-    QCheckBox *checkBox_3;
+    QPushButton *pushButton_2;
     QMenuBar *menuBar;
     QMenu *menu_File;
     QToolBar *mainToolBar;
@@ -145,27 +146,6 @@ public:
 
         formLayout->setWidget(1, QFormLayout::FieldRole, checkBox_2);
 
-        pushButton_2 = new QPushButton(frame);
-        pushButton_2->setObjectName(QStringLiteral("pushButton_2"));
-
-        formLayout->setWidget(2, QFormLayout::LabelRole, pushButton_2);
-
-        gridLayout_3 = new QGridLayout();
-        gridLayout_3->setSpacing(6);
-        gridLayout_3->setObjectName(QStringLiteral("gridLayout_3"));
-        pushButton_3 = new QPushButton(frame);
-        pushButton_3->setObjectName(QStringLiteral("pushButton_3"));
-
-        gridLayout_3->addWidget(pushButton_3, 0, 0, 1, 1);
-
-        pushButton_4 = new QPushButton(frame);
-        pushButton_4->setObjectName(QStringLiteral("pushButton_4"));
-
-        gridLayout_3->addWidget(pushButton_4, 0, 1, 1, 1);
-
-
-        formLayout->setLayout(2, QFormLayout::FieldRole, gridLayout_3);
-
         horizontalLayout = new QHBoxLayout();
         horizontalLayout->setSpacing(6);
         horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
@@ -176,8 +156,35 @@ public:
 
         horizontalLayout->addWidget(checkBox_3);
 
+        checkBox_4 = new QCheckBox(frame);
+        checkBox_4->setObjectName(QStringLiteral("checkBox_4"));
+        checkBox_4->setChecked(true);
+
+        horizontalLayout->addWidget(checkBox_4);
+
 
         formLayout->setLayout(3, QFormLayout::LabelRole, horizontalLayout);
+
+        gridLayout_3 = new QGridLayout();
+        gridLayout_3->setSpacing(6);
+        gridLayout_3->setObjectName(QStringLiteral("gridLayout_3"));
+        pushButton_3 = new QPushButton(frame);
+        pushButton_3->setObjectName(QStringLiteral("pushButton_3"));
+
+        gridLayout_3->addWidget(pushButton_3, 0, 1, 1, 1);
+
+        pushButton_4 = new QPushButton(frame);
+        pushButton_4->setObjectName(QStringLiteral("pushButton_4"));
+
+        gridLayout_3->addWidget(pushButton_4, 0, 2, 1, 1);
+
+        pushButton_2 = new QPushButton(frame);
+        pushButton_2->setObjectName(QStringLiteral("pushButton_2"));
+
+        gridLayout_3->addWidget(pushButton_2, 0, 0, 1, 1);
+
+
+        formLayout->setLayout(2, QFormLayout::SpanningRole, gridLayout_3);
 
 
         gridLayout->addLayout(formLayout, 0, 0, 1, 1);
@@ -216,10 +223,11 @@ public:
         pushButton->setText(QApplication::translate("MainWindowClass", "Pick color", Q_NULLPTR));
         checkBox->setText(QApplication::translate("MainWindowClass", "Adjust alpha", Q_NULLPTR));
         checkBox_2->setText(QApplication::translate("MainWindowClass", "Adjust color", Q_NULLPTR));
-        pushButton_2->setText(QApplication::translate("MainWindowClass", "Show transfer function", Q_NULLPTR));
+        checkBox_3->setText(QApplication::translate("MainWindowClass", "Apply tf editing to frames", Q_NULLPTR));
+        checkBox_4->setText(QApplication::translate("MainWindowClass", "Reset tf before editing", Q_NULLPTR));
         pushButton_3->setText(QApplication::translate("MainWindowClass", "Apply alpha/color editing", Q_NULLPTR));
         pushButton_4->setText(QApplication::translate("MainWindowClass", "Reset transfer function", Q_NULLPTR));
-        checkBox_3->setText(QApplication::translate("MainWindowClass", "Apply time-varying TF", Q_NULLPTR));
+        pushButton_2->setText(QApplication::translate("MainWindowClass", "Show transfer function", Q_NULLPTR));
         menu_File->setTitle(QApplication::translate("MainWindowClass", "&File", Q_NULLPTR));
     } // retranslateUi
 

@@ -128,31 +128,6 @@
            </property>
           </widget>
          </item>
-         <item row="2" column="0">
-          <widget class="QPushButton" name="pushButton_2">
-           <property name="text">
-            <string>Show transfer function</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="1">
-          <layout class="QGridLayout" name="gridLayout_3">
-           <item row="0" column="0">
-            <widget class="QPushButton" name="pushButton_3">
-             <property name="text">
-              <string>Apply alpha/color editing</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="QPushButton" name="pushButton_4">
-             <property name="text">
-              <string>Reset transfer function</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
          <item row="3" column="0">
           <layout class="QHBoxLayout" name="horizontalLayout">
            <property name="leftMargin">
@@ -170,10 +145,45 @@
            <item>
             <widget class="QCheckBox" name="checkBox_3">
              <property name="text">
-              <string>Apply time-varying TF</string>
+              <string>Apply tf editing to frames</string>
              </property>
              <property name="checked">
               <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="checkBox_4">
+             <property name="text">
+              <string>Reset tf before editing</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="2" column="0" colspan="2">
+          <layout class="QGridLayout" name="gridLayout_3">
+           <item row="0" column="1">
+            <widget class="QPushButton" name="pushButton_3">
+             <property name="text">
+              <string>Apply alpha/color editing</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QPushButton" name="pushButton_4">
+             <property name="text">
+              <string>Reset transfer function</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QPushButton" name="pushButton_2">
+             <property name="text">
+              <string>Show transfer function</string>
              </property>
             </widget>
            </item>

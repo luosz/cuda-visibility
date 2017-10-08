@@ -130,9 +130,18 @@ void MainWindow::on_pushButton_4_clicked()
 
 void MainWindow::on_checkBox_3_clicked()
 {
-    if (apply_time_varying_tf)
+    if (apply_time_varying_tf_editing)
     {
-        *apply_time_varying_tf = ui.checkBox_3->isChecked();
-        std::cout << "Apply time-varying TF: " << (*apply_time_varying_tf ? "true" : "false") << std::endl;
+        *apply_time_varying_tf_editing = ui.checkBox_3->isChecked();
+        std::cout << "apply_time_varying_tf=" << (*apply_time_varying_tf_editing ? "true" : "false") << std::endl;
+    }
+}
+
+void MainWindow::on_checkBox_4_clicked()
+{
+    if (apply_time_varying_tf_reset)
+    {
+        *apply_time_varying_tf_reset = ui.checkBox_4->isChecked();
+        std::cout << "apply_time_varying_tf_reset=" << (*apply_time_varying_tf_reset ? "true" : "false") << std::endl;
     }
 }
