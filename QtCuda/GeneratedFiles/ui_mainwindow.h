@@ -37,6 +37,7 @@ public:
     QAction *action_Open;
     QAction *action_Exit;
     QAction *action_About;
+    QAction *actionOpen_Files;
     QWidget *centralWidget;
     QGridLayout *gridLayout_2;
     QFrame *frame;
@@ -72,6 +73,8 @@ public:
         action_Exit->setObjectName(QStringLiteral("action_Exit"));
         action_About = new QAction(MainWindowClass);
         action_About->setObjectName(QStringLiteral("action_About"));
+        actionOpen_Files = new QAction(MainWindowClass);
+        actionOpen_Files->setObjectName(QStringLiteral("actionOpen_Files"));
         centralWidget = new QWidget(MainWindowClass);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         gridLayout_2 = new QGridLayout(centralWidget);
@@ -215,6 +218,7 @@ public:
         menuBar->addAction(menu_File->menuAction());
         menuBar->addAction(menu_Help->menuAction());
         menu_File->addAction(action_Open);
+        menu_File->addAction(actionOpen_Files);
         menu_File->addAction(action_Exit);
         menu_Help->addAction(action_About);
 
@@ -229,6 +233,7 @@ public:
         action_Open->setText(QApplication::translate("MainWindowClass", "&Open", Q_NULLPTR));
         action_Exit->setText(QApplication::translate("MainWindowClass", "&Exit", Q_NULLPTR));
         action_About->setText(QApplication::translate("MainWindowClass", "&About", Q_NULLPTR));
+        actionOpen_Files->setText(QApplication::translate("MainWindowClass", "Open &Files", Q_NULLPTR));
         pushButton->setText(QApplication::translate("MainWindowClass", "Pick color", Q_NULLPTR));
         checkBox->setText(QApplication::translate("MainWindowClass", "Adjust alpha", Q_NULLPTR));
         checkBox_2->setText(QApplication::translate("MainWindowClass", "Adjust color", Q_NULLPTR));

@@ -150,3 +150,25 @@ void MainWindow::on_action_About_triggered()
 {
     std::cout<<((float)5/2)<<std::endl;
 }
+
+void MainWindow::on_action_Exit_triggered()
+{
+	qApp->quit();
+}
+
+void MainWindow::on_action_Open_triggered()
+{
+
+}
+
+void MainWindow::on_actionOpen_Files_triggered()
+{
+	std::vector<std::string> file_list;
+	QStringList filenames = QFileDialog::getOpenFileNames(this, tr("BMP files"), QDir::currentPath(), tr("Bitmap files (*.bmp);;All files (*.*)"));
+	//if (!filenames.isEmpty())
+	//{
+	//	//std::string current_locale_text = qs.toLocal8Bit().constData();
+	//	//for (int i = 0;i < filenames.count();i++)
+	//	//	ui->lstFiles->addItem(filenames.at(i));
+	//}
+}

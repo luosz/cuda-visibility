@@ -12,6 +12,7 @@
 #include <QColorDialog>
 #include <QMessageBox>
 #include <QTextStream>
+#include <QFileDialog>
 #include "ui_mainwindow.h"
 #include "def.h"
 
@@ -85,6 +86,12 @@ private slots:
     void on_checkBox_4_clicked();
 
     void on_action_About_triggered();
+
+    void on_action_Exit_triggered();
+
+    void on_action_Open_triggered();
+
+    void on_actionOpen_Files_triggered();
 
 private:
 	Ui::MainWindowClass ui;
