@@ -1384,8 +1384,10 @@ void mouse(int button, int state, int x, int y)
 		loc.y = height - y - n * 4 / 3;
 		locf.x = loc.x;
 		locf.y = loc.y;
-	} 
-	else
+		loc2.x = loc.x;
+		loc2.y = loc.y;
+	}
+	if (button == GLUT_RIGHT_BUTTON)
 	{
 		loc2.x = x - n / 2;
 		loc2.y = height - y - n * 4 / 3;
