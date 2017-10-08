@@ -14,6 +14,7 @@
 #include <QTextStream>
 #include <QFileDialog>
 #include <QDebug>
+#include <QTimer>
 #include "ui_mainwindow.h"
 #include "def.h"
 
@@ -94,6 +95,45 @@ private slots:
     void on_action_Open_triggered();
 
     void on_actionOpen_Files_triggered();
+
+	void show_transfer_function()
+	{
+		auto p = get_tf_array();
+		const qreal N = D_BIN_COUNT - 1;
+
+		auto chart = chartView.chart();
+		chart->removeAllSeries();
+		chart->legend()->hide();
+		for (int i = 0; i < D_BIN_COUNT; i++)
+		{
+			auto c = QColor::fromRgbF((qreal)p[i].x, (qreal)p[i].y, (qreal)p[i].z);
+			auto line = new QLineSeries();
+			line->append(i / N, (qreal)p[i].w);
+			line->append(i / N, 0);
+			line->setColor(c);
+			chart->addSeries(line);
+		}
+		chart->createDefaultAxes();
+		chart->setTitle("Transfer function");
+		chartView.setRenderHint(QPainter::Antialiasing);
+
+		auto p2 = get_relative_visibility_histogram();
+		auto chart2 = chartView2.chart();
+		chart2->removeAllSeries();
+		chart2->legend()->hide();
+		for (int i = 0; i < D_BIN_COUNT; i++)
+		{
+			auto c = QColor::fromRgbF(0.5, 0.5, 0.5);
+			auto line = new QLineSeries();
+			line->append(i / N, 0);
+			line->append(i / N, (qreal)p2[i]);
+			line->setColor(c);
+			chart2->addSeries(line);
+		}
+		chart2->createDefaultAxes();
+		chart2->setTitle("Relative visibility histogram");
+		chartView2.setRenderHint(QPainter::Antialiasing);
+	}
 
 private:
 	Ui::MainWindowClass ui;

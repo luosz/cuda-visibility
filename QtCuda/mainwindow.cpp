@@ -48,46 +48,13 @@ void MainWindow::on_checkBox_2_clicked()
 
 void MainWindow::on_pushButton_2_clicked()
 {
-	auto p = get_tf_array();
-	const qreal N = D_BIN_COUNT - 1;
-
-	auto chart = chartView.chart();
-	chart->removeAllSeries();
-	chart->legend()->hide();
-	for (int i = 0; i < D_BIN_COUNT; i++)
-	{
-		auto c = QColor::fromRgbF((qreal)p[i].x, (qreal)p[i].y, (qreal)p[i].z);
-		auto line = new QLineSeries();
-		line->append(i / N, (qreal)p[i].w);
-		line->append(i / N, 0);
-		line->setColor(c);
-		chart->addSeries(line);
-	}
-	chart->createDefaultAxes();
-	chart->setTitle("Transfer function");
-	chartView.setRenderHint(QPainter::Antialiasing);
-
-	auto p2 = get_relative_visibility_histogram();
-	auto chart2 = chartView2.chart();
-	chart2->removeAllSeries();
-	chart2->legend()->hide();
-	for (int i = 0; i < D_BIN_COUNT; i++)
-	{
-		auto c = QColor::fromRgbF(0.5, 0.5, 0.5);
-		auto line = new QLineSeries();
-		line->append(i / N, 0);
-		line->append(i / N, (qreal)p2[i]);
-		line->setColor(c);
-		chart2->addSeries(line);
-	}
-	chart2->createDefaultAxes();
-	chart2->setTitle("Relative visibility histogram");
-	chartView2.setRenderHint(QPainter::Antialiasing);
+	show_transfer_function();
 }
 
 void MainWindow::on_pushButton_3_clicked()
 {
 	apply_tf_editing();
+	QTimer::singleShot(500, this, SLOT(show_transfer_function()));
 
 	//const int n = 11;
 	//int r = 2;
@@ -110,6 +77,7 @@ void MainWindow::on_pushButton_3_clicked()
 void MainWindow::on_pushButton_4_clicked()
 {
 	reset_transfer_function();
+	QTimer::singleShot(500, this, SLOT(show_transfer_function()));
 
 	////float gaussian1[R1*R1*R1] = { 0 };
 	//float a;
