@@ -152,6 +152,7 @@ float gaussian9[R9*R9*R9] = { 0 };
 
 int2 loc = {0, 0};
 int2 loc2 = {0, 0};
+float2 locf = {0,0};
 float2 diff = {0,0};
 bool dragMode = false; // mouse tracking mode
 bool time_varying_tf_editing = D_TIME_VARYING_TF_EDITING;
@@ -949,6 +950,8 @@ inline void add_volume_to_list_for_update2()
 	rgba_list_backup = rgba_list;
 	ofstream out(log_filename());
 	out.close();
+	diff.x = ((float)loc2.x - loc.x) / volume_list.size();
+	diff.y = ((float)loc2.y - loc.y) / volume_list.size();
 }
 
 std::vector<float> optimize_for_a_frame()
@@ -1013,8 +1016,10 @@ void load_a_volume_and_optimize()
 		}
 		if (time_varying_tf_editing)
 		{
-			loc.x += diff.x;
-			loc.y += diff.y;
+			locf.x += diff.x;
+			locf.y += diff.y;
+			loc.x = (int)locf.x;
+			loc.y = (int)locf.y;
 			apply_tf_editing();
 		}
 
@@ -1377,6 +1382,8 @@ void mouse(int button, int state, int x, int y)
 		//loc.y = height - y - n;
 		// put the tip of mouse cursor at the center of the selected region
 		loc.y = height - y - n * 4 / 3;
+		locf.x = loc.x;
+		locf.y = loc.y;
 	} 
 	else
 	{
