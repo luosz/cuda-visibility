@@ -158,7 +158,13 @@ void MainWindow::on_action_Exit_triggered()
 
 void MainWindow::on_action_Open_triggered()
 {
-
+	QString filename = QFileDialog::getOpenFileName(this, tr("Mhd files"), QDir::currentPath(), tr("Mhd files (*.mhd);;All files (*.*)"));
+	if (!filename.isNull())
+	{
+		auto str = QFileInfo(filename).fileName();
+		qDebug() << str;
+		std::cout<<str.toStdString()<<std::endl;
+	}
 }
 
 void MainWindow::on_actionOpen_Files_triggered()
@@ -169,8 +175,9 @@ void MainWindow::on_actionOpen_Files_triggered()
 	{
 		for (int i = 0;i < filenames.count();i++)
 		{
-			qDebug()<< filenames.at(i);
-			filelist.push_back(filenames.at(i).toStdString());
+			auto filename = QFileInfo(filenames.at(i)).fileName();
+			qDebug()<< filename;
+			filelist.push_back(filename.toStdString());
 		}
 		add_volume_to_list_for_update_from_vector(filelist);
 	}
