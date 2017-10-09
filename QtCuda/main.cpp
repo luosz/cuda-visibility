@@ -1490,13 +1490,35 @@ void mouse(int button, int state, int x, int y)
     glutPostRedisplay();
 }
 
+void passive_motion(int x, int y)
+{
+	//printf("passive_motion %d %d \n", x, y);
+	if (glutGetModifiers() == GLUT_ACTIVE_CTRL)
+	{
+		//printf("control key is pressed.\n");
+
+		int n = get_region_size();
+		loc.x = x - n / 2;
+		//loc.y = height - y - n;
+		// put the tip of mouse cursor at the center of the selected region
+		loc.y = height - y - n * 4 / 3;
+		locf.x = loc.x;
+		locf.y = loc.y;
+		loc2.x = loc.x;
+		loc2.y = loc.y;
+
+		reset_transfer_function();
+		apply_tf_editing();
+	}
+}
+
 void motion(int x, int y)
 {
 	//if (TwEventMouseMotionGLUT(x, y))
 	//{
 	//	return;
 	//}
-	//printf("motion %d %d \n", x, y);
+	printf("motion %d %d \n", x, y);
     float dx, dy;
     dx = (float)(x - ox);
     dy = (float)(y - oy);
@@ -1874,8 +1896,9 @@ init_gl_main(int argc, char **argv)
         glutDisplayFunc(display);
         glutKeyboardFunc(keyboard);
         glutMouseFunc(mouse);
-        glutMotionFunc(motion);
-        glutReshapeFunc(reshape);
+		glutMotionFunc(motion);
+		glutPassiveMotionFunc(passive_motion);
+		glutReshapeFunc(reshape);
         glutIdleFunc(idle);
 		//glutPassiveMotionFunc((GLUTmousemotionfun)TwEventMouseMotionGLUT);
 		//glutSpecialFunc((GLUTspecialfun)TwEventSpecialGLUT);
