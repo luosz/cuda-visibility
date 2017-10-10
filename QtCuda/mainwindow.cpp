@@ -160,20 +160,40 @@ void MainWindow::on_actionOpen_Files_triggered()
 
 void MainWindow::on_actionOpen_transfer_function_triggered()
 {
-
+	QString filename = QFileDialog::getOpenFileName(this, tr("Open transfer function"), QDir::currentPath(), tr("Transfer function (*.tfi);;All Files (*)"));
+	if (!filename.isNull())
+	{
+		auto str = QFileInfo(filename).fileName();
+		qDebug() << str;
+	}
 }
 
 void MainWindow::on_actionSave_transfer_function_as_triggered()
 {
-
+	QString filename = QFileDialog::getSaveFileName(this, tr("Save transfer function"), QDir::currentPath(), tr("Transfer function (*.tfi);;All Files (*)"));
+	if (!filename.isNull())
+	{
+		auto str = QFileInfo(filename).fileName();
+		qDebug() << str;
+	}
 }
 
 void MainWindow::on_actionLoad_view_and_region_triggered()
 {
-
+	QString filename = QFileDialog::getOpenFileName(this, tr("Open view"), QDir::currentPath(), tr("View (*.xml);;All Files (*)"));
+	if (!filename.isNull())
+		{
+			auto str = QFileInfo(filename).fileName();
+			qDebug() << str;
+		}
 }
 
 void MainWindow::on_actionSave_view_and_region_as_triggered()
 {
-
+	QString filename = QFileDialog::getSaveFileName(this, tr("Save view"), QDir::currentPath(), tr("View (*.xml);;All Files (*)"));
+	if (!filename.isNull())
+	{
+		auto str = QFileInfo(filename).fileName();
+		qDebug() << str;
+	}
 }
