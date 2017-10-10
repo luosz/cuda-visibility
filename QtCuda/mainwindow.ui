@@ -57,7 +57,7 @@
         </widget>
        </item>
        <item row="0" column="0">
-        <layout class="QFormLayout" name="formLayout">
+        <layout class="QGridLayout" name="gridLayout_4">
          <property name="leftMargin">
           <number>6</number>
          </property>
@@ -70,6 +70,47 @@
          <property name="bottomMargin">
           <number>6</number>
          </property>
+         <item row="8" column="0" colspan="3">
+          <layout class="QGridLayout" name="gridLayout_3">
+           <item row="0" column="1">
+            <widget class="QPushButton" name="pushButton_3">
+             <property name="text">
+              <string>Apply alpha/color editing</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QPushButton" name="pushButton_4">
+             <property name="text">
+              <string>Reset transfer function</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QPushButton" name="pushButton_2">
+             <property name="text">
+              <string>Show transfer function</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="0" column="1">
+          <widget class="QCheckBox" name="checkBox">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>Adjust alpha</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
          <item row="0" column="0">
           <widget class="QLineEdit" name="lineEdit">
            <property name="sizePolicy">
@@ -102,22 +143,6 @@
            </property>
           </widget>
          </item>
-         <item row="0" column="1">
-          <widget class="QCheckBox" name="checkBox">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="text">
-            <string>Adjust alpha</string>
-           </property>
-           <property name="checked">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
          <item row="1" column="1">
           <widget class="QCheckBox" name="checkBox_2">
            <property name="text">
@@ -128,66 +153,25 @@
            </property>
           </widget>
          </item>
-         <item row="3" column="0">
-          <layout class="QHBoxLayout" name="horizontalLayout">
-           <property name="leftMargin">
-            <number>9</number>
+         <item row="9" column="0">
+          <widget class="QCheckBox" name="checkBox_3">
+           <property name="text">
+            <string>Apply tf editing to frames</string>
            </property>
-           <property name="topMargin">
-            <number>9</number>
+           <property name="checked">
+            <bool>true</bool>
            </property>
-           <property name="rightMargin">
-            <number>9</number>
-           </property>
-           <property name="bottomMargin">
-            <number>9</number>
-           </property>
-           <item>
-            <widget class="QCheckBox" name="checkBox_3">
-             <property name="text">
-              <string>Apply tf editing to frames</string>
-             </property>
-             <property name="checked">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="checkBox_4">
-             <property name="text">
-              <string>Reset tf before editing</string>
-             </property>
-             <property name="checked">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-          </layout>
+          </widget>
          </item>
-         <item row="2" column="0" colspan="2">
-          <layout class="QGridLayout" name="gridLayout_3">
-           <item row="0" column="1">
-            <widget class="QPushButton" name="pushButton_3">
-             <property name="text">
-              <string>Apply alpha/color editing</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="2">
-            <widget class="QPushButton" name="pushButton_4">
-             <property name="text">
-              <string>Reset transfer function</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="0">
-            <widget class="QPushButton" name="pushButton_2">
-             <property name="text">
-              <string>Show transfer function</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
+         <item row="9" column="1">
+          <widget class="QCheckBox" name="checkBox_4">
+           <property name="text">
+            <string>Reset tf before editing</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
          </item>
         </layout>
        </item>
@@ -211,6 +195,10 @@
     </property>
     <addaction name="action_Open"/>
     <addaction name="actionOpen_Files"/>
+    <addaction name="actionOpen_transfer_function"/>
+    <addaction name="actionSave_transfer_function_as"/>
+    <addaction name="actionLoad_view_and_region"/>
+    <addaction name="actionSave_view_and_region_as"/>
     <addaction name="action_Exit"/>
    </widget>
    <widget class="QMenu" name="menu_Help">
@@ -233,7 +221,7 @@
   <widget class="QStatusBar" name="statusBar"/>
   <action name="action_Open">
    <property name="text">
-    <string>Open &amp;MetaImage (MHD) file</string>
+    <string>Open &amp;MetaImage (MHD) file...</string>
    </property>
   </action>
   <action name="action_Exit">
@@ -248,7 +236,27 @@
   </action>
   <action name="actionOpen_Files">
    <property name="text">
-    <string>Open &amp;RAW files (time-varying)</string>
+    <string>Open &amp;RAW files (time-varying data)...</string>
+   </property>
+  </action>
+  <action name="actionOpen_transfer_function">
+   <property name="text">
+    <string>&amp;Open transfer function...</string>
+   </property>
+  </action>
+  <action name="actionSave_transfer_function_as">
+   <property name="text">
+    <string>&amp;Save transfer function as...</string>
+   </property>
+  </action>
+  <action name="actionLoad_view_and_region">
+   <property name="text">
+    <string>Load &amp;view and region...</string>
+   </property>
+  </action>
+  <action name="actionSave_view_and_region_as">
+   <property name="text">
+    <string>Save view and region &amp;as...</string>
    </property>
   </action>
  </widget>

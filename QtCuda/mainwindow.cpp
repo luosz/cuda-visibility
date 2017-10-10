@@ -157,3 +157,23 @@ void MainWindow::on_actionOpen_Files_triggered()
 	//	//	ui->lstFiles->addItem(filenames.at(i));
 	//}
 }
+
+void MainWindow::on_actionOpen_transfer_function_triggered()
+{
+
+}
+
+void MainWindow::on_actionSave_transfer_function_as_triggered()
+{
+
+}
+
+void MainWindow::on_actionLoad_view_and_region_triggered()
+{
+
+}
+
+void MainWindow::on_actionSave_view_and_region_as_triggered()
+{
+
+}

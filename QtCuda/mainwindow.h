@@ -135,6 +135,14 @@ private slots:
 		chartView2.setRenderHint(QPainter::Antialiasing);
 	}
 
+    void on_actionOpen_transfer_function_triggered();
+
+    void on_actionSave_transfer_function_as_triggered();
+
+    void on_actionLoad_view_and_region_triggered();
+
+    void on_actionSave_view_and_region_as_triggered();
+
 private:
 	Ui::MainWindowClass ui;
 	QColor color;

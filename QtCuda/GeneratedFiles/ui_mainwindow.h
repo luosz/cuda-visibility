@@ -14,10 +14,8 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
 #include <QtWidgets/QCheckBox>
-#include <QtWidgets/QFormLayout>
 #include <QtWidgets/QFrame>
 #include <QtWidgets/QGridLayout>
-#include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMainWindow>
@@ -38,24 +36,27 @@ public:
     QAction *action_Exit;
     QAction *action_About;
     QAction *actionOpen_Files;
+    QAction *actionOpen_transfer_function;
+    QAction *actionSave_transfer_function_as;
+    QAction *actionLoad_view_and_region;
+    QAction *actionSave_view_and_region_as;
     QWidget *centralWidget;
     QGridLayout *gridLayout_2;
     QFrame *frame;
     QGridLayout *gridLayout;
     QFrame *frame_2;
     QVBoxLayout *verticalLayout;
-    QFormLayout *formLayout;
-    QLineEdit *lineEdit;
-    QPushButton *pushButton;
-    QCheckBox *checkBox;
-    QCheckBox *checkBox_2;
-    QHBoxLayout *horizontalLayout;
-    QCheckBox *checkBox_3;
-    QCheckBox *checkBox_4;
+    QGridLayout *gridLayout_4;
     QGridLayout *gridLayout_3;
     QPushButton *pushButton_3;
     QPushButton *pushButton_4;
     QPushButton *pushButton_2;
+    QCheckBox *checkBox;
+    QLineEdit *lineEdit;
+    QPushButton *pushButton;
+    QCheckBox *checkBox_2;
+    QCheckBox *checkBox_3;
+    QCheckBox *checkBox_4;
     QMenuBar *menuBar;
     QMenu *menu_File;
     QMenu *menu_Help;
@@ -75,6 +76,14 @@ public:
         action_About->setObjectName(QStringLiteral("action_About"));
         actionOpen_Files = new QAction(MainWindowClass);
         actionOpen_Files->setObjectName(QStringLiteral("actionOpen_Files"));
+        actionOpen_transfer_function = new QAction(MainWindowClass);
+        actionOpen_transfer_function->setObjectName(QStringLiteral("actionOpen_transfer_function"));
+        actionSave_transfer_function_as = new QAction(MainWindowClass);
+        actionSave_transfer_function_as->setObjectName(QStringLiteral("actionSave_transfer_function_as"));
+        actionLoad_view_and_region = new QAction(MainWindowClass);
+        actionLoad_view_and_region->setObjectName(QStringLiteral("actionLoad_view_and_region"));
+        actionSave_view_and_region_as = new QAction(MainWindowClass);
+        actionSave_view_and_region_as->setObjectName(QStringLiteral("actionSave_view_and_region_as"));
         centralWidget = new QWidget(MainWindowClass);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         gridLayout_2 = new QGridLayout(centralWidget);
@@ -112,66 +121,10 @@ public:
 
         gridLayout->addWidget(frame_2, 1, 0, 1, 1);
 
-        formLayout = new QFormLayout();
-        formLayout->setSpacing(6);
-        formLayout->setObjectName(QStringLiteral("formLayout"));
-        formLayout->setContentsMargins(6, 6, 6, 6);
-        lineEdit = new QLineEdit(frame);
-        lineEdit->setObjectName(QStringLiteral("lineEdit"));
-        QSizePolicy sizePolicy2(QSizePolicy::Expanding, QSizePolicy::Preferred);
-        sizePolicy2.setHorizontalStretch(0);
-        sizePolicy2.setVerticalStretch(0);
-        sizePolicy2.setHeightForWidth(lineEdit->sizePolicy().hasHeightForWidth());
-        lineEdit->setSizePolicy(sizePolicy2);
-        lineEdit->setAutoFillBackground(true);
-        lineEdit->setReadOnly(true);
-
-        formLayout->setWidget(0, QFormLayout::LabelRole, lineEdit);
-
-        pushButton = new QPushButton(frame);
-        pushButton->setObjectName(QStringLiteral("pushButton"));
-        sizePolicy.setHeightForWidth(pushButton->sizePolicy().hasHeightForWidth());
-        pushButton->setSizePolicy(sizePolicy);
-        pushButton->setAutoFillBackground(true);
-
-        formLayout->setWidget(1, QFormLayout::LabelRole, pushButton);
-
-        checkBox = new QCheckBox(frame);
-        checkBox->setObjectName(QStringLiteral("checkBox"));
-        QSizePolicy sizePolicy3(QSizePolicy::Minimum, QSizePolicy::Fixed);
-        sizePolicy3.setHorizontalStretch(0);
-        sizePolicy3.setVerticalStretch(0);
-        sizePolicy3.setHeightForWidth(checkBox->sizePolicy().hasHeightForWidth());
-        checkBox->setSizePolicy(sizePolicy3);
-        checkBox->setChecked(true);
-
-        formLayout->setWidget(0, QFormLayout::FieldRole, checkBox);
-
-        checkBox_2 = new QCheckBox(frame);
-        checkBox_2->setObjectName(QStringLiteral("checkBox_2"));
-        checkBox_2->setChecked(true);
-
-        formLayout->setWidget(1, QFormLayout::FieldRole, checkBox_2);
-
-        horizontalLayout = new QHBoxLayout();
-        horizontalLayout->setSpacing(6);
-        horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
-        horizontalLayout->setContentsMargins(9, 9, 9, 9);
-        checkBox_3 = new QCheckBox(frame);
-        checkBox_3->setObjectName(QStringLiteral("checkBox_3"));
-        checkBox_3->setChecked(true);
-
-        horizontalLayout->addWidget(checkBox_3);
-
-        checkBox_4 = new QCheckBox(frame);
-        checkBox_4->setObjectName(QStringLiteral("checkBox_4"));
-        checkBox_4->setChecked(true);
-
-        horizontalLayout->addWidget(checkBox_4);
-
-
-        formLayout->setLayout(3, QFormLayout::LabelRole, horizontalLayout);
-
+        gridLayout_4 = new QGridLayout();
+        gridLayout_4->setSpacing(6);
+        gridLayout_4->setObjectName(QStringLiteral("gridLayout_4"));
+        gridLayout_4->setContentsMargins(6, 6, 6, 6);
         gridLayout_3 = new QGridLayout();
         gridLayout_3->setSpacing(6);
         gridLayout_3->setObjectName(QStringLiteral("gridLayout_3"));
@@ -191,10 +144,59 @@ public:
         gridLayout_3->addWidget(pushButton_2, 0, 0, 1, 1);
 
 
-        formLayout->setLayout(2, QFormLayout::SpanningRole, gridLayout_3);
+        gridLayout_4->addLayout(gridLayout_3, 8, 0, 1, 3);
+
+        checkBox = new QCheckBox(frame);
+        checkBox->setObjectName(QStringLiteral("checkBox"));
+        QSizePolicy sizePolicy2(QSizePolicy::Minimum, QSizePolicy::Fixed);
+        sizePolicy2.setHorizontalStretch(0);
+        sizePolicy2.setVerticalStretch(0);
+        sizePolicy2.setHeightForWidth(checkBox->sizePolicy().hasHeightForWidth());
+        checkBox->setSizePolicy(sizePolicy2);
+        checkBox->setChecked(true);
+
+        gridLayout_4->addWidget(checkBox, 0, 1, 1, 1);
+
+        lineEdit = new QLineEdit(frame);
+        lineEdit->setObjectName(QStringLiteral("lineEdit"));
+        QSizePolicy sizePolicy3(QSizePolicy::Expanding, QSizePolicy::Preferred);
+        sizePolicy3.setHorizontalStretch(0);
+        sizePolicy3.setVerticalStretch(0);
+        sizePolicy3.setHeightForWidth(lineEdit->sizePolicy().hasHeightForWidth());
+        lineEdit->setSizePolicy(sizePolicy3);
+        lineEdit->setAutoFillBackground(true);
+        lineEdit->setReadOnly(true);
+
+        gridLayout_4->addWidget(lineEdit, 0, 0, 1, 1);
+
+        pushButton = new QPushButton(frame);
+        pushButton->setObjectName(QStringLiteral("pushButton"));
+        sizePolicy.setHeightForWidth(pushButton->sizePolicy().hasHeightForWidth());
+        pushButton->setSizePolicy(sizePolicy);
+        pushButton->setAutoFillBackground(true);
+
+        gridLayout_4->addWidget(pushButton, 1, 0, 1, 1);
+
+        checkBox_2 = new QCheckBox(frame);
+        checkBox_2->setObjectName(QStringLiteral("checkBox_2"));
+        checkBox_2->setChecked(true);
+
+        gridLayout_4->addWidget(checkBox_2, 1, 1, 1, 1);
+
+        checkBox_3 = new QCheckBox(frame);
+        checkBox_3->setObjectName(QStringLiteral("checkBox_3"));
+        checkBox_3->setChecked(true);
+
+        gridLayout_4->addWidget(checkBox_3, 9, 0, 1, 1);
+
+        checkBox_4 = new QCheckBox(frame);
+        checkBox_4->setObjectName(QStringLiteral("checkBox_4"));
+        checkBox_4->setChecked(true);
+
+        gridLayout_4->addWidget(checkBox_4, 9, 1, 1, 1);
 
 
-        gridLayout->addLayout(formLayout, 0, 0, 1, 1);
+        gridLayout->addLayout(gridLayout_4, 0, 0, 1, 1);
 
 
         gridLayout_2->addWidget(frame, 0, 0, 1, 1);
@@ -219,6 +221,10 @@ public:
         menuBar->addAction(menu_Help->menuAction());
         menu_File->addAction(action_Open);
         menu_File->addAction(actionOpen_Files);
+        menu_File->addAction(actionOpen_transfer_function);
+        menu_File->addAction(actionSave_transfer_function_as);
+        menu_File->addAction(actionLoad_view_and_region);
+        menu_File->addAction(actionSave_view_and_region_as);
         menu_File->addAction(action_Exit);
         menu_Help->addAction(action_About);
 
@@ -230,18 +236,22 @@ public:
     void retranslateUi(QMainWindow *MainWindowClass)
     {
         MainWindowClass->setWindowTitle(QApplication::translate("MainWindowClass", "Options", Q_NULLPTR));
-        action_Open->setText(QApplication::translate("MainWindowClass", "Open &MetaImage (MHD) file", Q_NULLPTR));
+        action_Open->setText(QApplication::translate("MainWindowClass", "Open &MetaImage (MHD) file...", Q_NULLPTR));
         action_Exit->setText(QApplication::translate("MainWindowClass", "&Exit", Q_NULLPTR));
         action_About->setText(QApplication::translate("MainWindowClass", "&About", Q_NULLPTR));
-        actionOpen_Files->setText(QApplication::translate("MainWindowClass", "Open &RAW files (time-varying)", Q_NULLPTR));
-        pushButton->setText(QApplication::translate("MainWindowClass", "Pick color", Q_NULLPTR));
-        checkBox->setText(QApplication::translate("MainWindowClass", "Adjust alpha", Q_NULLPTR));
-        checkBox_2->setText(QApplication::translate("MainWindowClass", "Adjust color", Q_NULLPTR));
-        checkBox_3->setText(QApplication::translate("MainWindowClass", "Apply tf editing to frames", Q_NULLPTR));
-        checkBox_4->setText(QApplication::translate("MainWindowClass", "Reset tf before editing", Q_NULLPTR));
+        actionOpen_Files->setText(QApplication::translate("MainWindowClass", "Open &RAW files (time-varying data)...", Q_NULLPTR));
+        actionOpen_transfer_function->setText(QApplication::translate("MainWindowClass", "&Open transfer function...", Q_NULLPTR));
+        actionSave_transfer_function_as->setText(QApplication::translate("MainWindowClass", "&Save transfer function as...", Q_NULLPTR));
+        actionLoad_view_and_region->setText(QApplication::translate("MainWindowClass", "Load &view and region...", Q_NULLPTR));
+        actionSave_view_and_region_as->setText(QApplication::translate("MainWindowClass", "Save view and region &as...", Q_NULLPTR));
         pushButton_3->setText(QApplication::translate("MainWindowClass", "Apply alpha/color editing", Q_NULLPTR));
         pushButton_4->setText(QApplication::translate("MainWindowClass", "Reset transfer function", Q_NULLPTR));
         pushButton_2->setText(QApplication::translate("MainWindowClass", "Show transfer function", Q_NULLPTR));
+        checkBox->setText(QApplication::translate("MainWindowClass", "Adjust alpha", Q_NULLPTR));
+        pushButton->setText(QApplication::translate("MainWindowClass", "Pick color", Q_NULLPTR));
+        checkBox_2->setText(QApplication::translate("MainWindowClass", "Adjust color", Q_NULLPTR));
+        checkBox_3->setText(QApplication::translate("MainWindowClass", "Apply tf editing to frames", Q_NULLPTR));
+        checkBox_4->setText(QApplication::translate("MainWindowClass", "Reset tf before editing", Q_NULLPTR));
         menu_File->setTitle(QApplication::translate("MainWindowClass", "&File", Q_NULLPTR));
         menu_Help->setTitle(QApplication::translate("MainWindowClass", "&Help", Q_NULLPTR));
     } // retranslateUi
