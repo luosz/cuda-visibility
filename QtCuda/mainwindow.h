@@ -33,6 +33,8 @@ extern "C" void add_volume_to_list_for_update_from_vector(std::vector<std::strin
 extern "C" void load_mhd_file(std::string filename);
 extern "C" void save_view(const char *file);
 extern "C" void load_view(const char *file);
+extern "C" void openTransferFunctionFromVoreenXML(const char *filename);
+extern "C" void bind_tf_texture();
 
 class MainWindow : public QMainWindow
 {

@@ -165,6 +165,8 @@ void MainWindow::on_actionOpen_transfer_function_triggered()
 	{
 		auto str = QFileInfo(filename).fileName();
 		qDebug() << str;
+		openTransferFunctionFromVoreenXML(str.toStdString().c_str());
+		bind_tf_texture();
 	}
 }
 
