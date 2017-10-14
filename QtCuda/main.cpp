@@ -1270,6 +1270,33 @@ inline void print_info()
 	printf("density = %.2f, brightness = %.2f, transferOffset = %.2f, transferScale = %.2f\n", density, brightness, transferOffset, transferScale);
 }
 
+extern "C" void save_view(const char *file)
+{
+	printf("save view to %s\n", file);
+	std::ofstream os(file);
+	cereal::XMLOutputArchive archive(os);
+	archive(viewRotation.x, viewRotation.y, viewRotation.z, viewTranslation.x, viewTranslation.y, viewTranslation.z, loc.x, loc.y);
+}
+
+extern "C" void load_view(const char *file)
+{
+	std::ifstream is(file);
+	if (is.is_open())
+	{
+		printf("load view from %s\n", file);
+		cereal::XMLInputArchive archive(is);
+		archive(viewRotation.x, viewRotation.y, viewRotation.z, viewTranslation.x, viewTranslation.y, viewTranslation.z, loc.x, loc.y);
+		locf.x = loc.x;
+		locf.y = loc.y;
+		loc2.x = loc.x;
+		loc2.y = loc.y;
+	}
+	else
+	{
+		printf("cannot open %s\n", file);
+	}
+}
+
 void keyboard(unsigned char key, int x, int y)
 {
 	//if (TwEventKeyboardGLUT(key, x, y))
@@ -1381,28 +1408,30 @@ void keyboard(unsigned char key, int x, int y)
 			break;
 
 		case 'b':
-			{
-				printf("save view to %s\n", view_file);
-				std::ofstream os(view_file);
-				cereal::XMLOutputArchive archive(os);
-				archive(viewRotation.x, viewRotation.y, viewRotation.z, viewTranslation.x, viewTranslation.y, viewTranslation.z, loc.x, loc.y);
-			}
+			save_view(view_file);
+			//{
+			//	printf("save view to %s\n", view_file);
+			//	std::ofstream os(view_file);
+			//	cereal::XMLOutputArchive archive(os);
+			//	archive(viewRotation.x, viewRotation.y, viewRotation.z, viewTranslation.x, viewTranslation.y, viewTranslation.z, loc.x, loc.y);
+			//}
 			break;
 
 		case 'v':
-			{
-				std::ifstream is(view_file);
-				if (is.is_open())
-				{
-					printf("load view from %s\n", view_file);
-					cereal::XMLInputArchive archive(is);
-					archive(viewRotation.x, viewRotation.y, viewRotation.z, viewTranslation.x, viewTranslation.y, viewTranslation.z, loc.x, loc.y);
-				}
-				else
-				{
-					printf("cannot open %s\n", view_file);
-				}
-			}
+			load_view(view_file);
+			//{
+			//	std::ifstream is(view_file);
+			//	if (is.is_open())
+			//	{
+			//		printf("load view from %s\n", view_file);
+			//		cereal::XMLInputArchive archive(is);
+			//		archive(viewRotation.x, viewRotation.y, viewRotation.z, viewTranslation.x, viewTranslation.y, viewTranslation.z, loc.x, loc.y);
+			//	}
+			//	else
+			//	{
+			//		printf("cannot open %s\n", view_file);
+			//	}
+			//}
 			break;
 
 		case 'w':

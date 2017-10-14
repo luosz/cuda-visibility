@@ -185,6 +185,7 @@ void MainWindow::on_actionLoad_view_and_region_triggered()
 		{
 			auto str = QFileInfo(filename).fileName();
 			qDebug() << str;
+			load_view(str.toStdString().c_str());
 		}
 }
 
@@ -195,5 +196,6 @@ void MainWindow::on_actionSave_view_and_region_as_triggered()
 	{
 		auto str = QFileInfo(filename).fileName();
 		qDebug() << str;
+		save_view(str.toStdString().c_str());
 	}
 }

@@ -31,6 +31,8 @@ extern "C" void apply_tf_editing();
 extern "C" void reset_transfer_function();
 extern "C" void add_volume_to_list_for_update_from_vector(std::vector<std::string> filelist);
 extern "C" void load_mhd_file(std::string filename);
+extern "C" void save_view(const char *file);
+extern "C" void load_view(const char *file);
 
 class MainWindow : public QMainWindow
 {
