@@ -19,6 +19,11 @@ inline float normalise_rgba(int n)
 	return map_to_range(n, 0, 255, 0, 1);
 }
 
+inline int denormalise_rgba(float n)
+{
+	return static_cast<int>(map_to_range(n, 0, 1, 0, 255));
+}
+
 //template<typename T>
 //float4 lerp_(T a, T b, float t)
 //{

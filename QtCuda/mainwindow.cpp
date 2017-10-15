@@ -169,8 +169,8 @@ void MainWindow::on_actionSave_transfer_function_as_triggered()
 	QString filename = QFileDialog::getSaveFileName(this, tr("Save transfer function"), QDir::currentPath(), tr("Transfer function (*.tfi);;All Files (*)"));
 	if (!filename.isNull())
 	{
-		auto str = QFileInfo(filename).fileName();
-		qDebug() << str;
+		qDebug() << filename;
+		saveTransferFunctionToVoreenXML(filename.toStdString().c_str());
 	}
 }
 

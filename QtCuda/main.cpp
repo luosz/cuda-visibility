@@ -922,6 +922,77 @@ void openTransferFunctionFromVoreenXML(const char *filename)
 	backup_tf();
 }
 
+void saveTransferFunctionToVoreenXML(const char *filename)
+{
+	tinyxml2::XMLDocument doc;
+
+	auto declaration = doc.NewDeclaration();
+	doc.InsertEndChild(declaration);
+	auto voreenData = doc.NewElement("VoreenData");
+	voreenData->SetAttribute("version", 1);
+	auto transFuncIntensity = doc.NewElement("TransFuncIntensity");
+	transFuncIntensity->SetAttribute("type", "TransFuncIntensity");
+
+	// add alphaMode
+	auto alphaMode = doc.NewElement("alphaMode");
+	alphaMode->SetAttribute("value", 1);
+	transFuncIntensity->InsertEndChild(alphaMode);
+
+	// add gammaValue
+	auto gammaValue = doc.NewElement("gammaValue");
+	gammaValue->SetAttribute("value", 1);
+	transFuncIntensity->InsertEndChild(gammaValue);
+
+	// add domain
+	auto domain = doc.NewElement("domain");
+	domain->SetAttribute("x", 0);
+	domain->SetAttribute("y", 1);
+	transFuncIntensity->InsertEndChild(domain);
+
+	// add threshold
+	auto threshold = doc.NewElement("threshold");
+	threshold->SetAttribute("x", 0);
+	threshold->SetAttribute("y", 1);
+	transFuncIntensity->InsertEndChild(threshold);
+
+	//intensity_list
+	//rgba_list
+
+	int n = intensity_list.size();
+
+	// add Keys
+	auto keys = doc.NewElement("Keys");
+	for (int i = 0; i < n; i++)
+	{
+		auto key = doc.NewElement("key");
+		key->SetAttribute("type", "TransFuncMappingKey");
+		auto intensity = doc.NewElement("intensity");
+		intensity->SetAttribute("value", intensity_list[i]);
+		auto split = doc.NewElement("split");
+		split->SetAttribute("value", "false");
+		auto colorL = doc.NewElement("colorL");
+		
+		colorL->SetAttribute("r", denormalise_rgba(rgba_list[i].x));
+		colorL->SetAttribute("g", denormalise_rgba(rgba_list[i].y));
+		colorL->SetAttribute("b", denormalise_rgba(rgba_list[i].z));
+		colorL->SetAttribute("a", denormalise_rgba(rgba_list[i].w));
+		key->InsertEndChild(intensity);
+		key->InsertEndChild(split);
+		key->InsertEndChild(colorL);
+		keys->InsertEndChild(key);
+	}
+	transFuncIntensity->InsertEndChild(keys);
+
+	voreenData->InsertEndChild(transFuncIntensity);
+	doc.InsertEndChild(voreenData);
+
+	auto r = doc.SaveFile(filename);
+	if (r != tinyxml2::XML_SUCCESS)
+	{
+		std::cout << "failed to save file " << filename << endl;
+	}
+}
+
 inline void add_volume_to_list_for_update()
 {
 	volume_list.clear();

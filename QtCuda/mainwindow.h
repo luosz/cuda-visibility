@@ -35,6 +35,7 @@ extern "C" void save_view(const char *file);
 extern "C" void load_view(const char *file);
 extern "C" void openTransferFunctionFromVoreenXML(const char *filename);
 extern "C" void bind_tf_texture();
+extern "C" void saveTransferFunctionToVoreenXML(const char *filename);
 
 class MainWindow : public QMainWindow
 {
