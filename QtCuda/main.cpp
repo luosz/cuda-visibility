@@ -922,11 +922,6 @@ void openTransferFunctionFromVoreenXML(const char *filename)
 	backup_tf();
 }
 
-extern "C" void load_transfer_function(const char *filename)
-{
-	openTransferFunctionFromVoreenXML(filename);
-}
-
 inline void add_volume_to_list_for_update()
 {
 	volume_list.clear();

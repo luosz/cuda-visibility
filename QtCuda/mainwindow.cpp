@@ -17,6 +17,7 @@ MainWindow::MainWindow(QWidget *parent)
 	//ui.graphicsView->setScene(&scene);
 	ui.verticalLayout->addWidget(&chartView);
 	ui.verticalLayout->addWidget(&chartView2);
+	QTimer::singleShot(2000, this, SLOT(show_transfer_function()));
 }
 
 void MainWindow::on_pushButton_clicked()
@@ -132,7 +133,6 @@ void MainWindow::on_action_Open_triggered()
 	if (!filename.isNull())
 	{
 		auto str = QFileInfo(filename).fileName();
-		//qDebug() << str;
 		load_mhd_file(str.toStdString());
 	}
 }
@@ -146,16 +146,10 @@ void MainWindow::on_actionOpen_Files_triggered()
 		for (int i = 0;i < filenames.count();i++)
 		{
 			auto filename = QFileInfo(filenames.at(i)).fileName();
-			//qDebug()<< filename;
 			filelist.push_back(filename.toStdString());
 		}
 		add_volume_to_list_for_update_from_vector(filelist);
 	}
-	//{
-	//	//std::string current_locale_text = qs.toLocal8Bit().constData();
-	//	//for (int i = 0;i < filenames.count();i++)
-	//	//	ui->lstFiles->addItem(filenames.at(i));
-	//}
 }
 
 void MainWindow::on_actionOpen_transfer_function_triggered()
@@ -163,10 +157,10 @@ void MainWindow::on_actionOpen_transfer_function_triggered()
 	QString filename = QFileDialog::getOpenFileName(this, tr("Open transfer function"), QDir::currentPath(), tr("Transfer function (*.tfi);;All Files (*)"));
 	if (!filename.isNull())
 	{
-		auto str = QFileInfo(filename).fileName();
-		qDebug() << str;
-		openTransferFunctionFromVoreenXML(str.toStdString().c_str());
+		qDebug() << filename;
+		openTransferFunctionFromVoreenXML(filename.toStdString().c_str());
 		bind_tf_texture();
+		show_transfer_function();
 	}
 }
 
@@ -185,6 +179,7 @@ void MainWindow::on_actionLoad_view_and_region_triggered()
 	QString filename = QFileDialog::getOpenFileName(this, tr("Open view"), QDir::currentPath(), tr("View (*.xml);;All Files (*)"));
 	if (!filename.isNull())
 		{
+			// extract filename from path
 			auto str = QFileInfo(filename).fileName();
 			qDebug() << str;
 			load_view(str.toStdString().c_str());
@@ -196,6 +191,7 @@ void MainWindow::on_actionSave_view_and_region_as_triggered()
 	QString filename = QFileDialog::getSaveFileName(this, tr("Save view"), QDir::currentPath(), tr("View (*.xml);;All Files (*)"));
 	if (!filename.isNull())
 	{
+		// extract filename from path
 		auto str = QFileInfo(filename).fileName();
 		qDebug() << str;
 		save_view(str.toStdString().c_str());
