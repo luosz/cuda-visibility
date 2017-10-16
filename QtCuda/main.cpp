@@ -1550,29 +1550,10 @@ void keyboard(unsigned char key, int x, int y)
 
 		case 'b':
 			save_view(view_file);
-			//{
-			//	printf("save view to %s\n", view_file);
-			//	std::ofstream os(view_file);
-			//	cereal::XMLOutputArchive archive(os);
-			//	archive(viewRotation.x, viewRotation.y, viewRotation.z, viewTranslation.x, viewTranslation.y, viewTranslation.z, loc.x, loc.y);
-			//}
 			break;
 
 		case 'v':
 			load_view(view_file);
-			//{
-			//	std::ifstream is(view_file);
-			//	if (is.is_open())
-			//	{
-			//		printf("load view from %s\n", view_file);
-			//		cereal::XMLInputArchive archive(is);
-			//		archive(viewRotation.x, viewRotation.y, viewRotation.z, viewTranslation.x, viewTranslation.y, viewTranslation.z, loc.x, loc.y);
-			//	}
-			//	else
-			//	{
-			//		printf("cannot open %s\n", view_file);
-			//	}
-			//}
 			break;
 
 		case 'w':
