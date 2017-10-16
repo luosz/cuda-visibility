@@ -1026,10 +1026,8 @@ void save_tf_array_to_voreen_XML(const char *filename)
 	threshold->SetAttribute("y", 1);
 	transFuncIntensity->InsertEndChild(threshold);
 
-	//intensity_list
-	//rgba_list
-
-	int n = intensity_list.size();
+	auto n = get_bin_count();
+	float4 *tf = get_tf_array();
 
 	// add Keys
 	auto keys = doc.NewElement("Keys");
@@ -1038,15 +1036,16 @@ void save_tf_array_to_voreen_XML(const char *filename)
 		auto key = doc.NewElement("key");
 		key->SetAttribute("type", "TransFuncMappingKey");
 		auto intensity = doc.NewElement("intensity");
-		intensity->SetAttribute("value", intensity_list[i]);
+		intensity->SetAttribute("value", i / 255.f);
 		auto split = doc.NewElement("split");
 		split->SetAttribute("value", "false");
 		auto colorL = doc.NewElement("colorL");
 
-		colorL->SetAttribute("r", denormalise_rgba(rgba_list[i].x));
-		colorL->SetAttribute("g", denormalise_rgba(rgba_list[i].y));
-		colorL->SetAttribute("b", denormalise_rgba(rgba_list[i].z));
-		colorL->SetAttribute("a", denormalise_rgba(rgba_list[i].w));
+		auto rgba = tf[i];
+		colorL->SetAttribute("r", denormalise_rgba(rgba.x));
+		colorL->SetAttribute("g", denormalise_rgba(rgba.y));
+		colorL->SetAttribute("b", denormalise_rgba(rgba.z));
+		colorL->SetAttribute("a", denormalise_rgba(rgba.w));
 		key->InsertEndChild(intensity);
 		key->InsertEndChild(split);
 		key->InsertEndChild(colorL);
