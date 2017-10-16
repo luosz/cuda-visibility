@@ -170,7 +170,7 @@ void MainWindow::on_actionSave_transfer_function_as_triggered()
 	if (!filename.isNull())
 	{
 		qDebug() << filename;
-		saveTransferFunctionToVoreenXML(filename.toStdString().c_str());
+		save_tf_array_to_voreen_XML(filename.toStdString().c_str());
 	}
 }
 
