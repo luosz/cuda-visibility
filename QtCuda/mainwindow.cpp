@@ -197,3 +197,12 @@ void MainWindow::on_actionSave_view_and_region_as_triggered()
 		save_view(str.toStdString().c_str());
 	}
 }
+
+void MainWindow::on_checkBox_5_clicked()
+{
+	if (apply_time_varying_vws_optimization)
+	{
+		*apply_time_varying_vws_optimization = ui.checkBox_5->isChecked();
+		std::cout << "apply_time_varying_vws_optimization=" << (*apply_time_varying_vws_optimization ? "true" : "false") << std::endl;
+	}
+}

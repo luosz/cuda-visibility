@@ -51,12 +51,13 @@ public:
     QPushButton *pushButton_3;
     QPushButton *pushButton_4;
     QPushButton *pushButton_2;
-    QCheckBox *checkBox;
-    QLineEdit *lineEdit;
     QPushButton *pushButton;
-    QCheckBox *checkBox_2;
     QCheckBox *checkBox_3;
+    QLineEdit *lineEdit;
     QCheckBox *checkBox_4;
+    QCheckBox *checkBox_5;
+    QCheckBox *checkBox;
+    QCheckBox *checkBox_2;
     QMenuBar *menuBar;
     QMenu *menu_File;
     QMenu *menu_Help;
@@ -144,30 +145,7 @@ public:
         gridLayout_3->addWidget(pushButton_2, 0, 0, 1, 1);
 
 
-        gridLayout_4->addLayout(gridLayout_3, 8, 0, 1, 3);
-
-        checkBox = new QCheckBox(frame);
-        checkBox->setObjectName(QStringLiteral("checkBox"));
-        QSizePolicy sizePolicy2(QSizePolicy::Minimum, QSizePolicy::Fixed);
-        sizePolicy2.setHorizontalStretch(0);
-        sizePolicy2.setVerticalStretch(0);
-        sizePolicy2.setHeightForWidth(checkBox->sizePolicy().hasHeightForWidth());
-        checkBox->setSizePolicy(sizePolicy2);
-        checkBox->setChecked(true);
-
-        gridLayout_4->addWidget(checkBox, 0, 1, 1, 1);
-
-        lineEdit = new QLineEdit(frame);
-        lineEdit->setObjectName(QStringLiteral("lineEdit"));
-        QSizePolicy sizePolicy3(QSizePolicy::Expanding, QSizePolicy::Preferred);
-        sizePolicy3.setHorizontalStretch(0);
-        sizePolicy3.setVerticalStretch(0);
-        sizePolicy3.setHeightForWidth(lineEdit->sizePolicy().hasHeightForWidth());
-        lineEdit->setSizePolicy(sizePolicy3);
-        lineEdit->setAutoFillBackground(true);
-        lineEdit->setReadOnly(true);
-
-        gridLayout_4->addWidget(lineEdit, 0, 0, 1, 1);
+        gridLayout_4->addLayout(gridLayout_3, 8, 1, 1, 5);
 
         pushButton = new QPushButton(frame);
         pushButton->setObjectName(QStringLiteral("pushButton"));
@@ -175,25 +153,53 @@ public:
         pushButton->setSizePolicy(sizePolicy);
         pushButton->setAutoFillBackground(true);
 
-        gridLayout_4->addWidget(pushButton, 1, 0, 1, 1);
-
-        checkBox_2 = new QCheckBox(frame);
-        checkBox_2->setObjectName(QStringLiteral("checkBox_2"));
-        checkBox_2->setChecked(true);
-
-        gridLayout_4->addWidget(checkBox_2, 1, 1, 1, 1);
+        gridLayout_4->addWidget(pushButton, 1, 1, 1, 1);
 
         checkBox_3 = new QCheckBox(frame);
         checkBox_3->setObjectName(QStringLiteral("checkBox_3"));
         checkBox_3->setChecked(true);
 
-        gridLayout_4->addWidget(checkBox_3, 9, 0, 1, 1);
+        gridLayout_4->addWidget(checkBox_3, 11, 1, 1, 1);
+
+        lineEdit = new QLineEdit(frame);
+        lineEdit->setObjectName(QStringLiteral("lineEdit"));
+        QSizePolicy sizePolicy2(QSizePolicy::Expanding, QSizePolicy::Preferred);
+        sizePolicy2.setHorizontalStretch(0);
+        sizePolicy2.setVerticalStretch(0);
+        sizePolicy2.setHeightForWidth(lineEdit->sizePolicy().hasHeightForWidth());
+        lineEdit->setSizePolicy(sizePolicy2);
+        lineEdit->setAutoFillBackground(true);
+        lineEdit->setReadOnly(true);
+
+        gridLayout_4->addWidget(lineEdit, 0, 1, 1, 1);
 
         checkBox_4 = new QCheckBox(frame);
         checkBox_4->setObjectName(QStringLiteral("checkBox_4"));
         checkBox_4->setChecked(true);
 
-        gridLayout_4->addWidget(checkBox_4, 9, 1, 1, 1);
+        gridLayout_4->addWidget(checkBox_4, 11, 2, 1, 1);
+
+        checkBox_5 = new QCheckBox(frame);
+        checkBox_5->setObjectName(QStringLiteral("checkBox_5"));
+
+        gridLayout_4->addWidget(checkBox_5, 11, 4, 1, 1);
+
+        checkBox = new QCheckBox(frame);
+        checkBox->setObjectName(QStringLiteral("checkBox"));
+        QSizePolicy sizePolicy3(QSizePolicy::Minimum, QSizePolicy::Fixed);
+        sizePolicy3.setHorizontalStretch(0);
+        sizePolicy3.setVerticalStretch(0);
+        sizePolicy3.setHeightForWidth(checkBox->sizePolicy().hasHeightForWidth());
+        checkBox->setSizePolicy(sizePolicy3);
+        checkBox->setChecked(true);
+
+        gridLayout_4->addWidget(checkBox, 0, 2, 1, 1);
+
+        checkBox_2 = new QCheckBox(frame);
+        checkBox_2->setObjectName(QStringLiteral("checkBox_2"));
+        checkBox_2->setChecked(true);
+
+        gridLayout_4->addWidget(checkBox_2, 1, 2, 1, 1);
 
 
         gridLayout->addLayout(gridLayout_4, 0, 0, 1, 1);
@@ -247,11 +253,12 @@ public:
         pushButton_3->setText(QApplication::translate("MainWindowClass", "Apply alpha/color editing", Q_NULLPTR));
         pushButton_4->setText(QApplication::translate("MainWindowClass", "Reset transfer function", Q_NULLPTR));
         pushButton_2->setText(QApplication::translate("MainWindowClass", "Show transfer function", Q_NULLPTR));
-        checkBox->setText(QApplication::translate("MainWindowClass", "Adjust alpha", Q_NULLPTR));
         pushButton->setText(QApplication::translate("MainWindowClass", "Pick color", Q_NULLPTR));
+        checkBox_3->setText(QApplication::translate("MainWindowClass", "Apply TF editing to frames", Q_NULLPTR));
+        checkBox_4->setText(QApplication::translate("MainWindowClass", "Reset TF before editing", Q_NULLPTR));
+        checkBox_5->setText(QApplication::translate("MainWindowClass", "VWS optimization", Q_NULLPTR));
+        checkBox->setText(QApplication::translate("MainWindowClass", "Adjust alpha", Q_NULLPTR));
         checkBox_2->setText(QApplication::translate("MainWindowClass", "Adjust color", Q_NULLPTR));
-        checkBox_3->setText(QApplication::translate("MainWindowClass", "Apply tf editing to frames", Q_NULLPTR));
-        checkBox_4->setText(QApplication::translate("MainWindowClass", "Reset tf before editing", Q_NULLPTR));
         menu_File->setTitle(QApplication::translate("MainWindowClass", "&File", Q_NULLPTR));
         menu_Help->setTitle(QApplication::translate("MainWindowClass", "&Help", Q_NULLPTR));
     } // retranslateUi

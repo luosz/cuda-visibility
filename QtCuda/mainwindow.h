@@ -67,13 +67,14 @@ public:
 		ui.lineEdit->setText(color.name());
 	}
 
-	void set_pointers(Pointer picked_color, bool *alpha, bool *color, bool *time_varying_tf, bool *time_varying_tf_reset)
+	void set_pointers(Pointer picked_color, bool *alpha, bool *color, bool *time_varying_tf, bool *time_varying_tf_reset, bool *time_varying_vws_optimization)
 	{
 		color_array = picked_color;
 		apply_alpha = alpha;
 		apply_color = color;
 		apply_time_varying_tf_editing = time_varying_tf;
 		apply_time_varying_tf_reset = time_varying_tf_reset;
+		apply_time_varying_vws_optimization = time_varying_vws_optimization;
 	}
 
 private slots:
@@ -148,6 +149,8 @@ private slots:
 
     void on_actionSave_view_and_region_as_triggered();
 
+    void on_checkBox_5_clicked();
+
 private:
 	Ui::MainWindowClass ui;
 	QColor color;
@@ -156,6 +159,7 @@ private:
 	bool *apply_color = NULL;
 	bool *apply_time_varying_tf_editing = NULL;
 	bool *apply_time_varying_tf_reset = NULL;
+	bool *apply_time_varying_vws_optimization = NULL;
 	//QGraphicsScene scene;
 	QChartView chartView;
 	QChartView chartView2;

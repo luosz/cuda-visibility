@@ -157,6 +157,7 @@ float2 diff = {0,0};
 bool dragMode = false; // mouse tracking mode
 bool time_varying_tf_editing = D_TIME_VARYING_TF_EDITING;
 bool time_varying_tf_reset = D_TIME_VARYING_TF_RESET;
+bool time_varying_vws_optimization = D_TIME_VARYING_VWS_OPTIMIZATION;
 
 //uint width = 512, height = 512;
 uint width = D_WIDTH, height = D_HEIGHT;
@@ -1229,18 +1230,39 @@ void load_a_volume_and_optimize()
 		//out << ss.str();
 		//out.close();
 
-		// apply tf editing
-		if (time_varying_tf_reset)
+		// vws optimiztion for a frame
+		if (time_varying_vws_optimization)
 		{
-			reset_transfer_function();
+			auto ans = optimize_for_a_frame();
+			std::stringstream ss;
+			std::cout << volumeFilename;
+			ss << volumeFilename;
+			for (auto i : ans)
+			{
+				std::cout << "\t" << i;
+				ss << "\t" << i;
+			}
+			std::cout << std::endl;
+			ss << std::endl;
+			ofstream out(log_filename(), std::ios_base::app);
+			out << ss.str();
+			out.close();
 		}
-		if (time_varying_tf_editing)
+		else
 		{
-			locf.x += diff.x;
-			locf.y += diff.y;
-			loc.x = (int)locf.x;
-			loc.y = (int)locf.y;
-			apply_tf_editing();
+			// apply tf editing
+			if (time_varying_tf_reset)
+			{
+				reset_transfer_function();
+			}
+			if (time_varying_tf_editing)
+			{
+				locf.x += diff.x;
+				locf.y += diff.y;
+				loc.x = (int)locf.x;
+				loc.y = (int)locf.y;
+				apply_tf_editing();
+			}
 		}
 
 		free(h_volume);
@@ -2084,7 +2106,7 @@ int main(int argc, char *argv[])
 	MainWindow w;
 	w.show();
 
-	w.set_pointers(get_SelectedColor(), get_ApplyAlpha(), get_ApplyColor(), &time_varying_tf_editing, &time_varying_tf_reset);
+	w.set_pointers(get_SelectedColor(), get_ApplyAlpha(), get_ApplyColor(), &time_varying_tf_editing, &time_varying_tf_reset, &time_varying_vws_optimization);
 
 	init_gl_main(argc, argv);
 
