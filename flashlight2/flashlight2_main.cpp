@@ -56,7 +56,7 @@ void printInstructions() {
 	printf("flashlight interactions\n");
 	printf("a: toggle mouse tracking mode\n");
 	printf("arrow keys: move ref location\n");
-	printf("esc: close graphics window\n");
+	printf("esc: close graphics qt_window\n");
 }
 
 // texture and pixel objects

@@ -17,7 +17,7 @@ MainWindow::MainWindow(QWidget *parent)
 	//ui.graphicsView->setScene(&scene);
 	ui.verticalLayout->addWidget(&chartView);
 	ui.verticalLayout->addWidget(&chartView2);
-	QTimer::singleShot(2000, this, SLOT(show_transfer_function()));
+	show_transfer_function_later(1000);
 }
 
 void MainWindow::on_pushButton_clicked()
@@ -55,7 +55,7 @@ void MainWindow::on_pushButton_2_clicked()
 void MainWindow::on_pushButton_3_clicked()
 {
 	apply_tf_editing();
-	QTimer::singleShot(500, this, SLOT(show_transfer_function()));
+	show_transfer_function_later();
 
 	//const int n = 11;
 	//int r = 2;
@@ -78,7 +78,7 @@ void MainWindow::on_pushButton_3_clicked()
 void MainWindow::on_pushButton_4_clicked()
 {
 	reset_transfer_function();
-	QTimer::singleShot(500, this, SLOT(show_transfer_function()));
+	show_transfer_function_later();
 
 	////float gaussian1[R1*R1*R1] = { 0 };
 	//float a;

@@ -77,6 +77,11 @@ public:
 		apply_time_varying_vws_optimization = time_varying_vws_optimization;
 	}
 
+	void show_transfer_function_later(int msec=10)
+	{
+		QTimer::singleShot(msec, this, SLOT(show_transfer_function()));
+	}
+
 private slots:
     void on_pushButton_clicked();
 
@@ -101,6 +106,16 @@ private slots:
     void on_action_Open_triggered();
 
     void on_actionOpen_Files_triggered();
+
+    void on_actionOpen_transfer_function_triggered();
+
+    void on_actionSave_transfer_function_as_triggered();
+
+    void on_actionLoad_view_and_region_triggered();
+
+    void on_actionSave_view_and_region_as_triggered();
+
+    void on_checkBox_5_clicked();
 
 	void show_transfer_function()
 	{
@@ -140,16 +155,6 @@ private slots:
 		chart2->setTitle("Relative visibility histogram");
 		chartView2.setRenderHint(QPainter::Antialiasing);
 	}
-
-    void on_actionOpen_transfer_function_triggered();
-
-    void on_actionSave_transfer_function_as_triggered();
-
-    void on_actionLoad_view_and_region_triggered();
-
-    void on_actionSave_view_and_region_as_triggered();
-
-    void on_checkBox_5_clicked();
 
 private:
 	Ui::MainWindowClass ui;

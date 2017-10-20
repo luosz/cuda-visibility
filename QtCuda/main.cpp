@@ -198,6 +198,8 @@ char **pArgv;
 #define MAX(a,b) ((a > b) ? a : b)
 #endif
 
+MainWindow *qt_window = NULL;
+
 extern "C" void update_volume(void *h_volume, cudaExtent volumeSize);
 extern "C" void bind_tf_texture();
 extern "C" VolumeType * get_raw_volume();
@@ -1267,6 +1269,11 @@ void load_a_volume_and_optimize()
 
 		free(h_volume);
 		volume_list.pop_back();
+
+		if (qt_window)
+		{
+			qt_window->show_transfer_function_later();
+		}
 	}
 }
 
@@ -1528,10 +1535,18 @@ void keyboard(unsigned char key, int x, int y)
 
 		case 'a':
 			set_apply(true);
+			if (qt_window)
+			{
+				qt_window->show_transfer_function_later();
+			}
 			break;
 
 		case 'd':
 			set_discard(true);
+			if (qt_window)
+			{
+				qt_window->show_transfer_function_later();
+			}
 			break;
 
 		case 's':
@@ -1540,6 +1555,10 @@ void keyboard(unsigned char key, int x, int y)
 
 		case 'g':
 			set_gaussian(true);
+			if (qt_window)
+			{
+				qt_window->show_transfer_function_later();
+			}
 			break;
 
 		case 't':
@@ -1682,6 +1701,12 @@ void passive_motion(int x, int y)
 
 		reset_transfer_function();
 		apply_tf_editing();
+		
+		//std::cout << "qt_window is " << (qt_window ? "valid" : "null") << std::endl;
+		if (qt_window)
+		{
+			qt_window->show_transfer_function_later();
+		}
 	}
 }
 
@@ -2107,6 +2132,7 @@ int main(int argc, char *argv[])
 	w.show();
 
 	w.set_pointers(get_SelectedColor(), get_ApplyAlpha(), get_ApplyColor(), &time_varying_tf_editing, &time_varying_tf_reset, &time_varying_vws_optimization);
+	qt_window = &w;
 
 	init_gl_main(argc, argv);
 
