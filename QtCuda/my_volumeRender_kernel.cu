@@ -189,7 +189,7 @@ extern "C" bool get_save()
 extern "C" void set_save(bool value)
 {
 	save_histogram = value;
-	printf("set save %s\n", save_histogram ?"true":"false");
+	//printf("set save %s\n", save_histogram ?"true":"false");
 }
 
 extern "C" bool get_apply()
@@ -200,7 +200,7 @@ extern "C" bool get_apply()
 extern "C" void set_apply(bool value)
 {
 	apply_blend = value;
-	printf("set apply %s\n", apply_blend ? "true" : "false");
+	//printf("set apply %s\n", apply_blend ? "true" : "false");
 }
 
 extern "C" bool get_discard()
@@ -211,7 +211,7 @@ extern "C" bool get_discard()
 extern "C" void set_discard(bool value)
 {
 	discard_table = value;
-	printf("set discard %s\n", discard_table ? "true" : "false");
+	//printf("set discard %s\n", discard_table ? "true" : "false");
 }
 
 extern "C" bool get_gaussian()
@@ -222,7 +222,7 @@ extern "C" bool get_gaussian()
 extern "C" void set_gaussian(bool value)
 {
 	gaussian_histogram = value;
-	printf("set gaussian %s\n", gaussian_histogram ? "true" : "false");
+	//printf("set gaussian %s\n", gaussian_histogram ? "true" : "false");
 }
 
 extern "C" bool get_backup()
@@ -1315,14 +1315,14 @@ void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, u
 	if (get_apply())
 	{
 		set_apply(false);
-		printf("loc %d %d\n", loc.x, loc.y);
+		//printf("loc %d %d\n", loc.x, loc.y);
 		blend_tf_rgba(make_float3(g_SelectedColor[0], g_SelectedColor[1], g_SelectedColor[2]));
 	}
 
 	if (get_gaussian())
 	{
 		set_gaussian(false);
-		printf("loc %d %d\n", loc.x, loc.y);
+		//printf("loc %d %d\n", loc.x, loc.y);
 		gaussian_tf(make_float3(g_SelectedColor[0], g_SelectedColor[1], g_SelectedColor[2]));
 	}
 

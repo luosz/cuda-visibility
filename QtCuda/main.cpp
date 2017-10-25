@@ -248,13 +248,13 @@ extern "C" void copyInvViewMatrix(float *invViewMatrix, size_t sizeofMatrix);
 
 void apply_tf_editing()
 {
-	std::cout << "apply_tf_editing()" << std::endl;
+	//std::cout << "apply_tf_editing()" << std::endl;
 	set_gaussian(true);
 }
 
 void reset_transfer_function()
 {
-	std::cout << "reset_transfer_function()" << std::endl;
+	//std::cout << "reset_transfer_function()" << std::endl;
 	set_discard(true);
 }
 
@@ -1473,7 +1473,7 @@ void keyboard(unsigned char key, int x, int y)
 	//{
 	//	return;
 	//}
-	printf("keyboard %d %d key %d \n", x, y, (int)key);
+	//printf("keyboard %d %d key %d \n", x, y, (int)key);
 	auto c = get_SelectedColor();
 	bool *p1 = get_ApplyAlpha(), *p2 = get_ApplyColor();
 	clock_t start, end;
@@ -1716,7 +1716,7 @@ void motion(int x, int y)
 	//{
 	//	return;
 	//}
-	printf("motion %d %d \n", x, y);
+	//printf("motion %d %d \n", x, y);
     float dx, dy;
     dx = (float)(x - ox);
     dy = (float)(y - oy);
@@ -1853,11 +1853,11 @@ void *loadRawFile(const char *filename, size_t size)
     size_t read = fread(data, 1, size, fp);
     fclose(fp);
 
-#if defined(_MSC_VER_)
-    printf("Read '%s', %Iu bytes\n", filename, read);
-#else
-    printf("Read '%s', %zu bytes\n", filename, read);
-#endif
+//#if defined(_MSC_VER_)
+//    printf("Read '%s', %Iu bytes\n", filename, read);
+//#else
+//    printf("Read '%s', %zu bytes\n", filename, read);
+//#endif
 
     return data;
 }
