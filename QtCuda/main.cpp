@@ -1685,6 +1685,7 @@ void mouse(int button, int state, int x, int y)
 void passive_motion(int x, int y)
 {
 	//printf("passive_motion %d %d \n", x, y);
+
 	if (glutGetModifiers() == GLUT_ACTIVE_CTRL)
 	{
 		//printf("control key is pressed.\n");
@@ -1717,6 +1718,7 @@ void motion(int x, int y)
 	//	return;
 	//}
 	//printf("motion %d %d \n", x, y);
+
     float dx, dy;
     dx = (float)(x - ox);
     dy = (float)(y - oy);
