@@ -53,6 +53,7 @@ __device__ __managed__ float histogram[BIN_COUNT] = {0};
 __device__ __managed__ float histogram2[BIN_COUNT] = { 0 };
 __device__ __managed__ float histogram3[BIN_COUNT] = { 0 };
 __device__ __managed__ float histogram4[BIN_COUNT] = { 0 };
+__device__ __managed__ float histogram5[BIN_COUNT] = { 0 };
 __device__ __managed__ float4 tf_array[BIN_COUNT] = { 0 };
 __device__ __managed__ float4 tf_array0[BIN_COUNT] = { 0 };
 __device__ __managed__ int radius = D_RADIUS;
@@ -78,6 +79,7 @@ bool discard_table = false;
 bool save_histogram = false;
 bool gaussian_histogram = false;
 bool backup_table = false;
+bool temporal = false;
 
 extern "C" float4 rgb_to_lch(float4 rgba);
 extern "C" int iDivUp(int a, int b);
@@ -153,6 +155,11 @@ extern "C" float4* get_tf_array()
 extern "C" float* get_relative_visibility_histogram()
 {
 	return histogram4;
+}
+
+extern "C" float* get_temporal_visibility_histogram()
+{
+	return histogram5;
 }
 
 extern "C" void backup_tf()
@@ -233,7 +240,17 @@ extern "C" bool get_backup()
 extern "C" void set_backup(bool value)
 {
 	backup_table = value;
-	printf("set backup %s\n", backup_table ? "true" : "false");
+	//printf("set backup %s\n", backup_table ? "true" : "false");
+}
+
+extern "C" bool get_temporal()
+{
+	return temporal;
+}
+
+extern "C" void set_temporal(bool value)
+{
+	temporal = value;
 }
 
 extern "C" void set_volume_file(const char *file, int n)
@@ -351,6 +368,19 @@ extern "C" void blend_tf_rgba(float3 color)
 	}
 
 	bind_tf_texture();
+}
+
+extern "C" void init_temporal_histogram()
+{
+	memset(histogram5, 0, sizeof(float) * BIN_COUNT);
+}
+
+extern "C" void add_temporal_histogram()
+{
+	for (int i = 0; i < BIN_COUNT; i++)
+	{
+		histogram5[i] += histogram2[i];
+	}
 }
 
 extern "C" void gaussian_tf(float3 color)
@@ -1324,6 +1354,12 @@ void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, u
 		set_gaussian(false);
 		//printf("loc %d %d\n", loc.x, loc.y);
 		gaussian_tf(make_float3(g_SelectedColor[0], g_SelectedColor[1], g_SelectedColor[2]));
+	}
+
+	if (get_temporal())
+	{
+		set_temporal(false);
+		add_temporal_histogram();
 	}
 
 	if (get_save())
