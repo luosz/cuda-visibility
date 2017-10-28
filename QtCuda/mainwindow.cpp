@@ -206,3 +206,17 @@ void MainWindow::on_checkBox_5_clicked()
 		std::cout << "apply_time_varying_vws_optimization=" << (*apply_time_varying_vws_optimization ? "true" : "false") << std::endl;
 	}
 }
+
+void MainWindow::on_checkBox_6_clicked()
+{
+	if (calc_temporal_visibility)
+	{
+		*calc_temporal_visibility = ui.checkBox_6->isChecked();
+		std::cout << "calc_temporal_visibility=" << (*calc_temporal_visibility ? "true" : "false") << std::endl;
+	}
+}
+
+void MainWindow::on_pushButton_5_clicked()
+{
+
+}

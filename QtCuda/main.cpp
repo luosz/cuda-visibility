@@ -158,6 +158,7 @@ bool dragMode = false; // mouse tracking mode
 bool time_varying_tf_editing = D_TIME_VARYING_TF_EDITING;
 bool time_varying_tf_reset = D_TIME_VARYING_TF_RESET;
 bool time_varying_vws_optimization = D_TIME_VARYING_VWS_OPTIMIZATION;
+bool temporal_visibility = D_TERMPORAL_VISIBILITY;
 
 //uint width = 512, height = 512;
 uint width = D_WIDTH, height = D_HEIGHT;
@@ -213,6 +214,8 @@ extern "C" void gaussian(float *lch_volume, cudaExtent volumeSize, float *out);
 extern "C" void compute_saliency();
 extern "C" void compute_vws();
 extern "C" void compute_saliency_once();
+extern "C" bool get_temporal();
+extern "C" void set_temporal(bool value);
 
 typedef float(*Pointer)[4];
 extern "C" Pointer get_SelectedColor();
@@ -1265,6 +1268,10 @@ void load_a_volume_and_optimize()
 				loc.y = (int)locf.y;
 				apply_tf_editing();
 			}
+			if(temporal_visibility)
+			{
+				set_temporal(true);
+			}
 		}
 
 		free(h_volume);
@@ -2133,7 +2140,7 @@ int main(int argc, char *argv[])
 	MainWindow w;
 	w.show();
 
-	w.set_pointers(get_SelectedColor(), get_ApplyAlpha(), get_ApplyColor(), &time_varying_tf_editing, &time_varying_tf_reset, &time_varying_vws_optimization);
+	w.set_pointers(get_SelectedColor(), get_ApplyAlpha(), get_ApplyColor(), &time_varying_tf_editing, &time_varying_tf_reset, &time_varying_vws_optimization, &temporal_visibility);
 	qt_window = &w;
 
 	init_gl_main(argc, argv);

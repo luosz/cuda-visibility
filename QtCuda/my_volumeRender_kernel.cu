@@ -79,7 +79,8 @@ bool discard_table = false;
 bool save_histogram = false;
 bool gaussian_histogram = false;
 bool backup_table = false;
-bool temporal = false;
+bool temporal_visibility = false;
+bool temporal_tf = false;
 
 extern "C" float4 rgb_to_lch(float4 rgba);
 extern "C" int iDivUp(int a, int b);
@@ -245,12 +246,22 @@ extern "C" void set_backup(bool value)
 
 extern "C" bool get_temporal()
 {
-	return temporal;
+	return temporal_visibility;
 }
 
 extern "C" void set_temporal(bool value)
 {
-	temporal = value;
+	temporal_visibility = value;
+}
+
+extern "C" bool get_temporal_tf()
+{
+	return temporal_tf;
+}
+
+extern "C" void set_temporal_tf(bool value)
+{
+	temporal_tf = value;
 }
 
 extern "C" void set_volume_file(const char *file, int n)
@@ -381,6 +392,83 @@ extern "C" void add_temporal_histogram()
 	{
 		histogram5[i] += histogram2[i];
 	}
+}
+
+extern "C" void apply_temporal_tf_editing(float3 color)
+{
+	float hist[BIN_COUNT], hist2[BIN_COUNT];
+	float sum = 0;
+	for (int i = 0; i < BIN_COUNT; i++)
+	{
+		sum += histogram[i];
+	}
+	for (int i = 0; i < BIN_COUNT; i++)
+	{
+		hist[i] = histogram[i] / sum;
+	}
+	float sum2 = 0;
+	for (int i = 0; i < BIN_COUNT; i++)
+	{
+		sum2 += histogram2[i];
+	}
+	for (int i = 0; i < BIN_COUNT; i++)
+	{
+		hist2[i] = histogram2[i] / sum2;
+	}
+	float max = 0;
+	for (int i = 0; i < BIN_COUNT; i++)
+	{
+		histogram3[i] = hist2[i] - hist[i];
+		auto m = fabsf(histogram3[i]);
+		max = max < m ? m : max;
+	}
+
+	// apply Gaussian filter to relateive visibility histogram
+	memcpy(histogram4, histogram3, BIN_COUNT * sizeof(float));
+	gaussian(histogram4, BIN_COUNT);
+
+	// normalize histogram3
+	for (int i = 0; i < BIN_COUNT; i++)
+	{
+		histogram3[i] /= max;
+	}
+
+	// normalize histogram4
+	max = 0;
+	for (int i = 0; i < BIN_COUNT; i++)
+	{
+		auto m = fabsf(histogram4[i]);
+		max = max < m ? m : max;
+	}
+	for (int i = 0; i < BIN_COUNT; i++)
+	{
+		histogram4[i] /= max;
+	}
+
+	if (g_ApplyColor)
+	{
+		for (int i = 0; i < BIN_COUNT; i++)
+		{
+			auto c = make_float3(tf_array[i].x, tf_array[i].y, tf_array[i].z);
+			auto t = histogram4[i] > 0 ? histogram4[i] : 0;
+			auto c2 = lerp(c, color, t);
+			tf_array[i].x = c2.x;
+			tf_array[i].y = c2.y;
+			tf_array[i].z = c2.z;
+		}
+	}
+
+	if (g_ApplyAlpha)
+	{
+		for (int i = 0; i < BIN_COUNT; i++)
+		{
+			auto a = histogram4[i] > 0 ? 1 : 0;
+			auto t = fabsf(histogram4[i]);
+			tf_array[i].w = lerp(tf_array[i].w, a, t);
+		}
+	}
+
+	bind_tf_texture();
 }
 
 extern "C" void gaussian_tf(float3 color)
@@ -1360,6 +1448,12 @@ void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, u
 	{
 		set_temporal(false);
 		add_temporal_histogram();
+	}
+
+	if (get_temporal_tf())
+	{
+		set_temporal_tf(false);
+		apply_temporal_tf_editing(make_float3(g_SelectedColor[0], g_SelectedColor[1], g_SelectedColor[2]));
 	}
 
 	if (get_save())

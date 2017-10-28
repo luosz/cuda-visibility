@@ -58,6 +58,7 @@ public:
     QCheckBox *checkBox_5;
     QCheckBox *checkBox;
     QCheckBox *checkBox_2;
+    QCheckBox *checkBox_6;
     QMenuBar *menuBar;
     QMenu *menu_File;
     QMenu *menu_Help;
@@ -201,6 +202,11 @@ public:
 
         gridLayout_4->addWidget(checkBox_2, 1, 2, 1, 1);
 
+        checkBox_6 = new QCheckBox(frame);
+        checkBox_6->setObjectName(QStringLiteral("checkBox_6"));
+
+        gridLayout_4->addWidget(checkBox_6, 0, 4, 1, 1);
+
 
         gridLayout->addLayout(gridLayout_4, 0, 0, 1, 1);
 
@@ -210,7 +216,7 @@ public:
         MainWindowClass->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindowClass);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 600, 17));
+        menuBar->setGeometry(QRect(0, 0, 600, 26));
         menu_File = new QMenu(menuBar);
         menu_File->setObjectName(QStringLiteral("menu_File"));
         menu_Help = new QMenu(menuBar);
@@ -259,6 +265,7 @@ public:
         checkBox_5->setText(QApplication::translate("MainWindowClass", "VWS optimization", Q_NULLPTR));
         checkBox->setText(QApplication::translate("MainWindowClass", "Adjust alpha", Q_NULLPTR));
         checkBox_2->setText(QApplication::translate("MainWindowClass", "Adjust color", Q_NULLPTR));
+        checkBox_6->setText(QApplication::translate("MainWindowClass", "Temoral visibility", Q_NULLPTR));
         menu_File->setTitle(QApplication::translate("MainWindowClass", "&File", Q_NULLPTR));
         menu_Help->setTitle(QApplication::translate("MainWindowClass", "&Help", Q_NULLPTR));
     } // retranslateUi

@@ -180,6 +180,20 @@
            </property>
           </widget>
          </item>
+         <item row="0" column="4">
+          <widget class="QCheckBox" name="checkBox_6">
+           <property name="text">
+            <string>Temoral visibility</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="4">
+          <widget class="QPushButton" name="pushButton_5">
+           <property name="text">
+            <string>Temporal TF editing</string>
+           </property>
+          </widget>
+         </item>
         </layout>
        </item>
       </layout>
@@ -193,7 +207,7 @@
      <x>0</x>
      <y>0</y>
      <width>600</width>
-     <height>17</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
