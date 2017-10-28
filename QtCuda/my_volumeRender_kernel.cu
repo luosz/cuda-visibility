@@ -79,7 +79,7 @@ bool discard_table = false;
 bool save_histogram = false;
 bool gaussian_histogram = false;
 bool backup_table = false;
-bool temporal_visibility = false;
+bool accumulate_visibility = false;
 bool temporal_tf = false;
 
 extern "C" float4 rgb_to_lch(float4 rgba);
@@ -244,14 +244,14 @@ extern "C" void set_backup(bool value)
 	//printf("set backup %s\n", backup_table ? "true" : "false");
 }
 
-extern "C" bool get_temporal()
+extern "C" bool get_accumulate_visibility()
 {
-	return temporal_visibility;
+	return accumulate_visibility;
 }
 
-extern "C" void set_temporal(bool value)
+extern "C" void set_accumulate_visibility(bool value)
 {
-	temporal_visibility = value;
+	accumulate_visibility = value;
 }
 
 extern "C" bool get_temporal_tf()
@@ -394,8 +394,14 @@ extern "C" void add_temporal_histogram()
 	}
 }
 
-extern "C" void apply_temporal_tf_editing(float3 color)
+extern "C" void reset_temporal_visibility_histogram()
 {
+	memset(histogram5, 0, sizeof(float)*BIN_COUNT);
+}
+
+extern "C" void temporal_tf_editing(float3 color)
+{
+	memcpy(histogram, histogram5, sizeof(float)*BIN_COUNT);
 	float hist[BIN_COUNT], hist2[BIN_COUNT];
 	float sum = 0;
 	for (int i = 0; i < BIN_COUNT; i++)
@@ -1444,16 +1450,16 @@ void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, u
 		gaussian_tf(make_float3(g_SelectedColor[0], g_SelectedColor[1], g_SelectedColor[2]));
 	}
 
-	if (get_temporal())
+	if (get_accumulate_visibility())
 	{
-		set_temporal(false);
+		set_accumulate_visibility(false);
 		add_temporal_histogram();
 	}
 
 	if (get_temporal_tf())
 	{
 		set_temporal_tf(false);
-		apply_temporal_tf_editing(make_float3(g_SelectedColor[0], g_SelectedColor[1], g_SelectedColor[2]));
+		temporal_tf_editing(make_float3(g_SelectedColor[0], g_SelectedColor[1], g_SelectedColor[2]));
 	}
 
 	if (get_save())

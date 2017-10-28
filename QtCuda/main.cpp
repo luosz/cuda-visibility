@@ -201,6 +201,9 @@ char **pArgv;
 
 MainWindow *qt_window = NULL;
 
+extern "C" void reset_temporal_visibility_histogram();
+extern "C" void set_temporal_tf(bool value);
+
 extern "C" void update_volume(void *h_volume, cudaExtent volumeSize);
 extern "C" void bind_tf_texture();
 extern "C" VolumeType * get_raw_volume();
@@ -214,8 +217,8 @@ extern "C" void gaussian(float *lch_volume, cudaExtent volumeSize, float *out);
 extern "C" void compute_saliency();
 extern "C" void compute_vws();
 extern "C" void compute_saliency_once();
-extern "C" bool get_temporal();
-extern "C" void set_temporal(bool value);
+extern "C" bool get_accumulate_visibility();
+extern "C" void set_accumulate_visibility(bool value);
 
 typedef float(*Pointer)[4];
 extern "C" Pointer get_SelectedColor();
@@ -224,7 +227,7 @@ extern "C" bool* get_ApplyColor();
 extern "C" bool* get_ApplyAlpha();
 extern "C" int get_region_size();
 extern "C" float4* get_tf_array();
-//extern "C" float* get_relative_visibility_histogram();
+
 extern "C" int get_bin_count();
 extern "C" bool get_apply();
 extern "C" void set_apply(bool value);
@@ -253,6 +256,11 @@ void apply_tf_editing()
 {
 	//std::cout << "apply_tf_editing()" << std::endl;
 	set_gaussian(true);
+}
+
+void apply_temporal_tf_editing()
+{
+	set_temporal_tf(true);
 }
 
 void reset_transfer_function()
@@ -1270,12 +1278,17 @@ void load_a_volume_and_optimize()
 			}
 			if(temporal_visibility)
 			{
-				set_temporal(true);
+				set_accumulate_visibility(true);
 			}
 		}
 
 		free(h_volume);
 		volume_list.pop_back();
+
+		if (volume_list.empty() && temporal_visibility)
+		{
+			reset_temporal_visibility_histogram();
+		}
 
 		if (qt_window)
 		{

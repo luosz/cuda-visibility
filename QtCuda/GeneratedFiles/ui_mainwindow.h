@@ -59,6 +59,7 @@ public:
     QCheckBox *checkBox;
     QCheckBox *checkBox_2;
     QCheckBox *checkBox_6;
+    QPushButton *pushButton_5;
     QMenuBar *menuBar;
     QMenu *menu_File;
     QMenu *menu_Help;
@@ -207,6 +208,11 @@ public:
 
         gridLayout_4->addWidget(checkBox_6, 0, 4, 1, 1);
 
+        pushButton_5 = new QPushButton(frame);
+        pushButton_5->setObjectName(QStringLiteral("pushButton_5"));
+
+        gridLayout_4->addWidget(pushButton_5, 1, 4, 1, 1);
+
 
         gridLayout->addLayout(gridLayout_4, 0, 0, 1, 1);
 
@@ -266,6 +272,7 @@ public:
         checkBox->setText(QApplication::translate("MainWindowClass", "Adjust alpha", Q_NULLPTR));
         checkBox_2->setText(QApplication::translate("MainWindowClass", "Adjust color", Q_NULLPTR));
         checkBox_6->setText(QApplication::translate("MainWindowClass", "Temoral visibility", Q_NULLPTR));
+        pushButton_5->setText(QApplication::translate("MainWindowClass", "Temporal TF editing", Q_NULLPTR));
         menu_File->setTitle(QApplication::translate("MainWindowClass", "&File", Q_NULLPTR));
         menu_Help->setTitle(QApplication::translate("MainWindowClass", "&Help", Q_NULLPTR));
     } // retranslateUi
