@@ -153,15 +153,25 @@ extern "C" float4* get_tf_array()
 	return tf_array;
 }
 
+extern "C" float* get_global_visibility_histogram()
+{
+	return histogram;
+}
+
+extern "C" float* get_local_visibility_histogram()
+{
+	return histogram2;
+}
+
 extern "C" float* get_relative_visibility_histogram()
 {
 	return histogram4;
 }
 
-extern "C" float* get_temporal_visibility_histogram()
-{
-	return histogram5;
-}
+//extern "C" float* get_temporal_visibility_histogram()
+//{
+//	return histogram5;
+//}
 
 extern "C" void backup_tf()
 {
