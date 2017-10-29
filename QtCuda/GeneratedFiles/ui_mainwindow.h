@@ -271,7 +271,7 @@ public:
         checkBox_5->setText(QApplication::translate("MainWindowClass", "VWS optimization", Q_NULLPTR));
         checkBox->setText(QApplication::translate("MainWindowClass", "Adjust alpha", Q_NULLPTR));
         checkBox_2->setText(QApplication::translate("MainWindowClass", "Adjust color", Q_NULLPTR));
-        checkBox_6->setText(QApplication::translate("MainWindowClass", "Temoral visibility", Q_NULLPTR));
+        checkBox_6->setText(QApplication::translate("MainWindowClass", "Accumulate visibility", Q_NULLPTR));
         pushButton_5->setText(QApplication::translate("MainWindowClass", "Temporal TF editing", Q_NULLPTR));
         menu_File->setTitle(QApplication::translate("MainWindowClass", "&File", Q_NULLPTR));
         menu_Help->setTitle(QApplication::translate("MainWindowClass", "&Help", Q_NULLPTR));
