@@ -1077,7 +1077,7 @@ void save_tf_array_to_voreen_XML(const char *filename)
 	}
 }
 
-inline void add_volume_to_list_for_update()
+inline void add_volume_to_list_for_update_vortex()
 {
 	volume_list.clear();
 	char file[_MAX_PATH];
@@ -1093,7 +1093,23 @@ inline void add_volume_to_list_for_update()
 	diff.y = ((float)loc2.y - loc.y) / volume_list.size();
 }
 
-inline void add_volume_to_list_for_update2()
+inline void add_volume_to_list_for_update_vortex_reverse()
+{
+	volume_list.clear();
+	char file[_MAX_PATH];
+	for (int i = 1; i <= 10; i++)
+	{
+		sprintf(file, "vorts%d.raw", i);
+		volume_list.push_back(file);
+	}
+	rgba_list_backup = rgba_list;
+	//ofstream out(log_filename());
+	//out.close();
+	diff.x = ((float)loc2.x - loc.x) / volume_list.size();
+	diff.y = ((float)loc2.y - loc.y) / volume_list.size();
+}
+
+inline void add_volume_to_list_for_update_supernova()
 {
 	volume_list.clear();
 	char file[_MAX_PATH];
@@ -1581,7 +1597,7 @@ void keyboard(unsigned char key, int x, int y)
 			}
 			break;
 
-		case 't':
+		case 'r':
 			set_backup(true);
 			break;
 
@@ -1637,11 +1653,15 @@ void keyboard(unsigned char key, int x, int y)
 			break;
 
 		case 'i':
-			add_volume_to_list_for_update();
+			add_volume_to_list_for_update_vortex();
 			break;
 
 		case 'j':
-			add_volume_to_list_for_update2();
+			add_volume_to_list_for_update_supernova();
+			break;
+
+		case 'k':
+			add_volume_to_list_for_update_vortex_reverse();
 			break;
 
 		default:
