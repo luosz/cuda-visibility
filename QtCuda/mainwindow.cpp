@@ -219,4 +219,5 @@ void MainWindow::on_checkBox_6_clicked()
 void MainWindow::on_pushButton_5_clicked()
 {
 	apply_temporal_tf_editing();
+	show_transfer_function_later();
 }

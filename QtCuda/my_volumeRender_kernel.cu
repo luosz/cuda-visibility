@@ -388,10 +388,13 @@ extern "C" void init_temporal_histogram()
 
 extern "C" void add_temporal_histogram()
 {
+	float sum=0;
 	for (int i = 0; i < BIN_COUNT; i++)
 	{
 		histogram5[i] += histogram2[i];
+		sum+= histogram5[i];
 	}
+	std::cout<<"add_temporal_histogram()\t"<<sum<<std::endl;
 }
 
 extern "C" void reset_temporal_visibility_histogram()
