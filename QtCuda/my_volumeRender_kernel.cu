@@ -404,7 +404,7 @@ extern "C" void add_temporal_histogram()
 		histogram5[i] += histogram2[i];
 		sum+= histogram5[i];
 	}
-	std::cout<<"add_temporal_histogram()\t"<<sum<<std::endl;
+	//std::cout<<"add_temporal_histogram()\t"<<sum<<std::endl;
 }
 
 extern "C" void reset_temporal_visibility_histogram()

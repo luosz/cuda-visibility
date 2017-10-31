@@ -1097,7 +1097,7 @@ inline void add_volume_to_list_for_update_vortex_reverse()
 {
 	volume_list.clear();
 	char file[_MAX_PATH];
-	for (int i = 1; i <= 10; i++)
+	for (int i = 1; i <= 20; i++)
 	{
 		sprintf(file, "vorts%d.raw", i);
 		volume_list.push_back(file);
