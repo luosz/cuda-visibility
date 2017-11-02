@@ -1673,9 +1673,9 @@ void keyboard(unsigned char key, int x, int y)
 			add_volume_to_list_for_update_supernova();
 			break;
 
-		case 'k':
-			add_volume_to_list_for_update_reverse();
-			break;
+		//case 'k':
+		//	add_volume_to_list_for_update_reverse();
+		//	break;
 
 		default:
             break;
@@ -1699,7 +1699,6 @@ void mouse(int button, int state, int x, int y)
 	//}
 
 	int n = get_region_size();
-
 	if (button == GLUT_LEFT_BUTTON)
 	{
 		loc.x = x - n / 2;
@@ -1710,6 +1709,15 @@ void mouse(int button, int state, int x, int y)
 		locf.y = loc.y;
 		loc2.x = loc.x;
 		loc2.y = loc.y;
+
+		if (state == GLUT_UP && glutGetModifiers() == GLUT_ACTIVE_SHIFT)
+		{
+			if (!volume_list2.empty())
+			{
+				std::cout << "volume_list2.size=" << volume_list2.size() << "\tloc.x=" << loc.x << "\tloc.y=" << loc.y << std::endl;
+				add_volume_to_list_for_update_reverse();
+			}
+		}
 	}
 	if (button == GLUT_RIGHT_BUTTON)
 	{
@@ -1741,8 +1749,6 @@ void passive_motion(int x, int y)
 
 	if (glutGetModifiers() == GLUT_ACTIVE_CTRL)
 	{
-		//printf("control key is pressed.\n");
-
 		int n = get_region_size();
 		loc.x = x - n / 2;
 		//loc.y = height - y - n;
