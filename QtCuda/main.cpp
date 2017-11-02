@@ -146,6 +146,7 @@ std::vector<float4> rgba_list_backup;
 std::vector<int> peak_indices;
 std::string program_path;
 std::vector<string> volume_list;
+std::vector<string> volume_list2;
 
 float gaussian5[R5*R5*R5] = { 0 };
 float gaussian9[R9*R9*R9] = { 0 };
@@ -1077,9 +1078,24 @@ void save_tf_array_to_voreen_XML(const char *filename)
 	}
 }
 
+inline void set_temporal_visibility(bool v)
+{
+	temporal_visibility = v;
+	if (temporal_visibility)
+	{
+		time_varying_vws_optimization = time_varying_tf_reset = time_varying_tf_editing = false;
+	}
+	if (qt_window)
+	{
+		qt_window->update_checkbox();
+	}
+}
+
 inline void add_volume_to_list_for_update_vortex()
 {
 	volume_list.clear();
+	volume_list2.clear();
+	set_temporal_visibility(false);
 	char file[_MAX_PATH];
 	for (int i=99;i>=1;i--)
 	{
@@ -1087,24 +1103,20 @@ inline void add_volume_to_list_for_update_vortex()
 		volume_list.push_back(file);
 	}
 	rgba_list_backup = rgba_list;
-	//ofstream out(log_filename());
-	//out.close();
 	diff.x = ((float)loc2.x - loc.x) / volume_list.size();
 	diff.y = ((float)loc2.y - loc.y) / volume_list.size();
 }
 
-inline void add_volume_to_list_for_update_vortex_reverse()
+inline void add_volume_to_list_for_update_reverse()
 {
 	volume_list.clear();
-	char file[_MAX_PATH];
-	for (int i = 1; i <= 20; i++)
+	for (auto i = volume_list2.rbegin(); i != volume_list2.rend(); i++)
 	{
-		sprintf(file, "vorts%d.raw", i);
-		volume_list.push_back(file);
+		volume_list.push_back(*i);
 	}
+	volume_list2.clear();
+	set_temporal_visibility(true);
 	rgba_list_backup = rgba_list;
-	//ofstream out(log_filename());
-	//out.close();
 	diff.x = ((float)loc2.x - loc.x) / volume_list.size();
 	diff.y = ((float)loc2.y - loc.y) / volume_list.size();
 }
@@ -1112,6 +1124,8 @@ inline void add_volume_to_list_for_update_vortex_reverse()
 inline void add_volume_to_list_for_update_supernova()
 {
 	volume_list.clear();
+	volume_list2.clear();
+	set_accumulate_visibility(false);
 	char file[_MAX_PATH];
 	for (int i = 1354; i >= 1295; i--)
 	{
@@ -1119,8 +1133,6 @@ inline void add_volume_to_list_for_update_supernova()
 		volume_list.push_back(file);
 	}
 	rgba_list_backup = rgba_list;
-	//ofstream out(log_filename());
-	//out.close();
 	diff.x = ((float)loc2.x - loc.x) / volume_list.size();
 	diff.y = ((float)loc2.y - loc.y) / volume_list.size();
 }
@@ -1128,13 +1140,13 @@ inline void add_volume_to_list_for_update_supernova()
 extern "C" void add_volume_to_list_for_update_from_vector(std::vector<std::string> filelist)
 {
 	volume_list.clear();
+	volume_list2.clear();
+	set_accumulate_visibility(false);
 	for (auto rit = filelist.rbegin(); rit != filelist.rend(); ++rit)
 	{
 		volume_list.push_back(*rit);
 	}
 	rgba_list_backup = rgba_list;
-	//ofstream out(log_filename());
-	//out.close();
 	diff.x = ((float)loc2.x - loc.x) / volume_list.size();
 	diff.y = ((float)loc2.y - loc.y) / volume_list.size();
 }
@@ -1299,7 +1311,8 @@ void load_a_volume_and_optimize()
 		}
 
 		free(h_volume);
-		volume_list.pop_back();
+		volume_list2.push_back(volume_list.back());
+		volume_list.pop_back();    
 
 		if (volume_list.empty() && temporal_visibility)
 		{
@@ -1661,7 +1674,7 @@ void keyboard(unsigned char key, int x, int y)
 			break;
 
 		case 'k':
-			add_volume_to_list_for_update_vortex_reverse();
+			add_volume_to_list_for_update_reverse();
 			break;
 
 		default:

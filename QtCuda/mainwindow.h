@@ -70,12 +70,12 @@ public:
 		ui.lineEdit->setText(color.name());
 	}
 
-	void set_pointers(Pointer picked_color, bool *alpha, bool *color, bool *time_varying_tf, bool *time_varying_tf_reset, bool *time_varying_vws_optimization, bool *temporal_visibility)
+	void set_pointers(Pointer picked_color, bool *alpha, bool *color, bool *time_varying_tf_editing, bool *time_varying_tf_reset, bool *time_varying_vws_optimization, bool *temporal_visibility)
 	{
 		color_array = picked_color;
 		apply_alpha = alpha;
 		apply_color = color;
-		apply_time_varying_tf_editing = time_varying_tf;
+		apply_time_varying_tf_editing = time_varying_tf_editing;
 		apply_time_varying_tf_reset = time_varying_tf_reset;
 		apply_time_varying_vws_optimization = time_varying_vws_optimization;
 		calc_temporal_visibility = temporal_visibility;
@@ -84,6 +84,26 @@ public:
 	void show_transfer_function_later(int msec=10)
 	{
 		QTimer::singleShot(msec, this, SLOT(show_transfer_function()));
+	}
+
+	void update_checkbox()
+	{
+		if (calc_temporal_visibility)
+		{
+			ui.checkBox_6->setChecked(*calc_temporal_visibility);
+		}
+		if (apply_time_varying_vws_optimization)
+		{
+			ui.checkBox_5->setChecked(*apply_time_varying_vws_optimization);
+		}
+		if (apply_time_varying_tf_reset)
+		{
+			ui.checkBox_4->setChecked(*apply_time_varying_tf_reset);
+		}
+		if (apply_time_varying_tf_editing)
+		{
+			ui.checkBox_3->setChecked(*apply_time_varying_tf_editing);
+		}
 	}
 
 private slots:
