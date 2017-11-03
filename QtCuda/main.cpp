@@ -2040,8 +2040,7 @@ void runSingleTest(const char *ref_file, const char *exec_path)
 ////////////////////////////////////////////////////////////////////////////////
 // Program main
 ////////////////////////////////////////////////////////////////////////////////
-int
-init_gl_main(int argc, char **argv)
+int init_gl_main(int argc, char **argv)
 {
     pArgc = &argc;
     pArgv = argv;
@@ -2184,6 +2183,7 @@ init_gl_main(int argc, char **argv)
 
         glutMainLoop();
     }
+	return 0;
 }
 
 int main(int argc, char *argv[])

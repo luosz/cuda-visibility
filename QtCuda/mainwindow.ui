@@ -111,16 +111,6 @@
            </property>
           </widget>
          </item>
-         <item row="11" column="1">
-          <widget class="QCheckBox" name="checkBox_3">
-           <property name="text">
-            <string>Apply TF editing to frames</string>
-           </property>
-           <property name="checked">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
          <item row="0" column="1">
           <widget class="QLineEdit" name="lineEdit">
            <property name="sizePolicy">
@@ -134,23 +124,6 @@
            </property>
            <property name="readOnly">
             <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="11" column="2">
-          <widget class="QCheckBox" name="checkBox_4">
-           <property name="text">
-            <string>Reset TF before editing</string>
-           </property>
-           <property name="checked">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="11" column="4">
-          <widget class="QCheckBox" name="checkBox_5">
-           <property name="text">
-            <string>VWS optimization</string>
            </property>
           </widget>
          </item>
@@ -180,19 +153,62 @@
            </property>
           </widget>
          </item>
-         <item row="0" column="4">
+         <item row="1" column="3" colspan="3">
+          <widget class="QPushButton" name="pushButton_5">
+           <property name="text">
+            <string>Temporal TF editing</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="3" colspan="3">
           <widget class="QCheckBox" name="checkBox_6">
            <property name="text">
             <string>Accumulate visibility</string>
            </property>
           </widget>
          </item>
-         <item row="1" column="4">
-          <widget class="QPushButton" name="pushButton_5">
-           <property name="text">
-            <string>Temporal TF editing</string>
+         <item row="9" column="1" colspan="5">
+          <layout class="QGridLayout" name="gridLayout_5">
+           <property name="leftMargin">
+            <number>0</number>
            </property>
-          </widget>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item row="0" column="1">
+            <widget class="QCheckBox" name="checkBox_4">
+             <property name="text">
+              <string>Reset TF before editing</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QCheckBox" name="checkBox_3">
+             <property name="text">
+              <string>Apply TF editing</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QCheckBox" name="checkBox_5">
+             <property name="text">
+              <string>VWS optimization</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
         </layout>
        </item>
@@ -207,7 +223,7 @@
      <x>0</x>
      <y>0</y>
      <width>600</width>
-     <height>26</height>
+     <height>17</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">

@@ -104,7 +104,12 @@ void MainWindow::on_checkBox_3_clicked()
     if (apply_time_varying_tf_editing)
     {
         *apply_time_varying_tf_editing = ui.checkBox_3->isChecked();
-        //std::cout << "apply_time_varying_tf=" << (*apply_time_varying_tf_editing ? "true" : "false") << std::endl;
+        std::cout << "apply_time_varying_tf_editing=" << (*apply_time_varying_tf_editing ? "true" : "false") << std::endl;
+		if (ui.checkBox_3->isChecked())
+		{
+			ui.checkBox_5->setChecked(false);
+			on_checkBox_5_clicked();
+		}
     }
 }
 
@@ -113,7 +118,7 @@ void MainWindow::on_checkBox_4_clicked()
     if (apply_time_varying_tf_reset)
     {
         *apply_time_varying_tf_reset = ui.checkBox_4->isChecked();
-        //std::cout << "apply_time_varying_tf_reset=" << (*apply_time_varying_tf_reset ? "true" : "false") << std::endl;
+        std::cout << "apply_time_varying_tf_reset=" << (*apply_time_varying_tf_reset ? "true" : "false") << std::endl;
     }
 }
 
@@ -206,6 +211,11 @@ void MainWindow::on_checkBox_5_clicked()
 	{
 		*apply_time_varying_vws_optimization = ui.checkBox_5->isChecked();
 		std::cout << "apply_time_varying_vws_optimization=" << (*apply_time_varying_vws_optimization ? "true" : "false") << std::endl;
+		if (ui.checkBox_5->isChecked())
+		{
+			ui.checkBox_3->setChecked(false);
+			on_checkBox_3_clicked();
+		}
 	}
 }
 

@@ -1086,7 +1086,7 @@ __global__ void d_compute_saliency()
 extern "C"
 void gaussian(float *lch_volume, cudaExtent volumeSize, float *out)
 {
-	auto len = volumeSize.width * volumeSize.height * volumeSize.depth;
+	//auto len = volumeSize.width * volumeSize.height * volumeSize.depth;
 	int w = volumeSize.width, h = volumeSize.height, d = volumeSize.depth;
 	const int r1 = R5 / 2;
 	const int r2 = R9 / 2;
@@ -1137,7 +1137,7 @@ void compute_saliency()
 	dim3 gridSize3 = dim3(iDivUp(sizeOfVolume.width, blockSize3.x), iDivUp(sizeOfVolume.height, blockSize3.y), iDivUp(sizeOfVolume.depth, blockSize3.z));
 
 	auto len = sizeOfVolume.width * sizeOfVolume.height * sizeOfVolume.depth;
-	int w = sizeOfVolume.width, h = sizeOfVolume.height, d = sizeOfVolume.depth;
+	//int w = sizeOfVolume.width, h = sizeOfVolume.height, d = sizeOfVolume.depth;
 	memset(saliencyVolume, 0, sizeof(float) * len);
 
 	float4 lch_array[BIN_COUNT] = { 0 };
