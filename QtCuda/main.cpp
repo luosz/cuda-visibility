@@ -1138,6 +1138,21 @@ inline void add_volume_to_list_for_update_supernova()
 	diff.y = ((float)loc2.y - loc.y) / volume_list.size();
 }
 
+inline void add_volume_to_list_for_update_test()
+{
+	std::vector<std::string> str = {"vorts1.raw","vorts1 - Copy.raw","vorts1 - Copy (2).raw","vorts1 - Copy (3).raw","vorts1 - Copy (4).raw"};
+	volume_list.clear();
+	volume_list2.clear();
+	set_temporal_visibility(false);
+	for (auto i:str)
+	{
+		volume_list.push_back(i);
+	}
+	rgba_list_backup = rgba_list;
+	diff.x = ((float)loc2.x - loc.x) / volume_list.size();
+	diff.y = ((float)loc2.y - loc.y) / volume_list.size();
+}
+
 extern "C" void add_volume_to_list_for_update_from_vector(std::vector<std::string> filelist)
 {
 	volume_list.clear();
@@ -1674,9 +1689,9 @@ void keyboard(unsigned char key, int x, int y)
 			add_volume_to_list_for_update_supernova();
 			break;
 
-		//case 'k':
-		//	add_volume_to_list_for_update_reverse();
-		//	break;
+		case 't':
+			add_volume_to_list_for_update_test();
+			break;
 
 		default:
             break;
