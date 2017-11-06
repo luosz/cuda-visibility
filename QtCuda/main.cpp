@@ -54,6 +54,7 @@
 #include <helper_cuda.h>
 #include <helper_functions.h>
 #include <helper_timer.h>
+#include <helper_math.h>
 
 #include <iostream>
 #include <sstream>
@@ -62,7 +63,7 @@
 #include <cstdio>
 #include <cmath>
 #include <ctime>
-#include <helper_math.h>
+#include <cctype>
 //#include <AntTweakBar.h>
 #include "tinyxml2.h"
 #include "util.h"
@@ -1526,7 +1527,7 @@ void keyboard(unsigned char key, int x, int y)
 	auto c = get_SelectedColor();
 	bool *p1 = get_ApplyAlpha(), *p2 = get_ApplyColor();
 	clock_t start, end;
-    switch (key)
+    switch (tolower(key))
     {
         case 27:
             #if defined (__APPLE__) || defined(MACOSX)
