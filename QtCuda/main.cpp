@@ -1534,31 +1534,35 @@ extern "C" void load_view(const char *file)
 }
 
 /**
-https://stackoverflow.com/questions/5844858/how-to-take-screenshot-in-opengl
-
-glPixelStorei(GL_UNPACK_ALIGNMENT, 1);is a good idea before glReadPixels(Read more on OpenGL Wiki ) ¨C Mortennobel Jun 19 '13 at 13:50
-
-Would be sensible to use GL_UNSIGNED_BYTE for the array too, instead of the windows-specific BYTE. ¨C Riot Jul 8 '13 at 8:32
-1
-Sorry, I meant GLubyte. ¨C Riot Jul 8 '13 at 8:48
+https://stackoverflow.com/questions/43624006/opengl-glreadpixels-to-freeimage-bitmap
+https://stackoverflow.com/questions/33757634/creating-screenshot-in-opengl-not-working
 */
 inline void save_rendering_to_image()
 {
-	std::cout<<"save_rendering_to_image()"<<std::endl;
+	GLubyte *pixels = (GLubyte*)malloc(width * height * 3);
+	
+	glPixelStorei(GL_PACK_ALIGNMENT, 1);
+	glReadPixels(0, 0, width, height, GL_BGR, GL_UNSIGNED_BYTE, pixels);
 
-	// Make the BYTE array, factor of 3 because it's RBG.
-	BYTE* pixels = new BYTE[3 * width * height];
+	if (GL_NO_ERROR != glGetError())
+	{
+		std::cout<<"Error: Unable to read pixels."<<std::endl;
+	}
+	
+	FIBITMAP* image = FreeImage_ConvertFromRawBits(pixels, width, height, 3 * width, 24, FI_RGBA_RED_MASK, FI_RGBA_GREEN_MASK, FI_RGBA_BLUE_MASK, false);
 
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, pixels);
+	if (FreeImage_Save(FIF_BMP, image, "~screenshot.bmp", 0))
+	{
+		std::cout << "Successfully saved!" << std::endl;
+	}
+	else
+	{
+		std::cout << "Failed saving!" << std::endl;
+	}
 
-	// Convert to FreeImage format & save to file
-	FIBITMAP* image = FreeImage_ConvertFromRawBits(pixels, width, height, 3 * width, 24, 0x0000FF, 0xFF0000, 0x00FF00, false);
-	FreeImage_Save(FIF_BMP, image, "~screenshot.bmp", 0);
-
-	// Free resources
 	FreeImage_Unload(image);
-	delete[] pixels;
+
+	free(pixels);
 }
 
 void keyboard(unsigned char key, int x, int y)
