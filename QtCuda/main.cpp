@@ -1544,6 +1544,8 @@ Sorry, I meant GLubyte. ¨C Riot Jul 8 '13 at 8:48
 */
 inline void save_rendering_to_image()
 {
+	std::cout<<"save_rendering_to_image()"<<std::endl;
+
 	// Make the BYTE array, factor of 3 because it's RBG.
 	BYTE* pixels = new BYTE[3 * width * height];
 
@@ -1552,7 +1554,7 @@ inline void save_rendering_to_image()
 
 	// Convert to FreeImage format & save to file
 	FIBITMAP* image = FreeImage_ConvertFromRawBits(pixels, width, height, 3 * width, 24, 0x0000FF, 0xFF0000, 0x00FF00, false);
-	FreeImage_Save(FIF_BMP, image, "C:/test.bmp", 0);
+	FreeImage_Save(FIF_BMP, image, "~screenshot.bmp", 0);
 
 	// Free resources
 	FreeImage_Unload(image);
