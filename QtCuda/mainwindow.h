@@ -41,6 +41,8 @@ extern "C" void load_view(const char *file);
 extern "C" void openTransferFunctionFromVoreenXML(const char *filename);
 extern "C" void bind_tf_texture();
 extern "C" void save_tf_array_to_voreen_XML(const char *filename);
+extern "C" int get_screenshot_id();
+extern "C" int get_next_screenshot_id(int id);
 
 class MainWindow : public QMainWindow
 {
@@ -223,10 +225,19 @@ private slots:
 
 	void update_screenshots()
 	{
-		QPixmap p("~screenshot_0.png");
-		QPixmap p2("~screenshot_1.png");
-		QPixmap p3("~screenshot_2.png");
-		QPixmap p4("~screenshot_3.png");
+		int n = get_next_screenshot_id(get_screenshot_id());
+		int n2 = get_next_screenshot_id(n);
+		int n3 = get_next_screenshot_id(n2);
+		int n4 = get_next_screenshot_id(n3);
+		char str[_MAX_PATH];
+		sprintf(str, "~screenshot_%d.png", n);
+		QPixmap p(str);
+		sprintf(str, "~screenshot_%d.png", n2);
+		QPixmap p2(str);
+		sprintf(str, "~screenshot_%d.png", n3);
+		QPixmap p3(str);
+		sprintf(str, "~screenshot_%d.png", n4);
+		QPixmap p4(str);
 		ui.label->setPixmap(p);
 		ui.label_2->setPixmap(p2);
 		ui.label_3->setPixmap(p3);

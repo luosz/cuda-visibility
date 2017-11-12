@@ -340,10 +340,10 @@ public:
         checkBox_5->setText(QApplication::translate("MainWindowClass", "VWS optimization", Q_NULLPTR));
         tabWidget_2->setTabText(tabWidget_2->indexOf(tabWidget_2Page1), QApplication::translate("MainWindowClass", "Histograms", Q_NULLPTR));
         pushButton_6->setText(QApplication::translate("MainWindowClass", "Show renderings", Q_NULLPTR));
-        label->setText(QApplication::translate("MainWindowClass", "n/a", Q_NULLPTR));
-        label_2->setText(QApplication::translate("MainWindowClass", "n/a", Q_NULLPTR));
-        label_3->setText(QApplication::translate("MainWindowClass", "n/a", Q_NULLPTR));
-        label_4->setText(QApplication::translate("MainWindowClass", "n/a", Q_NULLPTR));
+        label->setText(QString());
+        label_2->setText(QString());
+        label_3->setText(QString());
+        label_4->setText(QString());
         tabWidget_2->setTabText(tabWidget_2->indexOf(tab), QApplication::translate("MainWindowClass", "Renderings", Q_NULLPTR));
         menu_File->setTitle(QApplication::translate("MainWindowClass", "&File", Q_NULLPTR));
         menu_Help->setTitle(QApplication::translate("MainWindowClass", "&Help", Q_NULLPTR));
