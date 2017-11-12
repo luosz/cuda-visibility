@@ -81,7 +81,9 @@ bool gaussian_histogram = false;
 bool backup_table = false;
 bool accumulate_visibility = false;
 bool temporal_tf = false;
+bool save_rendering = false;
 
+extern "C" void save_rendering_and_display_in_Qt();
 extern "C" float4 rgb_to_lch(float4 rgba);
 extern "C" int iDivUp(int a, int b);
 
@@ -272,6 +274,17 @@ extern "C" bool get_temporal_tf()
 extern "C" void set_temporal_tf(bool value)
 {
 	temporal_tf = value;
+}
+
+extern "C" bool get_save_rendering()
+{
+	return save_rendering;
+}
+
+extern "C" void set_save_rendering(bool value)
+{
+	save_rendering = value;
+	printf("set save_rendering %s\n", save_rendering ? "true" : "false");
 }
 
 extern "C" void set_volume_file(const char *file, int n)
@@ -1473,6 +1486,12 @@ void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, u
 	{
 		set_temporal_tf(false);
 		temporal_tf_editing(make_float3(g_SelectedColor[0], g_SelectedColor[1], g_SelectedColor[2]));
+	}
+
+	if (get_save_rendering())
+	{
+		set_save_rendering(false);
+		save_rendering_and_display_in_Qt();
 	}
 
 	if (get_save())

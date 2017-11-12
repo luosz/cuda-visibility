@@ -233,3 +233,8 @@ void MainWindow::on_pushButton_5_clicked()
 	apply_temporal_tf_editing();
 	show_transfer_function_later();
 }
+
+void MainWindow::on_pushButton_6_clicked()
+{
+	update_screenshots();
+}

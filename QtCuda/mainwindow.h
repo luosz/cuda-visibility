@@ -15,6 +15,8 @@
 #include <QFileDialog>
 #include <QDebug>
 #include <QTimer>
+#include <QPixmap>
+#include <QLabel>
 #include "ui_mainwindow.h"
 #include "def.h"
 
@@ -104,6 +106,11 @@ public:
 		{
 			ui.checkBox_3->setChecked(*apply_time_varying_tf_editing);
 		}
+	}
+
+	void update_screenshots_later(int msec = 10)
+	{
+		QTimer::singleShot(msec, this, SLOT(update_screenshots()));
 	}
 
 private slots:
@@ -214,9 +221,23 @@ private slots:
 		chartView_local.setRenderHint(QPainter::Antialiasing);
 	}
 
+	void update_screenshots()
+	{
+		QPixmap p("~screenshot_0.png");
+		QPixmap p2("~screenshot_1.png");
+		QPixmap p3("~screenshot_2.png");
+		QPixmap p4("~screenshot_3.png");
+		ui.label->setPixmap(p);
+		ui.label_2->setPixmap(p2);
+		ui.label_3->setPixmap(p3);
+		ui.label_4->setPixmap(p4);
+	}
+
     void on_checkBox_6_clicked();
 
     void on_pushButton_5_clicked();
+
+    void on_pushButton_6_clicked();
 
 private:
 	Ui::MainWindowClass ui;

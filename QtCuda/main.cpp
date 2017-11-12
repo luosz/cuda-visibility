@@ -267,6 +267,13 @@ extern "C" void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uin
                               float density, float brightness, float transferOffset, float transferScale, int2 loc);
 extern "C" void copyInvViewMatrix(float *invViewMatrix, size_t sizeofMatrix);
 
+extern "C" void set_save_rendering(bool value);
+
+void apply_save_rendering()
+{
+	set_save_rendering(true);
+}
+
 void apply_tf_editing()
 {
 	//std::cout << "apply_tf_editing()" << std::endl;
@@ -1579,6 +1586,15 @@ inline void save_rendering_to_image()
 	free(pixels);
 }
 
+extern "C" void save_rendering_and_display_in_Qt()
+{
+	save_rendering_to_image();
+	if (qt_window)
+	{
+		qt_window->update_screenshots_later();
+	}
+}
+
 void keyboard(unsigned char key, int x, int y)
 {
 	//if (TwEventKeyboardGLUT(key, x, y))
@@ -1741,7 +1757,7 @@ void keyboard(unsigned char key, int x, int y)
 			break;
 
 		case 'm':
-			save_rendering_to_image();
+			save_rendering_and_display_in_Qt();
 			break;
 
 		default:
@@ -1823,8 +1839,13 @@ void passive_motion(int x, int y)
 		loc.y = height - y - n * 4 / 3;
 		locf.x = loc.x;
 		locf.y = loc.y;
-		loc2.x = loc.x;
-		loc2.y = loc.y;
+
+		if (loc2.x != loc.x || loc2.y != loc.y)
+		{
+			apply_save_rendering();
+			loc2.x = loc.x;
+			loc2.y = loc.y;
+		}
 
 		reset_transfer_function();
 		apply_tf_editing();

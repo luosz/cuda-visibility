@@ -17,12 +17,14 @@
 #include <QtWidgets/QFrame>
 #include <QtWidgets/QGridLayout>
 #include <QtWidgets/QHeaderView>
+#include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QStatusBar>
+#include <QtWidgets/QTabWidget>
 #include <QtWidgets/QToolBar>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
@@ -44,8 +46,6 @@ public:
     QGridLayout *gridLayout_2;
     QFrame *frame;
     QGridLayout *gridLayout;
-    QFrame *frame_2;
-    QVBoxLayout *verticalLayout;
     QGridLayout *gridLayout_4;
     QGridLayout *gridLayout_3;
     QPushButton *pushButton_3;
@@ -61,6 +61,17 @@ public:
     QCheckBox *checkBox_4;
     QCheckBox *checkBox_3;
     QCheckBox *checkBox_5;
+    QTabWidget *tabWidget_2;
+    QWidget *tabWidget_2Page1;
+    QVBoxLayout *verticalLayout;
+    QWidget *tab;
+    QVBoxLayout *verticalLayout_2;
+    QPushButton *pushButton_6;
+    QGridLayout *gridLayout_6;
+    QLabel *label;
+    QLabel *label_2;
+    QLabel *label_3;
+    QLabel *label_4;
     QMenuBar *menuBar;
     QMenu *menu_File;
     QMenu *menu_Help;
@@ -109,22 +120,6 @@ public:
         gridLayout->setSpacing(6);
         gridLayout->setContentsMargins(11, 11, 11, 11);
         gridLayout->setObjectName(QStringLiteral("gridLayout"));
-        frame_2 = new QFrame(frame);
-        frame_2->setObjectName(QStringLiteral("frame_2"));
-        QSizePolicy sizePolicy1(QSizePolicy::Expanding, QSizePolicy::Expanding);
-        sizePolicy1.setHorizontalStretch(0);
-        sizePolicy1.setVerticalStretch(0);
-        sizePolicy1.setHeightForWidth(frame_2->sizePolicy().hasHeightForWidth());
-        frame_2->setSizePolicy(sizePolicy1);
-        frame_2->setFrameShape(QFrame::StyledPanel);
-        frame_2->setFrameShadow(QFrame::Raised);
-        verticalLayout = new QVBoxLayout(frame_2);
-        verticalLayout->setSpacing(6);
-        verticalLayout->setContentsMargins(11, 11, 11, 11);
-        verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
-
-        gridLayout->addWidget(frame_2, 1, 0, 1, 1);
-
         gridLayout_4 = new QGridLayout();
         gridLayout_4->setSpacing(6);
         gridLayout_4->setObjectName(QStringLiteral("gridLayout_4"));
@@ -160,11 +155,11 @@ public:
 
         lineEdit = new QLineEdit(frame);
         lineEdit->setObjectName(QStringLiteral("lineEdit"));
-        QSizePolicy sizePolicy2(QSizePolicy::Expanding, QSizePolicy::Preferred);
-        sizePolicy2.setHorizontalStretch(0);
-        sizePolicy2.setVerticalStretch(0);
-        sizePolicy2.setHeightForWidth(lineEdit->sizePolicy().hasHeightForWidth());
-        lineEdit->setSizePolicy(sizePolicy2);
+        QSizePolicy sizePolicy1(QSizePolicy::Expanding, QSizePolicy::Preferred);
+        sizePolicy1.setHorizontalStretch(0);
+        sizePolicy1.setVerticalStretch(0);
+        sizePolicy1.setHeightForWidth(lineEdit->sizePolicy().hasHeightForWidth());
+        lineEdit->setSizePolicy(sizePolicy1);
         lineEdit->setAutoFillBackground(true);
         lineEdit->setReadOnly(true);
 
@@ -172,11 +167,11 @@ public:
 
         checkBox = new QCheckBox(frame);
         checkBox->setObjectName(QStringLiteral("checkBox"));
-        QSizePolicy sizePolicy3(QSizePolicy::Minimum, QSizePolicy::Fixed);
-        sizePolicy3.setHorizontalStretch(0);
-        sizePolicy3.setVerticalStretch(0);
-        sizePolicy3.setHeightForWidth(checkBox->sizePolicy().hasHeightForWidth());
-        checkBox->setSizePolicy(sizePolicy3);
+        QSizePolicy sizePolicy2(QSizePolicy::Minimum, QSizePolicy::Fixed);
+        sizePolicy2.setHorizontalStretch(0);
+        sizePolicy2.setVerticalStretch(0);
+        sizePolicy2.setHeightForWidth(checkBox->sizePolicy().hasHeightForWidth());
+        checkBox->setSizePolicy(sizePolicy2);
         checkBox->setChecked(true);
 
         gridLayout_4->addWidget(checkBox, 0, 2, 1, 1);
@@ -224,6 +219,65 @@ public:
 
         gridLayout->addLayout(gridLayout_4, 0, 0, 1, 1);
 
+        tabWidget_2 = new QTabWidget(frame);
+        tabWidget_2->setObjectName(QStringLiteral("tabWidget_2"));
+        QSizePolicy sizePolicy3(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        sizePolicy3.setHorizontalStretch(0);
+        sizePolicy3.setVerticalStretch(0);
+        sizePolicy3.setHeightForWidth(tabWidget_2->sizePolicy().hasHeightForWidth());
+        tabWidget_2->setSizePolicy(sizePolicy3);
+        tabWidget_2Page1 = new QWidget();
+        tabWidget_2Page1->setObjectName(QStringLiteral("tabWidget_2Page1"));
+        verticalLayout = new QVBoxLayout(tabWidget_2Page1);
+        verticalLayout->setSpacing(6);
+        verticalLayout->setContentsMargins(11, 11, 11, 11);
+        verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
+        tabWidget_2->addTab(tabWidget_2Page1, QString());
+        tab = new QWidget();
+        tab->setObjectName(QStringLiteral("tab"));
+        verticalLayout_2 = new QVBoxLayout(tab);
+        verticalLayout_2->setSpacing(6);
+        verticalLayout_2->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_2->setObjectName(QStringLiteral("verticalLayout_2"));
+        pushButton_6 = new QPushButton(tab);
+        pushButton_6->setObjectName(QStringLiteral("pushButton_6"));
+
+        verticalLayout_2->addWidget(pushButton_6);
+
+        gridLayout_6 = new QGridLayout();
+        gridLayout_6->setSpacing(6);
+        gridLayout_6->setObjectName(QStringLiteral("gridLayout_6"));
+        label = new QLabel(tab);
+        label->setObjectName(QStringLiteral("label"));
+        label->setScaledContents(true);
+
+        gridLayout_6->addWidget(label, 0, 0, 1, 1);
+
+        label_2 = new QLabel(tab);
+        label_2->setObjectName(QStringLiteral("label_2"));
+        label_2->setScaledContents(true);
+
+        gridLayout_6->addWidget(label_2, 0, 1, 1, 1);
+
+        label_3 = new QLabel(tab);
+        label_3->setObjectName(QStringLiteral("label_3"));
+        label_3->setScaledContents(true);
+
+        gridLayout_6->addWidget(label_3, 1, 0, 1, 1);
+
+        label_4 = new QLabel(tab);
+        label_4->setObjectName(QStringLiteral("label_4"));
+        label_4->setScaledContents(true);
+
+        gridLayout_6->addWidget(label_4, 1, 1, 1, 1);
+
+
+        verticalLayout_2->addLayout(gridLayout_6);
+
+        tabWidget_2->addTab(tab, QString());
+
+        gridLayout->addWidget(tabWidget_2, 1, 0, 1, 1);
+
 
         gridLayout_2->addWidget(frame, 0, 0, 1, 1);
 
@@ -256,6 +310,9 @@ public:
 
         retranslateUi(MainWindowClass);
 
+        tabWidget_2->setCurrentIndex(0);
+
+
         QMetaObject::connectSlotsByName(MainWindowClass);
     } // setupUi
 
@@ -281,6 +338,13 @@ public:
         checkBox_4->setText(QApplication::translate("MainWindowClass", "Reset TF before editing", Q_NULLPTR));
         checkBox_3->setText(QApplication::translate("MainWindowClass", "Apply TF editing", Q_NULLPTR));
         checkBox_5->setText(QApplication::translate("MainWindowClass", "VWS optimization", Q_NULLPTR));
+        tabWidget_2->setTabText(tabWidget_2->indexOf(tabWidget_2Page1), QApplication::translate("MainWindowClass", "Histograms", Q_NULLPTR));
+        pushButton_6->setText(QApplication::translate("MainWindowClass", "Show renderings", Q_NULLPTR));
+        label->setText(QApplication::translate("MainWindowClass", "n/a", Q_NULLPTR));
+        label_2->setText(QApplication::translate("MainWindowClass", "n/a", Q_NULLPTR));
+        label_3->setText(QApplication::translate("MainWindowClass", "n/a", Q_NULLPTR));
+        label_4->setText(QApplication::translate("MainWindowClass", "n/a", Q_NULLPTR));
+        tabWidget_2->setTabText(tabWidget_2->indexOf(tab), QApplication::translate("MainWindowClass", "Renderings", Q_NULLPTR));
         menu_File->setTitle(QApplication::translate("MainWindowClass", "&File", Q_NULLPTR));
         menu_Help->setTitle(QApplication::translate("MainWindowClass", "&Help", Q_NULLPTR));
     } // retranslateUi
