@@ -1577,11 +1577,17 @@ inline void save_rendering_to_image()
 
 	char str[_MAX_PATH];
 	sprintf(str, "~screenshot_%d.png", increase_screenshot_id());
-	if (FreeImage_Save(FIF_PNG, image, str, 0))
-	{
-		std::cout << "Successfully saved " << str << std::endl;
-	}
-	else
+
+	//if (FreeImage_Save(FIF_PNG, image, str, 0))
+	//{
+	//	std::cout << "Successfully saved " << str << std::endl;
+	//}
+	//else
+	//{
+	//	std::cout << "Failed saving " << str << std::endl;
+	//}
+
+	if(!FreeImage_Save(FIF_PNG, image, str, 0))
 	{
 		std::cout << "Failed saving " << str << std::endl;
 	}

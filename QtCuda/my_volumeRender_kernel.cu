@@ -284,7 +284,7 @@ extern "C" bool get_save_rendering()
 extern "C" void set_save_rendering(bool value)
 {
 	save_rendering = value;
-	printf("set save_rendering %s\n", save_rendering ? "true" : "false");
+	//printf("set save_rendering %s\n", save_rendering ? "true" : "false");
 }
 
 extern "C" void set_volume_file(const char *file, int n)
