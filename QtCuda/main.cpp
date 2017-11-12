@@ -202,6 +202,18 @@ char **pArgv;
 #define MAX(a,b) ((a > b) ? a : b)
 #endif
 
+int screenshot_id = -1;
+
+inline int get_screenshot_id()
+{
+	return screenshot_id;
+}
+
+inline int get_next_screenshot_id()
+{
+	return screenshot_id = (screenshot_id + 1) % 4;
+}
+
 MainWindow *qt_window = NULL;
 
 extern "C" void reset_temporal_visibility_histogram();
@@ -1551,13 +1563,15 @@ inline void save_rendering_to_image()
 	
 	FIBITMAP* image = FreeImage_ConvertFromRawBits(pixels, width, height, 3 * width, 24, FI_RGBA_RED_MASK, FI_RGBA_GREEN_MASK, FI_RGBA_BLUE_MASK, false);
 
-	if (FreeImage_Save(FIF_BMP, image, "~screenshot.bmp", 0))
+	char str[_MAX_PATH];
+	sprintf(str, "~screenshot_%d.png", get_next_screenshot_id());
+	if (FreeImage_Save(FIF_PNG, image, str, 0))
 	{
-		std::cout << "Successfully saved!" << std::endl;
+		std::cout << "Successfully saved " << str << std::endl;
 	}
 	else
 	{
-		std::cout << "Failed saving!" << std::endl;
+		std::cout << "Failed saving " << str << std::endl;
 	}
 
 	FreeImage_Unload(image);

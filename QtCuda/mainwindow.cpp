@@ -11,7 +11,7 @@ MainWindow::MainWindow(QWidget *parent)
 			qApp->desktop()->availableGeometry()
 		)
 	);
-	this->move(this->pos() - QPoint(179, 260));
+	this->move(this->pos() - QPoint(175, 200));
 	ui.setupUi(this);
 	update_color(QColor::fromRgbF(D_RGBA[0], D_RGBA[1], D_RGBA[2], D_RGBA[3]));
 	//ui.graphicsView->setScene(&scene);
