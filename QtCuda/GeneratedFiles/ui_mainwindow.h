@@ -259,7 +259,7 @@ public:
         verticalLayout_2->addLayout(formLayout);
 
         gridLayout_6 = new QGridLayout();
-        gridLayout_6->setSpacing(6);
+        gridLayout_6->setSpacing(0);
         gridLayout_6->setObjectName(QStringLiteral("gridLayout_6"));
         label = new QLabel(tab);
         label->setObjectName(QStringLiteral("label"));
@@ -298,7 +298,7 @@ public:
         MainWindowClass->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindowClass);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 768, 26));
+        menuBar->setGeometry(QRect(0, 0, 768, 17));
         menu_File = new QMenu(menuBar);
         menu_File->setObjectName(QStringLiteral("menu_File"));
         menu_Help = new QMenu(menuBar);
