@@ -1474,6 +1474,12 @@ void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, u
 		set_gaussian(false);
 		//printf("loc %d %d\n", loc.x, loc.y);
 		gaussian_tf(make_float3(g_SelectedColor[0], g_SelectedColor[1], g_SelectedColor[2]));
+
+		if (get_save_rendering())
+		{
+			set_save_rendering(false);
+			save_rendering_and_display_in_Qt();
+		}
 	}
 
 	if (get_accumulate_visibility())
@@ -1486,12 +1492,6 @@ void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, u
 	{
 		set_temporal_tf(false);
 		temporal_tf_editing(make_float3(g_SelectedColor[0], g_SelectedColor[1], g_SelectedColor[2]));
-	}
-
-	if (get_save_rendering())
-	{
-		set_save_rendering(false);
-		save_rendering_and_display_in_Qt();
 	}
 
 	if (get_save())
