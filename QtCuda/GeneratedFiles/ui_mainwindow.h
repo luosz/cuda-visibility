@@ -354,7 +354,7 @@ public:
         checkBox_5->setText(QApplication::translate("MainWindowClass", "VWS optimization", Q_NULLPTR));
         tabWidget_2->setTabText(tabWidget_2->indexOf(tabWidget_2Page1), QApplication::translate("MainWindowClass", "Histograms", Q_NULLPTR));
         pushButton_6->setText(QApplication::translate("MainWindowClass", "Show renderings", Q_NULLPTR));
-        checkBox_7->setText(QApplication::translate("MainWindowClass", "Save renderings and display automatically", Q_NULLPTR));
+        checkBox_7->setText(QApplication::translate("MainWindowClass", "Save and display previous renderings", Q_NULLPTR));
         label->setText(QString());
         label_2->setText(QString());
         label_3->setText(QString());

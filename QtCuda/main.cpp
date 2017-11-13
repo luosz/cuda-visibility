@@ -1602,7 +1602,7 @@ extern "C" void save_rendering_and_display_in_Qt()
 	save_rendering_to_image();
 	if (qt_window)
 	{
-		qt_window->update_screenshots_later();
+		qt_window->update_screenshots_later(100);
 	}
 }
 
@@ -1851,15 +1851,15 @@ void passive_motion(int x, int y)
 		locf.x = loc.x;
 		locf.y = loc.y;
 
-		if (loc2.x != loc.x || loc2.y != loc.y)
+		if (abs(loc2.x-loc.x) + abs(loc2.y-loc.y) >= n>>3)
 		{
-			loc2.x = loc.x;
-			loc2.y = loc.y;
 			if (qt_window && qt_window->is_save_renderings_checked())
 			{
 				apply_save_rendering();
 			}
 		}
+		loc2.x = loc.x;
+		loc2.y = loc.y;
 
 		reset_transfer_function();
 		apply_tf_editing();
