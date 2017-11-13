@@ -14,6 +14,7 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
 #include <QtWidgets/QCheckBox>
+#include <QtWidgets/QFormLayout>
 #include <QtWidgets/QFrame>
 #include <QtWidgets/QGridLayout>
 #include <QtWidgets/QHeaderView>
@@ -66,7 +67,9 @@ public:
     QVBoxLayout *verticalLayout;
     QWidget *tab;
     QVBoxLayout *verticalLayout_2;
+    QFormLayout *formLayout;
     QPushButton *pushButton_6;
+    QCheckBox *checkBox_7;
     QGridLayout *gridLayout_6;
     QLabel *label;
     QLabel *label_2;
@@ -239,10 +242,21 @@ public:
         verticalLayout_2->setSpacing(6);
         verticalLayout_2->setContentsMargins(11, 11, 11, 11);
         verticalLayout_2->setObjectName(QStringLiteral("verticalLayout_2"));
+        formLayout = new QFormLayout();
+        formLayout->setSpacing(6);
+        formLayout->setObjectName(QStringLiteral("formLayout"));
         pushButton_6 = new QPushButton(tab);
         pushButton_6->setObjectName(QStringLiteral("pushButton_6"));
 
-        verticalLayout_2->addWidget(pushButton_6);
+        formLayout->setWidget(0, QFormLayout::LabelRole, pushButton_6);
+
+        checkBox_7 = new QCheckBox(tab);
+        checkBox_7->setObjectName(QStringLiteral("checkBox_7"));
+
+        formLayout->setWidget(0, QFormLayout::FieldRole, checkBox_7);
+
+
+        verticalLayout_2->addLayout(formLayout);
 
         gridLayout_6 = new QGridLayout();
         gridLayout_6->setSpacing(6);
@@ -340,6 +354,7 @@ public:
         checkBox_5->setText(QApplication::translate("MainWindowClass", "VWS optimization", Q_NULLPTR));
         tabWidget_2->setTabText(tabWidget_2->indexOf(tabWidget_2Page1), QApplication::translate("MainWindowClass", "Histograms", Q_NULLPTR));
         pushButton_6->setText(QApplication::translate("MainWindowClass", "Show renderings", Q_NULLPTR));
+        checkBox_7->setText(QApplication::translate("MainWindowClass", "Save renderings and display automatically", Q_NULLPTR));
         label->setText(QString());
         label_2->setText(QString());
         label_3->setText(QString());

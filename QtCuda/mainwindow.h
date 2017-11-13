@@ -115,6 +115,11 @@ public:
 		QTimer::singleShot(msec, this, SLOT(update_screenshots()));
 	}
 
+	bool is_save_renderings_checked()
+	{
+		return ui.checkBox_7->isChecked();
+	}
+
 private slots:
     void on_pushButton_clicked();
 

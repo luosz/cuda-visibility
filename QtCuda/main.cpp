@@ -1853,9 +1853,12 @@ void passive_motion(int x, int y)
 
 		if (loc2.x != loc.x || loc2.y != loc.y)
 		{
-			apply_save_rendering();
 			loc2.x = loc.x;
 			loc2.y = loc.y;
+			if (qt_window && qt_window->is_save_renderings_checked())
+			{
+				apply_save_rendering();
+			}
 		}
 
 		reset_transfer_function();

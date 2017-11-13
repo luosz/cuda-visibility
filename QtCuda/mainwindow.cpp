@@ -20,6 +20,7 @@ MainWindow::MainWindow(QWidget *parent)
 	ui.verticalLayout->addWidget(&chartView_global);
 	ui.verticalLayout->addWidget(&chartView_local);
 	show_transfer_function_later(1000);
+	update_screenshots();
 }
 
 void MainWindow::on_pushButton_clicked()
