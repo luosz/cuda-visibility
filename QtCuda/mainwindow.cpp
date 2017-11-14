@@ -127,7 +127,7 @@ void MainWindow::on_action_About_triggered()
 {
     std::cout<<((float)5/2)<<std::endl;
 	int ret = QMessageBox::information(this, tr("QtCuda Volume Visualizer"),
-		tr("Copyright (c) 2017 The Trinity Centre for Creative Technologies & Media Engineering, Trinity College Dublin, The University of Dublin.\n" "All rights reserved."), QMessageBox::Ok);
+		tr("Copyright (c) 2017 Trinity College Dublin, The University of Dublin.\n" "All rights reserved."), QMessageBox::Ok);
 }
 
 void MainWindow::on_action_Exit_triggered()
