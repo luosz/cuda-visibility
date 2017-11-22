@@ -204,17 +204,17 @@ char **pArgv;
 
 int screenshot_id = -1;
 
-inline int get_screenshot_id()
+extern "C" int get_screenshot_id()
 {
 	return screenshot_id;
 }
 
-inline int get_next_screenshot_id(int id)
+extern "C" int get_next_screenshot_id(int id)
 {
 	return (id + 1) % 4;
 }
 
-inline int increase_screenshot_id()
+extern "C" int increase_screenshot_id()
 {
 	return screenshot_id = get_next_screenshot_id(screenshot_id);
 }
@@ -273,6 +273,7 @@ extern "C" void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uin
 extern "C" void copyInvViewMatrix(float *invViewMatrix, size_t sizeofMatrix);
 
 extern "C" void set_save_rendering(bool value);
+extern "C" void set_save_ppm(bool value);
 
 void apply_save_rendering()
 {
@@ -1597,13 +1598,18 @@ inline void save_rendering_to_image()
 	free(pixels);
 }
 
-extern "C" void save_rendering_and_display_in_Qt()
+extern "C" void update_screenshots_in_Qt()
 {
-	save_rendering_to_image();
 	if (qt_window)
 	{
 		qt_window->update_screenshots_later();
 	}
+}
+
+extern "C" void save_rendering_and_display_in_Qt()
+{
+	save_rendering_to_image();
+	update_screenshots_in_Qt();
 }
 
 void keyboard(unsigned char key, int x, int y)
@@ -1769,6 +1775,10 @@ void keyboard(unsigned char key, int x, int y)
 
 		case 'm':
 			save_rendering_and_display_in_Qt();
+			break;
+
+		case 'n':
+			set_save_ppm(true);
 			break;
 
 		default:

@@ -235,13 +235,13 @@ private slots:
 		int n3 = get_next_screenshot_id(n2);
 		int n4 = get_next_screenshot_id(n3);
 		char str[_MAX_PATH];
-		sprintf(str, "~screenshot_%d.png", n);
+		sprintf(str, "~screenshot_%d.ppm", n);
 		QPixmap p(str);
-		sprintf(str, "~screenshot_%d.png", n2);
+		sprintf(str, "~screenshot_%d.ppm", n2);
 		QPixmap p2(str);
-		sprintf(str, "~screenshot_%d.png", n3);
+		sprintf(str, "~screenshot_%d.ppm", n3);
 		QPixmap p3(str);
-		sprintf(str, "~screenshot_%d.png", n4);
+		sprintf(str, "~screenshot_%d.ppm", n4);
 		QPixmap p4(str);
 		ui.label->setPixmap(p);
 		ui.label_2->setPixmap(p2);

@@ -11,11 +11,14 @@
 
  // Simple 3D volume renderer
 
+#pragma once
+
 #ifndef _VOLUMERENDER_KERNEL_CU_
 #define _VOLUMERENDER_KERNEL_CU_
 
 #include <helper_cuda.h>
 #include <helper_math.h>
+#include <helper_functions.h>
 #include <iostream>
 #include <stdio.h>
 #include "define.cuh"
@@ -48,7 +51,11 @@ texture<VisibilityType, 3, cudaReadModeElementType> visTex;         // 3D textur
 texture<VolumeType, 3, cudaReadModeElementType> volTex;         // 3D texture
 //texture<VisibilityType, 3, cudaReadModeNormalizedFloat> visTex;         // 3D texture
 
-const int BIN_COUNT = D_BIN_COUNT;
+//const int BIN_COUNT = D_BIN_COUNT; // Error "BIN_COUNT" has already been declared in the current scope	QtCuda	C:\work\cuda-visibility\QtCuda\my_volumeRender_kernel.cu	47
+#ifndef BIN_COUNT
+#define BIN_COUNT D_BIN_COUNT
+#endif // !BIN_COUNT
+
 __device__ __managed__ float histogram[BIN_COUNT] = {0};
 __device__ __managed__ float histogram2[BIN_COUNT] = { 0 };
 __device__ __managed__ float histogram3[BIN_COUNT] = { 0 };
@@ -82,7 +89,10 @@ bool backup_table = false;
 bool accumulate_visibility = false;
 bool temporal_tf = false;
 bool save_rendering = false;
+bool save_ppm = false;
 
+extern "C" int increase_screenshot_id();
+extern "C" void update_screenshots_in_Qt();
 extern "C" void save_rendering_and_display_in_Qt();
 extern "C" float4 rgb_to_lch(float4 rgba);
 extern "C" int iDivUp(int a, int b);
@@ -154,6 +164,17 @@ extern "C" float4* get_tf_array()
 {
 	return tf_array;
 }
+
+extern "C" void set_save_ppm(bool value)
+{
+	save_ppm = value;
+}
+
+extern "C" bool get_save_ppm()
+{
+	return save_ppm;
+}
+
 
 extern "C" float* get_global_visibility_histogram()
 {
@@ -999,6 +1020,7 @@ d_renderVisibility(uint *d_output, uint imageW, uint imageH,
 
 	if (!hit)
 	{
+		// draw white background outside the cube
 		d_output[y*imageW + x] = rgbaFloatToInt(make_float4(1.0f, 1.0f, 1.0f, 0.0f));
 		return;
 	}
@@ -1046,6 +1068,7 @@ d_renderVisibility(uint *d_output, uint imageW, uint imageH,
 		pos += step;
 	}
 
+	// draw white background inside the cube
 	if (sum.w < 1.0f)
 	{
 		sum += make_float4(1.0f, 1.0f, 1.0f, 0.0f) * (1.0f - sum.w);
@@ -1478,7 +1501,8 @@ void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, u
 		if (get_save_rendering())
 		{
 			set_save_rendering(false);
-			save_rendering_and_display_in_Qt();
+			//save_rendering_and_display_in_Qt();
+			set_save_ppm(true);
 		}
 	}
 
@@ -1492,6 +1516,19 @@ void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, u
 	{
 		set_temporal_tf(false);
 		temporal_tf_editing(make_float3(g_SelectedColor[0], g_SelectedColor[1], g_SelectedColor[2]));
+	}
+
+	if (get_save_ppm())
+	{
+		set_save_ppm(false);
+		unsigned char *h_output = (unsigned char *)malloc(imageW*imageH * 4);
+		checkCudaErrors(cudaMemcpy(h_output, d_output, imageW*imageH * 4, cudaMemcpyDeviceToHost));
+		char str[_MAX_PATH];
+		sprintf(str, "~screenshot_%d.ppm", increase_screenshot_id());
+		printf(str);
+		sdkSavePPM4ub(str, h_output, imageW, imageH);
+		free(h_output);
+		update_screenshots_in_Qt();
 	}
 
 	if (get_save())
