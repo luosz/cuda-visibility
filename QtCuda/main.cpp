@@ -127,7 +127,7 @@ const char *sSDKsample = "CUDA 3D Volume Render";
 //const char *tfs[] = { "nucleon_naive_proportional_2.tfi","vortex_naive_proportional_2.tfi","CT-Knee_spectrum_6.tfi","E_1324_Rainbow6_even_2.tfi" };
 const char *tfs[] = { "nucleon_naive_proportional.tfi","vortex_naive_proportional.tfi","CT-Knee_spectrum_6.tfi","Rainbow3_even.tfi" };
 const char *volumes[] = { "nucleon.raw","vorts1.raw","CT-Knee.raw","E_1324.raw" };
-const int data_index = 1;
+const int data_index = 3;
 const char *tfFile = tfs[data_index];
 const char *volumeFilename = volumes[data_index];
 char volumeFilename_buffer[_MAX_PATH];
@@ -138,8 +138,12 @@ char volumeFilename_buffer[_MAX_PATH];
 379, 229, 305
 432, 432, 432
 */
-
-cudaExtent volumeSize = make_cudaExtent(128, 128, 128);
+const size_t sizes[] = {
+41, 41, 41,
+128, 128, 128,
+379, 229, 305,
+432, 432, 432 };
+cudaExtent volumeSize = make_cudaExtent(sizes[0+data_index*3], sizes[1+data_index*3], sizes[2+data_index*3]);
 typedef unsigned char VolumeType;
 
 std::vector<float> intensity_list;
