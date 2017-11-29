@@ -1,8 +1,8 @@
-#include "Conversion.h"
-#include "ColorSpace.h"
 #define _USE_MATH_DEFINES
 #include <cmath>
 #include <algorithm>
+#include "Conversion.h"
+#include "ColorSpace.h"
 
 #define POW3(x) ((x)*(x)*(x))
 #define POW7(x) (POW3(x)*POW3(x)*(x))

@@ -128,13 +128,7 @@ d_render(uint *d_output, uint imageW, uint imageH,
     float tnear, tfar;
     int hit = intersectBox(eyeRay, boxMin, boxMax, &tnear, &tfar);
 
-    //if (!hit) return;
-	if (!hit)
-	{
-		// draw white background outside the cube
-		//d_output[y*imageW + x] = rgbaFloatToInt(make_float4(1.0f, 1.0f, 1.0f, 0.0f));
-		return;
-	}
+    if (!hit) return;
 
     if (tnear < 0.0f) tnear = 0.0f;     // clamp to near plane
 
@@ -176,11 +170,6 @@ d_render(uint *d_output, uint imageW, uint imageH,
         pos += step;
     }
 
-	// draw white background inside the cube
-	if (sum.w < 1.0f)
-	{
-		sum += make_float4(1.0f, 1.0f, 1.0f, 0.0f) * (1.0f - sum.w);
-	}
     sum *= brightness;
 
     // write output color
