@@ -32,10 +32,12 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="..\common\OpenGL.x64.props" />
     <Import Project="..\common\cuda.props" />
+    <Import Project="..\common\Qt.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="..\common\OpenGL.x64.props" />
     <Import Project="..\common\cuda.props" />
+    <Import Project="..\common\Qt.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

@@ -1244,7 +1244,7 @@ extern "C"
 void compute_vws()
 {
 	auto len = sizeOfVolume.width * sizeOfVolume.height * sizeOfVolume.depth;
-	int w = sizeOfVolume.width, h = sizeOfVolume.height, d = sizeOfVolume.depth;
+	//int w = sizeOfVolume.width, h = sizeOfVolume.height, d = sizeOfVolume.depth;
 	memset(vwsVolume, 0, sizeof(float) * len);
 	for (int i = 0; i < len; i++)
 	{
@@ -1368,19 +1368,19 @@ void initCuda(void *h_volume, cudaExtent volumeSize)
 	// bind array to 3D texture
 	checkCudaErrors(cudaBindTextureToArray(volTex, d_volumeArray, channelDesc));
 
-    // create transfer function texture
-    float4 transferFunc[] =
-    {
-        {  0.0, 0.0, 0.0, 0.0, },
-        {  1.0, 0.0, 0.0, 1.0, },
-        {  1.0, 0.5, 0.0, 1.0, },
-        {  1.0, 1.0, 0.0, 1.0, },
-        {  0.0, 1.0, 0.0, 1.0, },
-        {  0.0, 1.0, 1.0, 1.0, },
-        {  0.0, 0.0, 1.0, 1.0, },
-        {  1.0, 0.0, 1.0, 1.0, },
-        {  0.0, 0.0, 0.0, 0.0, },
-    };
+    //// create transfer function texture
+    //float4 transferFunc[] =
+    //{
+    //    {  0.0, 0.0, 0.0, 0.0, },
+    //    {  1.0, 0.0, 0.0, 1.0, },
+    //    {  1.0, 0.5, 0.0, 1.0, },
+    //    {  1.0, 1.0, 0.0, 1.0, },
+    //    {  0.0, 1.0, 0.0, 1.0, },
+    //    {  0.0, 1.0, 1.0, 1.0, },
+    //    {  0.0, 0.0, 1.0, 1.0, },
+    //    {  1.0, 0.0, 1.0, 1.0, },
+    //    {  0.0, 0.0, 0.0, 0.0, },
+    //};
 
     cudaChannelFormatDesc channelDesc2 = cudaCreateChannelDesc<float4>();
     cudaArray *d_transferFuncArray;
