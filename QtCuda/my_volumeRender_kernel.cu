@@ -1262,6 +1262,24 @@ void compute_saliency_once()
 	}
 }
 
+extern "C" size_t get_width();
+extern "C" size_t get_height();
+extern "C" void load_ppm_to_gpu(const char *file)
+{
+	unsigned int w = get_width();
+	unsigned int h = get_height();
+	size_t width = (size_t)w;
+	size_t height = (size_t)h;
+	unsigned char *h_output = (unsigned char *)malloc(width*height * 4);
+	auto ans = sdkLoadPPM4ub(file, &h_output, &w, &h);
+	printf(ans ? "sdkLoadPPM4ub succeeded.\n" : "sdkLoadPPM4ub failed.\n");
+
+	cudaChannelFormatDesc channelDesc = cudaCreateChannelDesc<unsigned char>();
+	cudaArray* cuArray;
+	cudaMallocArray(&cuArray, &channelDesc, width, height);
+	cudaMemcpy2DToArray(cuArray, 0, 0, h_output, width * sizeof(float), width * sizeof(float), height, cudaMemcpyHostToDevice);
+}
+
 extern "C" void update_volume(void *h_volume, cudaExtent volumeSize)
 {
 	auto len = volumeSize.width * volumeSize.height * volumeSize.depth;

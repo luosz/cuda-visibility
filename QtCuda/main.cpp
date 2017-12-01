@@ -172,6 +172,17 @@ uint width = D_WIDTH, height = D_HEIGHT;
 dim3 blockSize(16, 16);
 dim3 gridSize;
 
+extern "C" size_t get_width()
+{
+	return (size_t)width;
+}
+
+extern "C" size_t get_height()
+{
+	return (size_t)height;
+}
+
+
 //dim3 blockSize3(16, 16, 16);
 //dim3 gridSize3;
 
@@ -1616,6 +1627,13 @@ extern "C" void save_rendering_and_display_in_Qt()
 	update_screenshots_in_Qt();
 }
 
+void load_ppm(const char *file)
+{
+	unsigned char *h_output = (unsigned char *)malloc(width*height * 4);
+	auto ans = sdkLoadPPM4ub(file, &h_output, &width, &height);
+	std::cout << (ans ? "sdkLoadPPM4ub succeeded" : "sdkLoadPPM4ub failed") << std::endl;
+}
+
 void keyboard(unsigned char key, int x, int y)
 {
 	//if (TwEventKeyboardGLUT(key, x, y))
@@ -1783,6 +1801,10 @@ void keyboard(unsigned char key, int x, int y)
 
 		case 'n':
 			set_save_ppm(true);
+			break;
+
+		case 'k':
+			load_ppm("~screenshot_0.ppm");
 			break;
 
 		default:
