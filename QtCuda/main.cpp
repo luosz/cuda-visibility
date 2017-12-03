@@ -172,14 +172,14 @@ uint width = D_WIDTH, height = D_HEIGHT;
 dim3 blockSize(16, 16);
 dim3 gridSize;
 
-extern "C" size_t get_width()
+extern "C" unsigned int get_width()
 {
-	return (size_t)width;
+	return width;
 }
 
-extern "C" size_t get_height()
+extern "C" unsigned int get_height()
 {
-	return (size_t)height;
+	return height;
 }
 
 
@@ -1627,12 +1627,13 @@ extern "C" void save_rendering_and_display_in_Qt()
 	update_screenshots_in_Qt();
 }
 
-void load_ppm(const char *file)
-{
-	unsigned char *h_output = (unsigned char *)malloc(width*height * 4);
-	auto ans = sdkLoadPPM4ub(file, &h_output, &width, &height);
-	std::cout << "sdkLoadPPM4ub " << file << (ans ? " succeeded." : " failed.") << std::endl;
-}
+extern "C" void load_ppm_to_gpu(const char *file);
+//void load_ppm(const char *file)
+//{
+//	unsigned char *h_output = (unsigned char *)malloc(width*height * 4);
+//	auto ans = sdkLoadPPM4ub(file, &h_output, &width, &height);
+//	std::cout << "sdkLoadPPM4ub " << file << (ans ? " succeeded." : " failed.") << std::endl;
+//}
 
 void keyboard(unsigned char key, int x, int y)
 {
@@ -1804,7 +1805,7 @@ void keyboard(unsigned char key, int x, int y)
 			break;
 
 		case 'k':
-			load_ppm("~screenshot_1-seg.ppm");
+			load_ppm_to_gpu("~screenshot_1-seg.ppm");
 			break;
 
 		default:

@@ -40,6 +40,7 @@ texture<float, cudaTextureType3D, cudaReadModeElementType>  volumeTexIn;
 surface<void, 3>                                    volumeTexOut;
 cudaArray *d_visibilityArray = 0;
 
+__device__ __managed__ unsigned char *segment = NULL;
 __device__ __managed__ VolumeType *raw_volume = NULL;
 __device__ __managed__ char *volume_file = NULL;
 __device__ __managed__ float *visVolume = NULL;
@@ -1262,22 +1263,26 @@ void compute_saliency_once()
 	}
 }
 
-extern "C" size_t get_width();
-extern "C" size_t get_height();
+extern "C" unsigned int get_width();
+extern "C" unsigned int get_height();
 extern "C" void load_ppm_to_gpu(const char *file)
 {
 	unsigned int w = get_width();
 	unsigned int h = get_height();
-	size_t width = (size_t)w;
-	size_t height = (size_t)h;
-	unsigned char *h_output = (unsigned char *)malloc(width*height * 4);
-	auto ans = sdkLoadPPM4ub(file, &h_output, &w, &h);
-	printf(ans ? "sdkLoadPPM4ub succeeded.\n" : "sdkLoadPPM4ub failed.\n");
+	//size_t width = (size_t)w;
+	//size_t height = (size_t)h;
+	//unsigned char *h_output = (unsigned char *)malloc(sizeof(unsigned char)*width*height * 4);
+	if (!segment)
+	{
+		checkCudaErrors(cudaMallocManaged(&segment, sizeof(unsigned char)*w*h * 4));
+	}
+	auto ans = sdkLoadPPM4ub(file, &segment, &w, &h);
+	printf("%s sdkLoadPPM4ub %s.\n", file, ans ? "succeeded" : "failed");
 
-	cudaChannelFormatDesc channelDesc = cudaCreateChannelDesc<unsigned char>();
-	cudaArray* cuArray;
-	cudaMallocArray(&cuArray, &channelDesc, width, height);
-	cudaMemcpy2DToArray(cuArray, 0, 0, h_output, width * sizeof(float), width * sizeof(float), height, cudaMemcpyHostToDevice);
+	//cudaChannelFormatDesc channelDesc = cudaCreateChannelDesc<unsigned char>();
+	//cudaArray* cuArray;
+	//cudaMallocArray(&cuArray, &channelDesc, width, height);
+	//cudaMemcpy2DToArray(cuArray, 0, 0, h_output, width * sizeof(float), width * sizeof(float), height, cudaMemcpyHostToDevice);
 }
 
 extern "C" void update_volume(void *h_volume, cudaExtent volumeSize)
