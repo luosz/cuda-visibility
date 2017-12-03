@@ -27,6 +27,7 @@ using namespace std;
 typedef unsigned int  uint;
 typedef unsigned char uchar;
 
+
 cudaArray *d_volumeArray = 0;
 cudaArray *d_transferFuncArray;
 
@@ -40,7 +41,9 @@ texture<float, cudaTextureType3D, cudaReadModeElementType>  volumeTexIn;
 surface<void, 3>                                    volumeTexOut;
 cudaArray *d_visibilityArray = 0;
 
-__device__ __managed__ unsigned char *segment = NULL;
+texture<uint4, cudaTextureType2D, cudaReadModeElementType>         segmentTex; // 2D segmentation texture
+__device__ __managed__ uint4 *segment = NULL;
+
 __device__ __managed__ VolumeType *raw_volume = NULL;
 __device__ __managed__ char *volume_file = NULL;
 __device__ __managed__ float *visVolume = NULL;
@@ -1084,6 +1087,13 @@ d_renderVisibility(uint *d_output, uint imageW, uint imageH,
 		sum.w = w;
 	}
 
+	if (!segment && segment[(y*imageW + x) * 4]== segment[(loc.y*imageW + loc.x) * 4])
+	{
+		auto w = sum.w;
+		sum = make_float4(1, 1, 1, 1) - sum;
+		sum.w = w;
+	}
+
 	// write output color
 	d_output[y*imageW + x] = rgbaFloatToInt(sum);
 }
@@ -1267,22 +1277,41 @@ extern "C" unsigned int get_width();
 extern "C" unsigned int get_height();
 extern "C" void load_ppm_to_gpu(const char *file)
 {
+	printf("%d %d\n", sizeof(uint4), sizeof(unsigned int));
 	unsigned int w = get_width();
 	unsigned int h = get_height();
-	//size_t width = (size_t)w;
-	//size_t height = (size_t)h;
-	//unsigned char *h_output = (unsigned char *)malloc(sizeof(unsigned char)*width*height * 4);
-	if (!segment)
-	{
-		checkCudaErrors(cudaMallocManaged(&segment, sizeof(unsigned char)*w*h * 4));
-	}
-	auto ans = sdkLoadPPM4ub(file, &segment, &w, &h);
+	size_t width = (size_t)w;
+	size_t height = (size_t)h;
+	unsigned char *h_output = (unsigned char *)malloc(sizeof(unsigned char)*width*height * 4);
+	bool ans = sdkLoadPPM4ub(file, &h_output, &w, &h);
 	printf("%s sdkLoadPPM4ub %s.\n", file, ans ? "succeeded" : "failed");
+
+	//for (int i = 0; i < w*h; i++)
+	//{
+	//	segment[i].x = h_output[i * 4];
+	//	segment[i].y = h_output[i * 4 + 1];
+	//	segment[i].z = h_output[i * 4 + 2];
+	//	segment[i].w = h_output[i * 4 + 3];
+	//}
+	memcpy(segment, (uint4*)h_output, sizeof(uint4)*w*h);
+	free(h_output);
 
 	//cudaChannelFormatDesc channelDesc = cudaCreateChannelDesc<unsigned char>();
 	//cudaArray* cuArray;
 	//cudaMallocArray(&cuArray, &channelDesc, width, height);
 	//cudaMemcpy2DToArray(cuArray, 0, 0, h_output, width * sizeof(float), width * sizeof(float), height, cudaMemcpyHostToDevice);
+
+	cudaChannelFormatDesc channelDesc2 = cudaCreateChannelDesc<uint4>();
+	cudaArray *d_segmentArray;
+	checkCudaErrors(cudaMallocArray(&d_segmentArray, &channelDesc2, w, h));
+	checkCudaErrors(cudaMemcpyToArray(d_segmentArray, 0, 0, segment, w*h*sizeof(uint4), cudaMemcpyHostToDevice));
+
+	segmentTex.filterMode = cudaFilterModeLinear;
+	segmentTex.normalized = true;    // access with normalized texture coordinates
+	segmentTex.addressMode[0] = cudaAddressModeClamp;   // wrap texture coordinates
+
+	// Bind the array to the texture
+	checkCudaErrors(cudaBindTextureToArray(segmentTex, d_segmentArray, channelDesc2));
 }
 
 extern "C" void update_volume(void *h_volume, cudaExtent volumeSize)
@@ -1326,6 +1355,11 @@ extern "C" void update_volume(void *h_volume, cudaExtent volumeSize)
 extern "C"
 void initCuda(void *h_volume, cudaExtent volumeSize)
 {
+	unsigned int w = get_width();
+	unsigned int h = get_height();
+	printf("w=%d\th=%d\n", w, h);
+	checkCudaErrors(cudaMallocManaged(&segment, sizeof(uint4)*w*h));
+
 	auto len = volumeSize.width * volumeSize.height * volumeSize.depth;
 	checkCudaErrors(cudaMallocManaged(&raw_volume, sizeof(VolumeType) * len));
 	memcpy(raw_volume, h_volume, sizeof(VolumeType) * len);
