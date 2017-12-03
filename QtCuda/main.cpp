@@ -127,7 +127,7 @@ const char *sSDKsample = "CUDA 3D Volume Render";
 //const char *tfs[] = { "nucleon_naive_proportional_2.tfi","vortex_naive_proportional_2.tfi","CT-Knee_spectrum_6.tfi","E_1324_Rainbow6_even_2.tfi" };
 const char *tfs[] = { "nucleon_naive_proportional.tfi","vortex_naive_proportional.tfi","CT-Knee_spectrum_6.tfi","Rainbow3_even.tfi" };
 const char *volumes[] = { "nucleon.raw","vorts1.raw","CT-Knee.raw","E_1324.raw" };
-const int data_index = 1;
+const int data_index = 0;
 const char *tfFile = tfs[data_index];
 const char *volumeFilename = volumes[data_index];
 char volumeFilename_buffer[_MAX_PATH];
@@ -1631,7 +1631,7 @@ void load_ppm(const char *file)
 {
 	unsigned char *h_output = (unsigned char *)malloc(width*height * 4);
 	auto ans = sdkLoadPPM4ub(file, &h_output, &width, &height);
-	std::cout << (ans ? "sdkLoadPPM4ub succeeded" : "sdkLoadPPM4ub failed") << std::endl;
+	std::cout << "sdkLoadPPM4ub " << file << (ans ? " succeeded." : " failed.") << std::endl;
 }
 
 void keyboard(unsigned char key, int x, int y)
@@ -1804,7 +1804,7 @@ void keyboard(unsigned char key, int x, int y)
 			break;
 
 		case 'k':
-			load_ppm("~screenshot_0.ppm");
+			load_ppm("~screenshot_1-seg.ppm");
 			break;
 
 		default:
