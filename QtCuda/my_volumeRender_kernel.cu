@@ -1290,7 +1290,7 @@ extern "C" void load_ppm_to_gpu(const char *file)
 		checkCudaErrors(cudaMallocManaged(&d_segment, sizeof(uint)*width*height));
 
 		segmentTex.filterMode = cudaFilterModePoint;
-		segmentTex.normalized = true;    // access with normalized texture coordinates
+		segmentTex.normalized = false;    // access with normalized texture coordinates
 		segmentTex.addressMode[0] = cudaAddressModeClamp;   // wrap texture coordinates
 	}
 
