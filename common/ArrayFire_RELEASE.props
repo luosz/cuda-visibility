@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <IncludePath>$(AF_PATH)/include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(AF_PATH)/lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <Link>
+      <AdditionalDependencies>afcuda.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(AF_PATH)/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+    <PreBuildEvent>
+      <Command>echo ArrayFire_RELEASE.props
+xcopy /f /y "$(CUDA_PATH)\nvvm\bin\nvvm64*.dll" "$(OutDir)"
+%(Command)</Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <PreprocessorDefinitions>NOMINMAX;ASSETS_DIR=R"(C:/Program Files/ArrayFire/v3/examples/assets)";AF_CUDA;AF_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(AF_PATH)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup />
+</Project>
