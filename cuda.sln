@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2009
+VisualStudioVersion = 15.0.27004.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cuda", "cuda\cuda.vcxproj", "{A91FC659-D633-4320-A4A1-7E7E601C25C5}"
 EndProject
@@ -12,6 +12,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "volumeFiltering", "volumeFiltering\volumeFiltering_vs2017.vcxproj", "{997E0757-EA74-4A4E-A0FC-47D8C8831A15}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "volumeRender", "volumeRender\volumeRender_vs2017.vcxproj", "{5568853C-66B8-4208-8B15-71BF06CC052E}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "util", "util\util.vcxproj", "{0FCFD4E3-630C-46B7-BBBD-05E4BA3961CD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,12 @@ Global
 		{5568853C-66B8-4208-8B15-71BF06CC052E}.Release|x64.ActiveCfg = Release|x64
 		{5568853C-66B8-4208-8B15-71BF06CC052E}.Release|x64.Build.0 = Release|x64
 		{5568853C-66B8-4208-8B15-71BF06CC052E}.Release|x86.ActiveCfg = Release|x64
+		{0FCFD4E3-630C-46B7-BBBD-05E4BA3961CD}.Debug|x64.ActiveCfg = Debug|x64
+		{0FCFD4E3-630C-46B7-BBBD-05E4BA3961CD}.Debug|x64.Build.0 = Debug|x64
+		{0FCFD4E3-630C-46B7-BBBD-05E4BA3961CD}.Debug|x86.ActiveCfg = Debug|x64
+		{0FCFD4E3-630C-46B7-BBBD-05E4BA3961CD}.Release|x64.ActiveCfg = Release|x64
+		{0FCFD4E3-630C-46B7-BBBD-05E4BA3961CD}.Release|x64.Build.0 = Release|x64
+		{0FCFD4E3-630C-46B7-BBBD-05E4BA3961CD}.Release|x86.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
