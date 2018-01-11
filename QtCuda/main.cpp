@@ -1807,7 +1807,7 @@ void keyboard(unsigned char key, int x, int y)
 			break;
 
 		case 'k':
-			load_ppm_to_gpu("../kmeans/out_dbl.ppm");
+			load_ppm_to_gpu("../kmeans/~out_dbl.ppm");
 			break;
 
 		default:
