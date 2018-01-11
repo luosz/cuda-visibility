@@ -1294,9 +1294,8 @@ extern "C" void load_ppm_to_gpu(const char *file)
 		segmentTex.addressMode[0] = cudaAddressModeClamp;   // wrap texture coordinates
 	}
 
-	//memcpy(d_segment, h_output, sizeof(uint)*width*height);
-	cudaMemcpy(d_segment, h_output, sizeof(uint)*width*height, cudaMemcpyHostToDevice);
-	cudaMemcpy(h_output, d_segment, sizeof(uint)*width*height, cudaMemcpyDeviceToHost);
+	checkCudaErrors(cudaMemcpy(d_segment, h_output, sizeof(uint)*width*height, cudaMemcpyHostToDevice));
+	checkCudaErrors(cudaMemcpy(h_output, d_segment, sizeof(uint)*width*height, cudaMemcpyDeviceToHost));
 	char str[_MAX_PATH];
 	sprintf(str, "~out_dbl.ppm");
 	printf("width=%d height=%d %s\n", width, height, str);
