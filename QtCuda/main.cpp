@@ -56,6 +56,8 @@
 #include <helper_timer.h>
 #include <helper_math.h>
 
+#include <arrayfire.h>
+
 #include <iostream>
 #include <sstream>
 #include <fstream>
@@ -1805,7 +1807,7 @@ void keyboard(unsigned char key, int x, int y)
 			break;
 
 		case 'k':
-			load_ppm_to_gpu("~screenshot_1-seg.ppm");
+			load_ppm_to_gpu("../kmeans/out_dbl.ppm");
 			break;
 
 		default:
@@ -2320,6 +2322,11 @@ int init_gl_main(int argc, char **argv)
 		//TwAddVarRW(bar, "color", TW_TYPE_BOOL32, get_ApplyColor(), "");
 		//TwAddVarRW(bar, "pick", TW_TYPE_COLOR3F, get_SelectedColor(), "");
 
+		//af::Window wnd("Image Demo");
+		//af::array img = af::loadImage("../QtCuda/~screenshot_0.ppm", true);
+		//wnd.image(img);
+		//wnd.show();
+
         glutMainLoop();
     }
 	return 0;
@@ -2327,6 +2334,7 @@ int init_gl_main(int argc, char **argv)
 
 int main(int argc, char *argv[])
 {
+	af::info();
 	QApplication a(argc, argv);
 	MainWindow w;
 	w.show();

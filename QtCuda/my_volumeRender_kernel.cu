@@ -41,7 +41,7 @@ surface<void, 3>                                    volumeTexOut;
 cudaArray *d_visibilityArray = 0;
 
 texture<uint, cudaTextureType2D, cudaReadModeElementType>         segmentTex; // 2D segmentation texture
-__device__ __managed__ uint *d_segment = NULL;
+__device__ uint *d_segment = NULL;
 __device__ __managed__ VolumeType *raw_volume = NULL;
 __device__ __managed__ char *volume_file = NULL;
 __device__ __managed__ float *visVolume = NULL;
@@ -1285,16 +1285,22 @@ extern "C" void load_ppm_to_gpu(const char *file)
 
 	if (!d_segment)
 	{
-		printf("Initialize segmentation\n");
+		printf("Initialize d_segment\n");
 		printf("%d %d\n", width, height);
-		checkCudaErrors(cudaMallocManaged(&d_segment, sizeof(uint)*width*height));
+		checkCudaErrors(cudaMalloc(&d_segment, sizeof(uint)*width*height));
 
 		segmentTex.filterMode = cudaFilterModePoint;
 		segmentTex.normalized = false;    // access with normalized texture coordinates
 		segmentTex.addressMode[0] = cudaAddressModeClamp;   // wrap texture coordinates
 	}
 
-	memcpy(d_segment, h_output, sizeof(uint)*width*height);
+	//memcpy(d_segment, h_output, sizeof(uint)*width*height);
+	cudaMemcpy(d_segment, h_output, sizeof(uint)*width*height, cudaMemcpyHostToDevice);
+	cudaMemcpy(h_output, d_segment, sizeof(uint)*width*height, cudaMemcpyDeviceToHost);
+	char str[_MAX_PATH];
+	sprintf(str, "~out_dbl.ppm");
+	printf("width=%d height=%d %s\n", width, height, str);
+	sdkSavePPM4ub(str, h_output, width, height);
 	free(h_output);
 
 	//checkCudaErrors(cudaMemcpy(d_segment, h_output, sizeof(uint4)*width*height, cudaMemcpyHostToDevice));
