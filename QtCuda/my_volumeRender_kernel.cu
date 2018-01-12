@@ -1087,7 +1087,7 @@ d_renderVisibility(uint *d_output, uint imageW, uint imageH,
 
 	if (!d_segment)
 	{
-		if (x == loc.x && y == loc.y)
+		if (x > 0 && y > 0 && x < imageW && y < imageH && x == loc.x && y == loc.y)
 		{
 			printf("imageW=%d imageH=%d \t x=%d y=%d loc.x=%d loc.y=%d \n", imageW, imageH, x, y, loc.x, loc.y);
 			if (!d_segment)
