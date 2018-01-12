@@ -1085,13 +1085,26 @@ d_renderVisibility(uint *d_output, uint imageW, uint imageH,
 		sum.w = w;
 	}
 
+	if (!d_segment)
+	{
+		if (x == loc.x && y == loc.y)
+		{
+			printf("imageW=%d imageH=%d \t x=%d y=%d loc.x=%d loc.y=%d \n", imageW, imageH, x, y, loc.x, loc.y);
+			if (!d_segment)
+			{
+				printf("d_segment %d\n", d_segment[loc.y*imageW + loc.x]);
+			}
+		}
+		//if (d_segment[x] == d_segment[loc.x])
+		//{
+		//	auto w = sum.w;
+		//	sum = make_float4(1, 1, 1, 1) - sum;
+		//	sum.w = w;
+		//}
+	}
+
 	// write output color
 	d_output[y*imageW + x] = rgbaFloatToInt(sum);
-
-	//if (!d_segment)
-	//{
-	//	d_output[y*imageW + x] = d_segment[y*imageW + x];
-	//}
 }
 
 extern "C"
