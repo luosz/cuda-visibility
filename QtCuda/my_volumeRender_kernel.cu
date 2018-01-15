@@ -40,8 +40,8 @@ texture<float, cudaTextureType3D, cudaReadModeElementType>  volumeTexIn;
 surface<void, 3>                                    volumeTexOut;
 cudaArray *d_visibilityArray = 0;
 
-texture<uint, cudaTextureType2D, cudaReadModeElementType>         segmentTex; // 2D segmentation texture
-__device__ uint *d_segment = NULL;
+texture<uint, cudaTextureType2D, cudaReadModeElementType> segmentTex; // 2D segmentation texture
+__device__ __managed__ uint *d_segment = NULL;
 __device__ __managed__ VolumeType *raw_volume = NULL;
 __device__ __managed__ char *volume_file = NULL;
 __device__ __managed__ float *visVolume = NULL;
@@ -991,6 +991,15 @@ d_visibilityLocal(uint *d_output, uint imageW, uint imageH,
 	d_output[y*imageW + x] = rgbaFloatToInt(sum);
 }
 
+__device__ float4 rgbaIntToFloat(uint rgba)
+{
+	float r = __saturatef((rgba & 0xFF) / 255.f);
+	float g = __saturatef(((rgba >> 8) & 0xFF) / 255.f);
+	float b = __saturatef(((rgba >> 16) & 0xFF) / 255.f);
+	float a = __saturatef(((rgba >> 24) & 0xFF) / 255.f);
+	return make_float4(r, g, b, a);
+}
+
 __global__ void
 d_renderVisibility(uint *d_output, uint imageW, uint imageH,
 	float density, float brightness,
@@ -1078,29 +1087,24 @@ d_renderVisibility(uint *d_output, uint imageW, uint imageH,
 	sum *= brightness;
 
 	// draw selected region in inverted colors
-	if (fabsf(x - loc.x) <= radius && fabsf(y - loc.y) <= radius)
+	if (d_segment && loc.x >= 0 && loc.y >= 0 && loc.x < imageW && loc.y < imageH)
 	{
-		auto w = sum.w;
-		sum = make_float4(1, 1, 1, 1) - sum;
-		sum.w = w;
-	}
-
-	if (!d_segment)
-	{
-		if (x > 0 && y > 0 && x < imageW && y < imageH && x == loc.x && y == loc.y)
+		if (d_segment[y*imageW + x] == d_segment[loc.y*imageW + loc.x])
 		{
-			printf("imageW=%d imageH=%d \t x=%d y=%d loc.x=%d loc.y=%d \n", imageW, imageH, x, y, loc.x, loc.y);
-			if (!d_segment)
-			{
-				printf("d_segment %d\n", d_segment[loc.y*imageW + loc.x]);
-			}
+			////uint s = tex2D(segmentTex, x / (float)imageW, y / (float)imageH);
+			uint s = d_segment[y*imageW + x];
+			sum = rgbaIntToFloat(s);
+			sum = make_float4(1, 1, 1, 1) - sum;
 		}
-		//if (d_segment[x] == d_segment[loc.x])
-		//{
-		//	auto w = sum.w;
-		//	sum = make_float4(1, 1, 1, 1) - sum;
-		//	sum.w = w;
-		//}
+	}
+	else
+	{
+		if (fabsf(x - loc.x) <= radius && fabsf(y - loc.y) <= radius)
+		{
+			auto w = sum.w;
+			sum = make_float4(1, 1, 1, 1) - sum;
+			sum.w = w;
+		}
 	}
 
 	// write output color
@@ -1300,7 +1304,7 @@ extern "C" void load_ppm_to_gpu(const char *file)
 	{
 		printf("Initialize d_segment\n");
 		printf("%d %d\n", width, height);
-		checkCudaErrors(cudaMalloc(&d_segment, sizeof(uint)*width*height));
+		checkCudaErrors(cudaMallocManaged(&d_segment, sizeof(uint)*width*height));
 
 		segmentTex.filterMode = cudaFilterModePoint;
 		segmentTex.normalized = false;    // access with normalized texture coordinates
@@ -1313,22 +1317,16 @@ extern "C" void load_ppm_to_gpu(const char *file)
 	sprintf(str, "~out_dbl.ppm");
 	printf("width=%d height=%d %s\n", width, height, str);
 	sdkSavePPM4ub(str, h_output, width, height);
-	free(h_output);
-
-	//checkCudaErrors(cudaMemcpy(d_segment, h_output, sizeof(uint4)*width*height, cudaMemcpyHostToDevice));
-
-	//cudaChannelFormatDesc channelDesc = cudaCreateChannelDesc<unsigned char>();
-	//cudaArray* cuArray;
-	//cudaMallocArray(&cuArray, &channelDesc, width, height);
-	//cudaMemcpy2DToArray(cuArray, 0, 0, h_output, width * sizeof(float), width * sizeof(float), height, cudaMemcpyHostToDevice);
 
 	cudaChannelFormatDesc channelDesc2 = cudaCreateChannelDesc<uint>();
 	cudaArray *d_segmentArray;
 	checkCudaErrors(cudaMallocArray(&d_segmentArray, &channelDesc2, width, height));
-	checkCudaErrors(cudaMemcpyToArray(d_segmentArray, 0, 0, d_segment, width*height*sizeof(uint), cudaMemcpyHostToDevice));
+	checkCudaErrors(cudaMemcpyToArray(d_segmentArray, 0, 0, h_output, width*height*sizeof(uint), cudaMemcpyHostToDevice));
 
 	// Bind the array to the texture
-	checkCudaErrors(cudaBindTextureToArray(segmentTex, d_segmentArray, channelDesc2));
+	checkCudaErrors(cudaBindTextureToArray(&segmentTex, d_segmentArray, &channelDesc2));
+
+	free(h_output);
 }
 
 extern "C" void update_volume(void *h_volume, cudaExtent volumeSize)
