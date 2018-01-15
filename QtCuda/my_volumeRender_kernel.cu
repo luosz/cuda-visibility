@@ -970,9 +970,19 @@ d_visibilityLocal(uint *d_output, uint imageW, uint imageH,
 		addVisibility(sum.w - sumw, pos, t- tnear);
 		
 		// calculate visibility for selected region
-		if (fabsf(x - loc.x) <= radius && fabsf(y - loc.y) <= radius)
+		if (d_segment && loc.x >= 0 && loc.y >= 0 && loc.x < imageW && loc.y < imageH)
 		{
-			addVisibility2(sum.w - sumw, pos);
+			if (d_segment[y*imageW + x] == d_segment[loc.y*imageW + loc.x])
+			{
+				addVisibility2(sum.w - sumw, pos);
+			}
+		}
+		else
+		{
+			if (fabsf(x - loc.x) <= radius && fabsf(y - loc.y) <= radius)
+			{
+				addVisibility2(sum.w - sumw, pos);
+			}
 		}
 
 		// exit early if opaque
@@ -1093,8 +1103,7 @@ d_renderVisibility(uint *d_output, uint imageW, uint imageH,
 		{
 			////uint s = tex2D(segmentTex, x / (float)imageW, y / (float)imageH);
 			uint s = d_segment[y*imageW + x];
-			sum = rgbaIntToFloat(s);
-			sum = make_float4(1, 1, 1, 1) - sum;
+			sum = make_float4(1, 1, 1, 1) - rgbaIntToFloat(s);
 		}
 	}
 	else
@@ -1318,6 +1327,7 @@ extern "C" void load_ppm_to_gpu(const char *file)
 	printf("width=%d height=%d %s\n", width, height, str);
 	sdkSavePPM4ub(str, h_output, width, height);
 
+	// create cuda array
 	cudaChannelFormatDesc channelDesc2 = cudaCreateChannelDesc<uint>();
 	cudaArray *d_segmentArray;
 	checkCudaErrors(cudaMallocArray(&d_segmentArray, &channelDesc2, width, height));
