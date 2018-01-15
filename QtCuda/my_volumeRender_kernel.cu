@@ -1096,6 +1096,11 @@ d_renderVisibility(uint *d_output, uint imageW, uint imageH,
 	}
 	sum *= brightness;
 
+	//if (loc.x == x && loc.y == y)
+	//{
+	//	printf("x=%d y=%d loc.x=%d loc.y=%d \n", x, y, loc.x, loc.y);
+	//}
+
 	// draw selected region in inverted colors
 	if (d_segment && loc.x >= 0 && loc.y >= 0 && loc.x < imageW && loc.y < imageH)
 	{
