@@ -140,6 +140,7 @@
     <ClInclude Include="define.cuh" />
     <ClInclude Include="gaussian.h" />
     <ClInclude Include="GeneratedFiles\ui_mainwindow.h" />
+    <ClInclude Include="kmeans.h" />
     <ClInclude Include="tinyxml2.h" />
     <ClInclude Include="util.h" />
   </ItemGroup>
@@ -160,6 +161,9 @@
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="my_volumeRender_kernel.cu" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

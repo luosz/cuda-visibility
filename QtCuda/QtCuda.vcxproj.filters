@@ -117,11 +117,17 @@
     <ClInclude Include="ColorSpace\Conversion.h">
       <Filter>ColorSpace</Filter>
     </ClInclude>
+    <ClInclude Include="kmeans.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="QtCuda.rc" />
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="my_volumeRender_kernel.cu" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
 </Project>

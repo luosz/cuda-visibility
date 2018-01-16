@@ -92,7 +92,9 @@ bool accumulate_visibility = false;
 bool temporal_tf = false;
 bool save_rendering = false;
 bool save_ppm = false;
+bool do_kmeans = false;
 
+extern "C" const char * apply_kmeans_and_save_image(const char *filename, unsigned char *h_output, int k = 32);
 extern "C" int increase_screenshot_id();
 extern "C" void update_screenshots_in_Qt();
 extern "C" void save_rendering_and_display_in_Qt();
@@ -167,7 +169,7 @@ extern "C" float4* get_tf_array()
 	return tf_array;
 }
 
-extern "C" void set_save_ppm(bool value)
+extern "C" void set_save_ppm(bool value = true)
 {
 	save_ppm = value;
 }
@@ -177,6 +179,15 @@ extern "C" bool get_save_ppm()
 	return save_ppm;
 }
 
+extern "C" void set_kmeans(bool value = true)
+{
+	do_kmeans = value;
+}
+
+extern "C" bool get_kmeans()
+{
+	return do_kmeans;
+}
 
 extern "C" float* get_global_visibility_histogram()
 {
@@ -229,7 +240,7 @@ extern "C" bool get_save()
 	return save_histogram;
 }
 
-extern "C" void set_save(bool value)
+extern "C" void set_save(bool value = true)
 {
 	save_histogram = value;
 	//printf("set save %s\n", save_histogram ?"true":"false");
@@ -240,7 +251,7 @@ extern "C" bool get_apply()
 	return apply_blend;
 }
 
-extern "C" void set_apply(bool value)
+extern "C" void set_apply(bool value = true)
 {
 	apply_blend = value;
 	//printf("set apply %s\n", apply_blend ? "true" : "false");
@@ -251,7 +262,7 @@ extern "C" bool get_discard()
 	return discard_table;
 }
 
-extern "C" void set_discard(bool value)
+extern "C" void set_discard(bool value = true)
 {
 	discard_table = value;
 	//printf("set discard %s\n", discard_table ? "true" : "false");
@@ -262,7 +273,7 @@ extern "C" bool get_gaussian()
 	return gaussian_histogram;
 }
 
-extern "C" void set_gaussian(bool value)
+extern "C" void set_gaussian(bool value = true)
 {
 	gaussian_histogram = value;
 	//printf("set gaussian %s\n", gaussian_histogram ? "true" : "false");
@@ -273,7 +284,7 @@ extern "C" bool get_backup()
 	return backup_table;
 }
 
-extern "C" void set_backup(bool value)
+extern "C" void set_backup(bool value = true)
 {
 	backup_table = value;
 	//printf("set backup %s\n", backup_table ? "true" : "false");
@@ -284,7 +295,7 @@ extern "C" bool get_accumulate_visibility()
 	return accumulate_visibility;
 }
 
-extern "C" void set_accumulate_visibility(bool value)
+extern "C" void set_accumulate_visibility(bool value = true)
 {
 	accumulate_visibility = value;
 }
@@ -294,7 +305,7 @@ extern "C" bool get_temporal_tf()
 	return temporal_tf;
 }
 
-extern "C" void set_temporal_tf(bool value)
+extern "C" void set_temporal_tf(bool value = true)
 {
 	temporal_tf = value;
 }
@@ -304,7 +315,7 @@ extern "C" bool get_save_rendering()
 	return save_rendering;
 }
 
-extern "C" void set_save_rendering(bool value)
+extern "C" void set_save_rendering(bool value = true)
 {
 	save_rendering = value;
 	//printf("set save_rendering %s\n", save_rendering ? "true" : "false");
@@ -1104,7 +1115,7 @@ d_renderVisibility(uint *d_output, uint imageW, uint imageH,
 	// draw selected region in inverted colors
 	if (d_segment && loc.x >= 0 && loc.y >= 0 && loc.x < imageW && loc.y < imageH)
 	{
-		if (d_segment[y*imageW + x] == d_segment[loc.y*imageW + loc.x])
+		if (d_segment[y*imageW + x] == d_segment[loc.y*imageW + loc.x] && d_segment[y*imageW + x] != d_segment[0])
 		{
 			////uint s = tex2D(segmentTex, x / (float)imageW, y / (float)imageH);
 			uint s = d_segment[y*imageW + x];
@@ -1612,6 +1623,23 @@ void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, u
 		free(h_output);
 		update_screenshots_in_Qt();
 		load_ppm_to_gpu(str);
+	}
+
+	if (get_kmeans())
+	{
+		set_kmeans(false);
+		unsigned char *h_output = (unsigned char *)malloc(imageW*imageH * 4);
+		checkCudaErrors(cudaMemcpy(h_output, d_output, imageW*imageH * 4, cudaMemcpyDeviceToHost));
+		char str[_MAX_PATH];
+		sprintf(str, "~screenshot_%d.ppm", increase_screenshot_id());
+		printf("imageW=%d imageH=%d %s \n", imageW, imageH, str);
+		sdkSavePPM4ub(str, h_output, imageW, imageH);
+		update_screenshots_in_Qt();
+		cudaDeviceSynchronize();
+		const char *segmentation = apply_kmeans_and_save_image(str, h_output);
+		printf("%s \n", segmentation);
+		load_ppm_to_gpu(segmentation);
+		free(h_output);
 	}
 
 	if (get_save())

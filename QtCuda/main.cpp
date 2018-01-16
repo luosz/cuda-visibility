@@ -57,6 +57,7 @@
 #include <helper_math.h>
 
 #include <arrayfire.h>
+#include <af/util.h>
 
 #include <iostream>
 #include <sstream>
@@ -66,11 +67,13 @@
 #include <cmath>
 #include <ctime>
 #include <cctype>
+#include <cstring>
 //#include <AntTweakBar.h>
 #include <FreeImage.h>
 #include "tinyxml2.h"
 #include "util.h"
 #include "def.h"
+#include "kmeans.h"
 
 // include cereal for serialization
 #include "cereal/archives/xml.hpp"
@@ -147,6 +150,8 @@ const size_t sizes[] = {
 432, 432, 432 };
 cudaExtent volumeSize = make_cudaExtent(sizes[0+data_index*3], sizes[1+data_index*3], sizes[2+data_index*3]);
 typedef unsigned char VolumeType;
+
+char filename_buffer[_MAX_PATH] = "";
 
 std::vector<float> intensity_list;
 std::vector<float4> rgba_list;
@@ -238,9 +243,20 @@ extern "C" int increase_screenshot_id()
 
 MainWindow *qt_window = NULL;
 
-extern "C" void reset_temporal_visibility_histogram();
 extern "C" void set_temporal_tf(bool value);
+extern "C" void set_kmeans(bool value);
+//extern "C" bool get_apply();
+extern "C" void set_apply(bool value);
+//extern "C" bool get_save();
+extern "C" void set_save(bool value);
+//extern "C" bool get_discard();
+extern "C" void set_discard(bool value);
+//extern "C" bool get_gaussian();
+extern "C" void set_gaussian(bool value);
+//extern "C" bool get_backup();
+extern "C" void set_backup(bool value);
 
+extern "C" void reset_temporal_visibility_histogram();
 extern "C" void update_volume(void *h_volume, cudaExtent volumeSize);
 extern "C" void bind_tf_texture();
 extern "C" VolumeType * get_raw_volume();
@@ -254,7 +270,7 @@ extern "C" void gaussian(float *lch_volume, cudaExtent volumeSize, float *out);
 extern "C" void compute_saliency();
 extern "C" void compute_vws();
 extern "C" void compute_saliency_once();
-extern "C" bool get_accumulate_visibility();
+//extern "C" bool get_accumulate_visibility();
 extern "C" void set_accumulate_visibility(bool value);
 
 typedef float(*Pointer)[4];
@@ -266,16 +282,6 @@ extern "C" int get_region_size();
 extern "C" float4* get_tf_array();
 
 extern "C" int get_bin_count();
-extern "C" bool get_apply();
-extern "C" void set_apply(bool value);
-extern "C" bool get_save();
-extern "C" void set_save(bool value);
-extern "C" bool get_discard();
-extern "C" void set_discard(bool value);
-extern "C" bool get_gaussian();
-extern "C" void set_gaussian(bool value);
-extern "C" bool get_backup();
-extern "C" void set_backup(bool value);
 extern "C" void set_volume_file(const char *file, int n);
 extern "C" void backup_tf();
 extern "C" void restore_tf();
@@ -1637,6 +1643,30 @@ extern "C" void load_ppm_to_gpu(const char *file);
 //	std::cout << "sdkLoadPPM4ub " << file << (ans ? " succeeded." : " failed.") << std::endl;
 //}
 
+extern "C" const char * apply_kmeans_and_save_image(const char *filename, unsigned char *h_output, int k = 32)
+{
+	af::array img = af::loadImage(filename, true) / 255; // [0-255]
+	int w = img.dims(0), h = img.dims(1), c = img.dims(2);
+	printf("w=%d\th=%d\tc=%d\n", w, h, c);
+	af::array h_A(w*h, h_output, afHost);
+	h_A /= 255;
+	af::array vec = af::moddims(img, w * h, 1, c);
+	af::array means_full, clusters_full;
+	af::timer start1 = af::timer::start();
+	kmeans(means_full, clusters_full, vec, k);
+	auto t1 = af::timer::stop(start1);
+	printf("K-means timing (seconds) \t k=%d time=%g \n", k, t1);
+	af::array out_full = af::moddims(means_full(af::span, clusters_full, af::span), img.dims());
+	sprintf(filename_buffer, "~%s", filename);
+	af::saveImage(filename_buffer, out_full);
+	char str[_MAX_PATH];
+	sprintf(str, "~%s", filename_buffer);
+	af::saveImage(str, h_A);
+	af::eval(out_full);
+	af::sync();
+	return filename_buffer;
+}
+
 void keyboard(unsigned char key, int x, int y)
 {
 	//if (TwEventKeyboardGLUT(key, x, y))
@@ -1807,7 +1837,8 @@ void keyboard(unsigned char key, int x, int y)
 			break;
 
 		case 'k':
-			load_ppm_to_gpu("../kmeans/~out_dbl.ppm");
+			//load_ppm_to_gpu("../kmeans/~out_dbl.ppm");
+			set_kmeans(true);
 			break;
 
 		default:
