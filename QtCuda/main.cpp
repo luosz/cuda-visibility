@@ -1648,8 +1648,8 @@ extern "C" const char * apply_kmeans_and_save_image(const char *filename, unsign
 	af::array img = af::loadImage(filename, true) / 255; // [0-255]
 	int w = img.dims(0), h = img.dims(1), c = img.dims(2);
 	printf("w=%d\th=%d\tc=%d\n", w, h, c);
-	af::array h_A(w*h, h_output, afHost);
-	h_A /= 255;
+	af::array h_A(w*h*c, h_output, afHost);
+	h_A = af::moddims(h_A / 255, w, h, c);
 	af::array vec = af::moddims(img, w * h, 1, c);
 	af::array means_full, clusters_full;
 	af::timer start1 = af::timer::start();
