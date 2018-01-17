@@ -79,7 +79,7 @@ int kmeans_demo(int k, bool console)
 {
 	//printf("** ArrayFire K-Means Demo (k = %d) **\n\n", k);
 	//array img = loadImage(ASSETS_DIR"/examples/images/vegetable-woman.jpg", true) / 255; // [0-255]
-	char str[_MAX_PATH], filename[_MAX_PATH] = "~screenshot_3.ppm";
+	char str[_MAX_PATH], filename[_MAX_PATH] = "~screenshot_0.ppm";
 	sprintf(str, "../QtCuda/%s", filename);
 	array img = loadImage(str, true) / 255; // [0-255]
 	int w = img.dims(0), h = img.dims(1), c = img.dims(2);
@@ -115,18 +115,23 @@ int kmeans_demo(int k, bool console)
 		//printf("Hit enter to finish\n");
 		//getchar();
 
+		af::eval(out_full);
+		af::eval(out_half);
+		af::eval(out_dbl);
+		af::sync();
+
 		sprintf(str, "~full_%s", filename);
-		saveImage(str, out_full);
+		saveImage(str, out_full * 255);
 		sprintf(str, "~half_%s", filename);
-		saveImage(str, out_half);
+		saveImage(str, out_half * 255);
 		sprintf(str, "~dbl_%s", filename);
-		saveImage(str, out_dbl);
+		saveImage(str, out_dbl * 255);
 		auto dot = strrchr(str, '.');
 		if (dot)
 		{
 			sprintf(dot, ".png");
 		}
-		saveImage(str, out_dbl);
+		saveImage(str, out_dbl * 255);
 
 		af::Window wnd("K-Means Demo");
 		wnd.setPos(240, 320);

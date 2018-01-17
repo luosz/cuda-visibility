@@ -1664,7 +1664,6 @@ extern "C" const char * apply_kmeans_and_save_image(const char *filename, unsign
 	printf("K-means timing (seconds) \t k=%d time=%g \n", k, t1);
 	af::array out_full = af::moddims(means_full(af::span, clusters_full, af::span), img.dims());
 	//sprintf(filename_buffer, "~%s", filename);
-	af::saveImage(filename_buffer, out_full);
 	//char str[_MAX_PATH];
 	//sprintf(str, "~host_%s", filename);
 	//af::saveImage(str, h_A);
@@ -1672,6 +1671,7 @@ extern "C" const char * apply_kmeans_and_save_image(const char *filename, unsign
 	//af::saveImage(str, d_A);
 	af::eval(out_full);
 	af::sync();
+	af::saveImage(filename_buffer, out_full);
 	return filename_buffer;
 }
 
