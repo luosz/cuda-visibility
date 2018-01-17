@@ -243,6 +243,9 @@ extern "C" int increase_screenshot_id()
 
 MainWindow *qt_window = NULL;
 
+extern bool get_display_selection();
+extern void set_display_selection(bool value);
+
 extern "C" void set_temporal_tf(bool value);
 extern "C" void set_kmeans(bool value);
 //extern "C" bool get_apply();
@@ -1643,13 +1646,16 @@ extern "C" void load_ppm_to_gpu(const char *file);
 //	std::cout << "sdkLoadPPM4ub " << file << (ans ? " succeeded." : " failed.") << std::endl;
 //}
 
-extern "C" const char * apply_kmeans_and_save_image(const char *filename, unsigned char *h_output, int k = 32)
+extern "C" const char * apply_kmeans_and_save_image(const char *filename, unsigned char *h_output, uint *d_output, int k = 32)
 {
 	af::array img = af::loadImage(filename, true) / 255; // [0-255]
 	int w = img.dims(0), h = img.dims(1), c = img.dims(2);
 	printf("w=%d\th=%d\tc=%d\n", w, h, c);
-	af::array h_A(w*h*c, h_output, afHost);
-	h_A = af::moddims(h_A / 255, w, h, c);
+	//int color_components = c;
+	//af::array h_A(w*h*color_components, h_output, afHost);
+	//h_A = af::moddims(h_A / 255, w, h, color_components);
+	//af::array d_A(w*h*color_components, d_output, afDevice);
+	//d_A = af::moddims(d_A / 255, w, h, color_components);
 	af::array vec = af::moddims(img, w * h, 1, c);
 	af::array means_full, clusters_full;
 	af::timer start1 = af::timer::start();
@@ -1657,11 +1663,13 @@ extern "C" const char * apply_kmeans_and_save_image(const char *filename, unsign
 	auto t1 = af::timer::stop(start1);
 	printf("K-means timing (seconds) \t k=%d time=%g \n", k, t1);
 	af::array out_full = af::moddims(means_full(af::span, clusters_full, af::span), img.dims());
-	sprintf(filename_buffer, "~%s", filename);
+	//sprintf(filename_buffer, "~%s", filename);
 	af::saveImage(filename_buffer, out_full);
-	char str[_MAX_PATH];
-	sprintf(str, "~%s", filename_buffer);
-	af::saveImage(str, h_A);
+	//char str[_MAX_PATH];
+	//sprintf(str, "~host_%s", filename);
+	//af::saveImage(str, h_A);
+	//sprintf(str, "~device_%s", filename);
+	//af::saveImage(str, d_A);
 	af::eval(out_full);
 	af::sync();
 	return filename_buffer;
@@ -1839,6 +1847,14 @@ void keyboard(unsigned char key, int x, int y)
 		case 'k':
 			//load_ppm_to_gpu("../kmeans/~out_dbl.ppm");
 			set_kmeans(true);
+			break;
+
+		case 'h':
+			set_display_selection(false);
+			break;
+
+		case 'y':
+			set_display_selection(true);
 			break;
 
 		default:

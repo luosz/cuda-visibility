@@ -75,6 +75,7 @@ __device__ __managed__ unsigned char *featureVolume = NULL;
 __device__ __managed__ int feature_number = 0;
 __device__ __managed__ float feature_array[BIN_COUNT] = { 0 };
 __device__ __managed__ float feature_vws_array[BIN_COUNT] = { 0 };
+__device__ __managed__ bool display_selection = true;
 
 // GUI settings
 //float g_SelectedColor[] = { 1.f,1.f,0.f,1.f };
@@ -94,12 +95,23 @@ bool save_rendering = false;
 bool save_ppm = false;
 bool do_kmeans = false;
 
-extern "C" const char * apply_kmeans_and_save_image(const char *filename, unsigned char *h_output, int k = 32);
+extern "C" const char * apply_kmeans_and_save_image(const char *filename, unsigned char *h_output, uint *d_output, int k = 32);
+
 extern "C" int increase_screenshot_id();
 extern "C" void update_screenshots_in_Qt();
 extern "C" void save_rendering_and_display_in_Qt();
 extern "C" float4 rgb_to_lch(float4 rgba);
 extern "C" int iDivUp(int a, int b);
+
+__device__ bool get_display_selection()
+{
+	return display_selection;
+}
+
+extern void set_display_selection(bool value)
+{
+	display_selection = value;
+}
 
 extern "C" VolumeType * get_raw_volume()
 {
@@ -1112,23 +1124,26 @@ d_renderVisibility(uint *d_output, uint imageW, uint imageH,
 	//	printf("x=%d y=%d loc.x=%d loc.y=%d \n", x, y, loc.x, loc.y);
 	//}
 
-	// draw selected region in inverted colors
-	if (d_segment && loc.x >= 0 && loc.y >= 0 && loc.x < imageW && loc.y < imageH)
+	if (get_display_selection())
 	{
-		if (d_segment[y*imageW + x] == d_segment[loc.y*imageW + loc.x] && d_segment[y*imageW + x] != d_segment[0])
+		// draw selected region in inverted colors
+		if (d_segment && loc.x >= 0 && loc.y >= 0 && loc.x < imageW && loc.y < imageH)
 		{
-			////uint s = tex2D(segmentTex, x / (float)imageW, y / (float)imageH);
-			uint s = d_segment[y*imageW + x];
-			sum = make_float4(1, 1, 1, 1) - rgbaIntToFloat(s);
+			if (d_segment[y*imageW + x] == d_segment[loc.y*imageW + loc.x] && d_segment[y*imageW + x] != d_segment[0])
+			{
+				////uint s = tex2D(segmentTex, x / (float)imageW, y / (float)imageH);
+				uint s = d_segment[y*imageW + x];
+				sum = make_float4(1, 1, 1, 1) - rgbaIntToFloat(s);
+			}
 		}
-	}
-	else
-	{
-		if (fabsf(x - loc.x) <= radius && fabsf(y - loc.y) <= radius)
+		else
 		{
-			auto w = sum.w;
-			sum = make_float4(1, 1, 1, 1) - sum;
-			sum.w = w;
+			if (fabsf(x - loc.x) <= radius && fabsf(y - loc.y) <= radius)
+			{
+				auto w = sum.w;
+				sum = make_float4(1, 1, 1, 1) - sum;
+				sum.w = w;
+			}
 		}
 	}
 
@@ -1319,7 +1334,7 @@ extern "C" void load_ppm_to_gpu(const char *file)
 	unsigned int h = get_height();
 	size_t width = (size_t)w;
 	size_t height = (size_t)h;
-	printf("%d %d %d %d\n", width, height, width*height * 4, sizeof(uint)*width*height);
+	//printf("%d %d %d %d\n", width, height, width*height * 4, sizeof(uint)*width*height);
 	unsigned char *h_output = (unsigned char *)malloc(width*height * 4);
 	//unsigned char *h_output = (unsigned char *)malloc(sizeof(uint4)*width*height);
 	auto ans = sdkLoadPPM4ub(file, &h_output, &w, &h);
@@ -1327,8 +1342,7 @@ extern "C" void load_ppm_to_gpu(const char *file)
 
 	if (!d_segment)
 	{
-		printf("Initialize d_segment\n");
-		printf("%d %d\n", width, height);
+		printf("Initialize d_segment %d %d\n", width, height);
 		checkCudaErrors(cudaMallocManaged(&d_segment, sizeof(uint)*width*height));
 
 		segmentTex.filterMode = cudaFilterModePoint;
@@ -1340,7 +1354,7 @@ extern "C" void load_ppm_to_gpu(const char *file)
 	checkCudaErrors(cudaMemcpy(h_output, d_segment, sizeof(uint)*width*height, cudaMemcpyDeviceToHost));
 	char str[_MAX_PATH];
 	sprintf(str, "~cudaMemcpyDeviceToHost.ppm");
-	printf("width=%d height=%d %s\n", width, height, str);
+	//printf("width=%d height=%d %s\n", width, height, str);
 	sdkSavePPM4ub(str, h_output, width, height);
 
 	// create cuda array
@@ -1636,8 +1650,8 @@ void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, u
 		sdkSavePPM4ub(str, h_output, imageW, imageH);
 		update_screenshots_in_Qt();
 		cudaDeviceSynchronize();
-		const char *segmentation = apply_kmeans_and_save_image(str, h_output);
-		printf("%s \n", segmentation);
+		const char *segmentation = apply_kmeans_and_save_image(str, h_output, d_output);
+		//printf("%s \n", segmentation);
 		load_ppm_to_gpu(segmentation);
 		free(h_output);
 	}
