@@ -1339,7 +1339,7 @@ extern "C" void load_ppm_to_gpu(const char *file)
 	checkCudaErrors(cudaMemcpy(d_segment, h_output, sizeof(uint)*width*height, cudaMemcpyHostToDevice));
 	checkCudaErrors(cudaMemcpy(h_output, d_segment, sizeof(uint)*width*height, cudaMemcpyDeviceToHost));
 	char str[_MAX_PATH];
-	sprintf(str, "~out_dbl.ppm");
+	sprintf(str, "~cudaMemcpyDeviceToHost.ppm");
 	printf("width=%d height=%d %s\n", width, height, str);
 	sdkSavePPM4ub(str, h_output, width, height);
 
