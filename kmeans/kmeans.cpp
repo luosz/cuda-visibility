@@ -73,17 +73,29 @@ void kmeans(array &means, array &clusters, const array in, int k, int iter = 100
 	}
 	clusters = prev_clusters;
 }
+
+inline void save_png(char *str, af::array out_dbl)
+{
+	auto dot = strrchr(str, '.');
+	if (dot)
+	{
+		sprintf(dot, ".png");
+	}
+	saveImage(str, out_dbl);
+}
+
 // K-Means image recoloring.
 // Shifts the hues of an image to the k mean hues.
-int kmeans_demo(int k, bool console)
+int kmeans_demo(int k, bool console, const char *filename)
 {
 	//printf("** ArrayFire K-Means Demo (k = %d) **\n\n", k);
 	//array img = loadImage(ASSETS_DIR"/examples/images/vegetable-woman.jpg", true) / 255; // [0-255]
-	char str[_MAX_PATH], filename[_MAX_PATH] = "~screenshot_0.ppm";
+	char str[_MAX_PATH];
+	//char filename[_MAX_PATH] = "~screenshot_0.ppm";
 	sprintf(str, "../QtCuda/%s", filename);
 	array img = loadImage(str, true) / 255; // [0-255]
 	int w = img.dims(0), h = img.dims(1), c = img.dims(2);
-	std::cout << "w=" << w << "\th=" << h << "\tc=" << c << std::endl;
+	std::cout << filename << "\tw=" << w << "\th=" << h << "\tc=" << c << std::endl;
 	array vec = moddims(img, w * h, 1, c);
 	array means_full, clusters_full;
 	timer start1 = timer::start();
@@ -97,7 +109,7 @@ int kmeans_demo(int k, bool console)
 	timer start3 = timer::start();
 	kmeans(means_dbl, clusters_dbl, vec, k * 2);
 	auto t3 = timer::stop(start3);
-	printf("Timing (seconds) \t k=%d time=%g \t k=%d time=%g \t k=%d time=%g", k, t1, k / 2, t2, k * 2, t3);
+	printf("Timing (seconds) \t k=%d time=%g \t k=%d time=%g \t k=%d time=%g \n", k, t1, k / 2, t2, k * 2, t3);
 	if (!console) {
 #if 1
 		array out_full = moddims(means_full(span, clusters_full, span), img.dims());
@@ -115,28 +127,25 @@ int kmeans_demo(int k, bool console)
 		//printf("Hit enter to finish\n");
 		//getchar();
 
-		af::eval(out_full);
-		af::eval(out_half);
-		af::eval(out_dbl);
-		af::sync();
+		//af::eval(out_full);
+		//af::eval(out_half);
+		//af::eval(out_dbl);
+		//af::sync();
 
 		sprintf(str, "~full_%s", filename);
-		saveImage(str, out_full * 255);
+		saveImage(str, out_full);
+		//save_png(str, out_full);
 		sprintf(str, "~half_%s", filename);
-		saveImage(str, out_half * 255);
+		saveImage(str, out_half);
+		//save_png(str, out_half);
 		sprintf(str, "~dbl_%s", filename);
-		saveImage(str, out_dbl * 255);
-		auto dot = strrchr(str, '.');
-		if (dot)
-		{
-			sprintf(dot, ".png");
-		}
-		saveImage(str, out_dbl * 255);
+		saveImage(str, out_dbl);
+		//save_png(str, out_dbl);
 
 		af::Window wnd("K-Means Demo");
 		wnd.setPos(240, 320);
 		wnd.grid(1, 4);
-		while (!wnd.close())
+		//while (!wnd.close())
 		{
 			wnd(0, 0).image(img, "input");
 			wnd(0, 1).image(out_full, str_full);
@@ -160,13 +169,20 @@ int kmeans_demo(int k, bool console)
 }
 int main(int argc, char** argv)
 {
+	char str[_MAX_PATH];
+
 	int device = argc > 1 ? atoi(argv[1]) : 0;
 	bool console = argc > 2 ? argv[2][0] == '-' : false;
 	int k = argc > 3 ? atoi(argv[3]) : 16;
 	try {
 		af::setDevice(device);
 		af::info();
-		return kmeans_demo(k, console);
+		//return kmeans_demo(k, console);
+		for (int i = 0; i <= 3; i++)
+		{
+			sprintf(str, "~screenshot_%d.ppm", i);
+			kmeans_demo(k, console, str);
+		}
 	}
 	catch (af::exception &ae) {
 		std::cerr << ae.what() << std::endl;
