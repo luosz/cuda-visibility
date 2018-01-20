@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros">
+    <OpenCV>C:\opencv\build</OpenCV>
+  </PropertyGroup>
+  <PropertyGroup>
+    <IncludePath>$(OpenCV)\include;$(OpenCV)\include\opencv;$(OpenCV)\include\opencv2;$(IncludePath)</IncludePath>
+    <LibraryPath>$(OpenCV)\x64\vc15\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <Link>
+      <AdditionalDependencies>opencv_world340d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PreBuildEvent>
+      <Command>echo OpenCV.props
+echo lib_$(Configuration)
+xcopy /f /y "$(OpenCV)\x64\vc15\bin\*.dll" "$(OutDir)"
+%(Command)</Command>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <BuildMacro Include="OpenCV">
+      <Value>$(OpenCV)</Value>
+    </BuildMacro>
+  </ItemGroup>
+</Project>
