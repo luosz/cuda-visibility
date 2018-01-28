@@ -19,6 +19,11 @@ MainWindow::MainWindow(QWidget *parent)
 	ui.verticalLayout->addWidget(&chartView_relative);
 	ui.verticalLayout->addWidget(&chartView_global);
 	ui.verticalLayout->addWidget(&chartView_local);
+
+	ui.verticalLayout_3->addWidget(&chartView_feature1);
+	ui.verticalLayout_3->addWidget(&chartView_feature2);
+	ui.verticalLayout_3->addWidget(&chartView_feature3);
+	ui.verticalLayout_3->addWidget(&chartView_all_features);
 	show_transfer_function_later(1000);
 	update_screenshots();
 }

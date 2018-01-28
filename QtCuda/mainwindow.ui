@@ -210,13 +210,13 @@
           <attribute name="title">
            <string>Histograms</string>
           </attribute>
-          <layout class="QVBoxLayout" name="verticalLayout"/>
+          <layout class="QVBoxLayout" name="verticalLayout" stretch=""/>
          </widget>
          <widget class="QWidget" name="tab">
           <attribute name="title">
            <string>Renderings</string>
           </attribute>
-          <layout class="QVBoxLayout" name="verticalLayout_2">
+          <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0">
            <item>
             <layout class="QFormLayout" name="formLayout">
              <item row="0" column="0">
@@ -284,6 +284,20 @@
            </item>
           </layout>
          </widget>
+         <widget class="QWidget" name="tab_2">
+          <attribute name="title">
+           <string>Transfer Functions</string>
+          </attribute>
+          <layout class="QVBoxLayout" name="verticalLayout_3">
+           <item>
+            <widget class="QPushButton" name="pushButton_7">
+             <property name="text">
+              <string>PushButton</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
         </widget>
        </item>
       </layout>
@@ -297,7 +311,7 @@
      <x>0</x>
      <y>0</y>
      <width>768</width>
-     <height>17</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">

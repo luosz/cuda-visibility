@@ -270,4 +270,9 @@ private:
 	QChartView chartView_relative;
 	QChartView chartView_global;
 	QChartView chartView_local;
+
+	QChartView chartView_feature1;
+	QChartView chartView_feature2;
+	QChartView chartView_feature3;
+	QChartView chartView_all_features;
 };

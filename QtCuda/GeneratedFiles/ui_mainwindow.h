@@ -75,6 +75,9 @@ public:
     QLabel *label_2;
     QLabel *label_3;
     QLabel *label_4;
+    QWidget *tab_2;
+    QVBoxLayout *verticalLayout_3;
+    QPushButton *pushButton_7;
     QMenuBar *menuBar;
     QMenu *menu_File;
     QMenu *menu_Help;
@@ -289,6 +292,18 @@ public:
         verticalLayout_2->addLayout(gridLayout_6);
 
         tabWidget_2->addTab(tab, QString());
+        tab_2 = new QWidget();
+        tab_2->setObjectName(QStringLiteral("tab_2"));
+        verticalLayout_3 = new QVBoxLayout(tab_2);
+        verticalLayout_3->setSpacing(6);
+        verticalLayout_3->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_3->setObjectName(QStringLiteral("verticalLayout_3"));
+        pushButton_7 = new QPushButton(tab_2);
+        pushButton_7->setObjectName(QStringLiteral("pushButton_7"));
+
+        verticalLayout_3->addWidget(pushButton_7);
+
+        tabWidget_2->addTab(tab_2, QString());
 
         gridLayout->addWidget(tabWidget_2, 1, 0, 1, 1);
 
@@ -298,7 +313,7 @@ public:
         MainWindowClass->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindowClass);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 768, 17));
+        menuBar->setGeometry(QRect(0, 0, 768, 26));
         menu_File = new QMenu(menuBar);
         menu_File->setObjectName(QStringLiteral("menu_File"));
         menu_Help = new QMenu(menuBar);
@@ -360,6 +375,8 @@ public:
         label_3->setText(QString());
         label_4->setText(QString());
         tabWidget_2->setTabText(tabWidget_2->indexOf(tab), QApplication::translate("MainWindowClass", "Renderings", Q_NULLPTR));
+        pushButton_7->setText(QApplication::translate("MainWindowClass", "PushButton", Q_NULLPTR));
+        tabWidget_2->setTabText(tabWidget_2->indexOf(tab_2), QApplication::translate("MainWindowClass", "Transfer Functions", Q_NULLPTR));
         menu_File->setTitle(QApplication::translate("MainWindowClass", "&File", Q_NULLPTR));
         menu_Help->setTitle(QApplication::translate("MainWindowClass", "&Help", Q_NULLPTR));
     } // retranslateUi
