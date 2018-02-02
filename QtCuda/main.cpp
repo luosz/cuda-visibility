@@ -1651,11 +1651,7 @@ extern "C" const char * apply_kmeans_and_save_image(const char *filename, unsign
 	af::array img = af::loadImage(filename, true) / 255; // [0-255]
 	int w = img.dims(0), h = img.dims(1), c = img.dims(2);
 	printf("w=%d\th=%d\tc=%d\n", w, h, c);
-	//int color_components = c;
-	//af::array h_A(w*h*color_components, h_output, afHost);
-	//h_A = af::moddims(h_A / 255, w, h, color_components);
-	//af::array d_A(w*h*color_components, d_output, afDevice);
-	//d_A = af::moddims(d_A / 255, w, h, color_components);
+
 	af::array vec = af::moddims(img, w * h, 1, c);
 	af::array means_full, clusters_full;
 	af::timer start1 = af::timer::start();
@@ -1663,7 +1659,15 @@ extern "C" const char * apply_kmeans_and_save_image(const char *filename, unsign
 	auto t1 = af::timer::stop(start1);
 	printf("K-means timing (seconds) \t k=%d time=%g \n", k, t1);
 	af::array out_full = af::moddims(means_full(af::span, clusters_full, af::span), img.dims());
-	//sprintf(filename_buffer, "~%s", filename);
+	sprintf(filename_buffer, "~%s", filename);
+	af::saveImage(filename_buffer, out_full);
+	printf("segmentation saved to %s\n", filename_buffer);
+
+	//int color_components = c;
+	//af::array h_A(w*h*color_components, h_output, afHost);
+	//h_A = af::moddims(h_A / 255, w, h, color_components);
+	//af::array d_A(w*h*color_components, d_output, afDevice);
+	//d_A = af::moddims(d_A / 255, w, h, color_components);
 	//char str[_MAX_PATH];
 	//sprintf(str, "~host_%s", filename);
 	//af::saveImage(str, h_A);
@@ -1671,7 +1675,7 @@ extern "C" const char * apply_kmeans_and_save_image(const char *filename, unsign
 	//af::saveImage(str, d_A);
 	//af::eval(out_full);
 	//af::sync();
-	af::saveImage(filename_buffer, out_full);
+
 	return filename_buffer;
 }
 
