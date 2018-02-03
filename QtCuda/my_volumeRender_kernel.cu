@@ -1637,7 +1637,7 @@ void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, u
 		// save screenshot to image
 		sdkSavePPM4ub(str, h_output, imageW, imageH);
 		update_screenshots_in_Qt();
-		load_ppm_to_gpu(str);
+		//load_ppm_to_gpu(str);
 		free(h_output);
 	}
 
