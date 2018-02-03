@@ -265,7 +265,6 @@ private:
 	bool *apply_time_varying_tf_reset = NULL;
 	bool *apply_time_varying_vws_optimization = NULL;
 	bool *calc_temporal_visibility = NULL;
-	//QGraphicsScene scene;
 	QChartView chartView_tf;
 	QChartView chartView_relative;
 	QChartView chartView_global;

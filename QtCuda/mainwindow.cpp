@@ -14,7 +14,6 @@ MainWindow::MainWindow(QWidget *parent)
 	this->move(this->pos() - QPoint(200, 200));
 	ui.setupUi(this);
 	update_color(QColor::fromRgbF(D_RGBA[0], D_RGBA[1], D_RGBA[2], D_RGBA[3]));
-	//ui.graphicsView->setScene(&scene);
 	ui.verticalLayout->addWidget(&chartView_tf);
 	ui.verticalLayout->addWidget(&chartView_relative);
 	ui.verticalLayout->addWidget(&chartView_global);
