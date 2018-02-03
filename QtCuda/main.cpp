@@ -132,7 +132,7 @@ const char *sSDKsample = "CUDA 3D Volume Render";
 //const char *tfs[] = { "nucleon_naive_proportional_2.tfi","vortex_naive_proportional_2.tfi","CT-Knee_spectrum_6.tfi","E_1324_Rainbow6_even_2.tfi" };
 const char *tfs[] = { "nucleon_naive_proportional.tfi","vortex_naive_proportional.tfi","CT-Knee_spectrum_6.tfi","Rainbow3_even.tfi" };
 const char *volumes[] = { "nucleon.raw","vorts1.raw","CT-Knee.raw","E_1324.raw" };
-const int data_index = 3;
+const int data_index = 2;
 const char *tfFile = tfs[data_index];
 const char *volumeFilename = volumes[data_index];
 char volumeFilename_buffer[_MAX_PATH];
@@ -2000,10 +2000,10 @@ extern "C" int iDivUp(int a, int b)
 
 void reshape(int w, int h)
 {
-    width = w;
-    height = h;
-	printf("reshape %d %d \n", width, height);
-    initPixelBuffer();
+	//width = w;
+	//height = h;
+	printf("reshape: pixel buffer size %d %d \t window size %d %d \n", width, height, w, h);
+	initPixelBuffer();
 
     // calculate new grid size
     gridSize = dim3(iDivUp(width, blockSize.x), iDivUp(height, blockSize.y));
