@@ -1129,11 +1129,12 @@ d_renderVisibility(uint *d_output, uint imageW, uint imageH,
 		// draw selected region in inverted colors
 		if (d_segment && loc.x >= 0 && loc.y >= 0 && loc.x < imageW && loc.y < imageH)
 		{
-			if (d_segment[y*imageW + x] == d_segment[loc.y*imageW + loc.x] && d_segment[y*imageW + x] != d_segment[0])
+			//if (d_segment[y*imageW + x] == d_segment[loc.y*imageW + loc.x] && d_segment[y*imageW + x] != d_segment[0])
 			{
 				////uint s = tex2D(segmentTex, x / (float)imageW, y / (float)imageH);
 				uint s = d_segment[y*imageW + x];
 				sum = make_float4(1, 1, 1, 1) - rgbaIntToFloat(s);
+				sum = rgbaIntToFloat(s);
 			}
 		}
 		else
@@ -1500,7 +1501,7 @@ void initCuda(void *h_volume, cudaExtent volumeSize)
     transferTex.normalized = true;    // access with normalized texture coordinates
     transferTex.addressMode[0] = cudaAddressModeClamp;   // wrap texture coordinates
 
-    // Bind the array to the texture
+    // bind the array to the texture
 	checkCudaErrors(cudaBindTextureToArray(transferTex, d_transferFuncArray, channelDesc2));
 }
 
@@ -1633,6 +1634,7 @@ void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, u
 		char str[_MAX_PATH];
 		sprintf(str, "~screenshot_%d.ppm", increase_screenshot_id());
 		printf("imageW=%d imageH=%d %s\n", imageW, imageH, str);
+		// save screenshot to image
 		sdkSavePPM4ub(str, h_output, imageW, imageH);
 		update_screenshots_in_Qt();
 		load_ppm_to_gpu(str);
@@ -1647,11 +1649,11 @@ void render_kernel(dim3 gridSize, dim3 blockSize, uint *d_output, uint imageW, u
 		char str[_MAX_PATH];
 		sprintf(str, "~screenshot_%d.ppm", increase_screenshot_id());
 		printf("imageW=%d imageH=%d %s \n", imageW, imageH, str);
+		// save screenshot to image
 		sdkSavePPM4ub(str, h_output, imageW, imageH);
 		update_screenshots_in_Qt();
-		cudaDeviceSynchronize();
+		// load the screenshot and save the k-means segmentation to another image
 		const char *segmentation = apply_kmeans_and_save_image(str, h_output, d_output);
-		//printf("%s \n", segmentation);
 		load_ppm_to_gpu(segmentation);
 		free(h_output);
 	}
