@@ -1886,8 +1886,8 @@ inline int2 convert_mouse_position(int x, int y)
 	int h = glutGet(GLUT_WINDOW_HEIGHT);
 	int n = get_region_size();
 	int2 ans;
-	ans.x = x;
-	ans.y = h - y;
+	ans.x = x - n / 2;
+	ans.y = h - y - n / 2;
 	return ans;
 }
 
