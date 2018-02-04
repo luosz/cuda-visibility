@@ -1880,14 +1880,11 @@ inline int2 convert_mouse_position(int x, int y)
 	// put the tip of mouse cursor at the center of the selected region
 	//loc.y = h - y - n * 4 / 3;
 
-	//loc2.x = x - n / 2;
-	//loc2.y = height - y - n * 4 / 3;
-
 	int h = glutGet(GLUT_WINDOW_HEIGHT);
 	int n = get_region_size();
 	int2 ans;
-	ans.x = x - n / 2;
-	ans.y = h - y - n / 2;
+	ans.x = x - n / 3;
+	ans.y = h - y - n * 2 / 3;
 	return ans;
 }
 
