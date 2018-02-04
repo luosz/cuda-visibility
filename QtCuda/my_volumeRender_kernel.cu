@@ -1129,12 +1129,12 @@ d_renderVisibility(uint *d_output, uint imageW, uint imageH,
 		// draw selected region in inverted colors
 		if (d_segment && loc.x >= 0 && loc.y >= 0 && loc.x < imageW && loc.y < imageH)
 		{
-			//if (d_segment[y*imageW + x] == d_segment[loc.y*imageW + loc.x] && d_segment[y*imageW + x] != d_segment[0])
+			if (d_segment[y*imageW + x] == d_segment[loc.y*imageW + loc.x] && d_segment[y*imageW + x] != d_segment[0])
 			{
 				////uint s = tex2D(segmentTex, x / (float)imageW, y / (float)imageH);
 				uint s = d_segment[y*imageW + x];
+				//sum = rgbaIntToFloat(s);
 				sum = make_float4(1, 1, 1, 1) - rgbaIntToFloat(s);
-				sum = rgbaIntToFloat(s);
 			}
 		}
 		else

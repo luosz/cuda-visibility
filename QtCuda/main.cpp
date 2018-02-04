@@ -1874,24 +1874,38 @@ void keyboard(unsigned char key, int x, int y)
 int ox, oy;
 int buttonState = 0;
 
+inline int2 convert_mouse_position(int x, int y)
+{
+	//loc.x = x - n / 2;
+	// put the tip of mouse cursor at the center of the selected region
+	//loc.y = h - y - n * 4 / 3;
+
+	//loc2.x = x - n / 2;
+	//loc2.y = height - y - n * 4 / 3;
+
+	int h = glutGet(GLUT_WINDOW_HEIGHT);
+	int n = get_region_size();
+	int2 ans;
+	ans.x = x;
+	ans.y = h - y;
+	return ans;
+}
+
 void mouse(int button, int state, int x, int y)
 {
 	//if (TwEventMouseButtonGLUT(button, state, x, y))
 	//{
 	//	return;
 	//}
-	//if (1==state)
-	//{
-	//	printf("mouse %d %d button %d state %d \n", x, y, button, state);
-	//}
-
-	int n = get_region_size();
+	//int h = glutGet(GLUT_WINDOW_HEIGHT);
+	//int n = get_region_size();
 	if (button == GLUT_LEFT_BUTTON)
 	{
-		loc.x = x - n / 2;
+		//loc.x = x - n / 2;
 		//loc.y = height - y - n;
 		// put the tip of mouse cursor at the center of the selected region
-		loc.y = height - y - n * 4 / 3;
+		//loc.y = h - y - n * 4 / 3;
+		loc = convert_mouse_position(x, y);
 		locf.x = loc.x;
 		locf.y = loc.y;
 		loc2.x = loc.x;
@@ -1908,8 +1922,7 @@ void mouse(int button, int state, int x, int y)
 	}
 	if (button == GLUT_RIGHT_BUTTON)
 	{
-		loc2.x = x - n / 2;
-		loc2.y = height - y - n * 4 / 3;
+		loc2 = convert_mouse_position(x, y);
 		if (state == GLUT_DOWN)
 		{
 			std::cout<<"loc="<<loc.x<<","<<loc.y<<"\t loc2="<<loc2.x<<"," <<loc2.y<<std::endl;
@@ -1928,19 +1941,27 @@ void mouse(int button, int state, int x, int y)
     ox = x;
     oy = y;
     glutPostRedisplay();
+
+	if (1 == state)
+	{
+		printf("mouse %d %d button %d state %d \t loc.x=%d loc.y=%d \n", x, y, button, state, loc.x, loc.y);
+	}
 }
 
 void passive_motion(int x, int y)
 {
 	//printf("passive_motion %d %d \n", x, y);
-
+	//int h = glutGet(GLUT_WINDOW_HEIGHT);
 	if (glutGetModifiers() == GLUT_ACTIVE_CTRL)
 	{
 		int n = get_region_size();
-		loc.x = x - n / 2;
+		//loc.x = x - n / 2;
 		//loc.y = height - y - n;
 		// put the tip of mouse cursor at the center of the selected region
-		loc.y = height - y - n * 4 / 3;
+		//loc.y = h - y - n * 4 / 3;
+		//loc.x = x;
+		//loc.y = h - y;
+		loc = convert_mouse_position(x, y);
 		locf.x = loc.x;
 		locf.y = loc.y;
 
@@ -1951,8 +1972,10 @@ void passive_motion(int x, int y)
 				apply_save_rendering();
 			}
 		}
-		loc2.x = loc.x;
-		loc2.y = loc.y;
+		//loc2.x = loc.x;
+		//loc2.y = loc.y;
+		loc2 = loc;
+		//std::cout << "loc2=" << &loc2 << " " << loc2.x << " " << loc2.y << "\tloc=" << &loc << " " << loc.x << " " << loc.y << std::endl;
 
 		reset_transfer_function();
 		apply_tf_editing();
