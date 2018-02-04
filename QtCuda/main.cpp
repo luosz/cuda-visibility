@@ -1849,7 +1849,6 @@ void keyboard(unsigned char key, int x, int y)
 			break;
 
 		case 'k':
-			//load_ppm_to_gpu("../kmeans/~out_dbl.ppm");
 			set_kmeans(true);
 			break;
 
@@ -1859,6 +1858,10 @@ void keyboard(unsigned char key, int x, int y)
 
 		case 'y':
 			set_display_selection(true);
+			break;
+
+		case 'u':
+			load_ppm_to_gpu("../kmeans/~full_~screenshot_0.ppm");
 			break;
 
 		default:
