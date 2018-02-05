@@ -58,10 +58,15 @@ texture<VolumeType, 3, cudaReadModeElementType> volTex;         // 3D texture
 #define BIN_COUNT D_BIN_COUNT
 #endif // !BIN_COUNT
 
-__device__ __managed__ float histogram[BIN_COUNT] = {0};
+// global visibility histogram
+__device__ __managed__ float histogram[BIN_COUNT] = { 0 };
+// local visibility histogram
 __device__ __managed__ float histogram2[BIN_COUNT] = { 0 };
+// relative visibility histogram no smoothing
 __device__ __managed__ float histogram3[BIN_COUNT] = { 0 };
+// Gaussian smoothed relative visibility histogram
 __device__ __managed__ float histogram4[BIN_COUNT] = { 0 };
+// temporal visibility histogram
 __device__ __managed__ float histogram5[BIN_COUNT] = { 0 };
 __device__ __managed__ float4 tf_array[BIN_COUNT] = { 0 };
 __device__ __managed__ float4 tf_array0[BIN_COUNT] = { 0 };
@@ -76,6 +81,8 @@ __device__ __managed__ int feature_number = 0;
 __device__ __managed__ float feature_array[BIN_COUNT] = { 0 };
 __device__ __managed__ float feature_vws_array[BIN_COUNT] = { 0 };
 __device__ __managed__ bool display_selection = true;
+// transfer function components
+__device__ __managed__ float opacity_transfer_functions[4][BIN_COUNT] = { 0 };
 
 // GUI settings
 //float g_SelectedColor[] = { 1.f,1.f,0.f,1.f };
