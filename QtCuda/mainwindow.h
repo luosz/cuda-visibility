@@ -31,6 +31,10 @@ extern "C" float4* get_tf_array();
 extern "C" float* get_relative_visibility_histogram();
 extern "C" float* get_global_visibility_histogram();
 extern "C" float* get_local_visibility_histogram();
+extern "C" float* get_tf_component0();
+extern "C" float* get_tf_component1();
+extern "C" float* get_tf_component2();
+extern "C" float* get_tf_component3();
 extern "C" void apply_tf_editing();
 extern "C" void apply_temporal_tf_editing();
 extern "C" void reset_transfer_function();
@@ -255,6 +259,14 @@ private slots:
 
     void on_pushButton_6_clicked();
 
+    void on_pushButton_7_clicked();
+
+    void on_pushButton_8_clicked();
+
+    void on_pushButton_9_clicked();
+
+    void on_pushButton_10_clicked();
+
 private:
 	Ui::MainWindowClass ui;
 	QColor color;
@@ -270,8 +282,9 @@ private:
 	QChartView chartView_global;
 	QChartView chartView_local;
 
+	QChartView chartView_feature0;
 	QChartView chartView_feature1;
 	QChartView chartView_feature2;
 	QChartView chartView_feature3;
-	QChartView chartView_all_features;
+	//QChartView chartView_all_features;
 };

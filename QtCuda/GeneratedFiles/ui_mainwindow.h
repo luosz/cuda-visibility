@@ -14,6 +14,7 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
 #include <QtWidgets/QCheckBox>
+#include <QtWidgets/QDoubleSpinBox>
 #include <QtWidgets/QFormLayout>
 #include <QtWidgets/QFrame>
 #include <QtWidgets/QGridLayout>
@@ -77,7 +78,14 @@ public:
     QLabel *label_4;
     QWidget *tab_2;
     QVBoxLayout *verticalLayout_3;
+    QGridLayout *gridLayout_7;
+    QPushButton *pushButton_9;
+    QPushButton *pushButton_8;
     QPushButton *pushButton_7;
+    QPushButton *pushButton_10;
+    QDoubleSpinBox *doubleSpinBox;
+    QDoubleSpinBox *doubleSpinBox_2;
+    QDoubleSpinBox *doubleSpinBox_3;
     QMenuBar *menuBar;
     QMenu *menu_File;
     QMenu *menu_Help;
@@ -298,10 +306,55 @@ public:
         verticalLayout_3->setSpacing(6);
         verticalLayout_3->setContentsMargins(11, 11, 11, 11);
         verticalLayout_3->setObjectName(QStringLiteral("verticalLayout_3"));
+        gridLayout_7 = new QGridLayout();
+        gridLayout_7->setSpacing(6);
+        gridLayout_7->setObjectName(QStringLiteral("gridLayout_7"));
+        pushButton_9 = new QPushButton(tab_2);
+        pushButton_9->setObjectName(QStringLiteral("pushButton_9"));
+
+        gridLayout_7->addWidget(pushButton_9, 0, 2, 1, 1);
+
+        pushButton_8 = new QPushButton(tab_2);
+        pushButton_8->setObjectName(QStringLiteral("pushButton_8"));
+
+        gridLayout_7->addWidget(pushButton_8, 0, 1, 1, 1);
+
         pushButton_7 = new QPushButton(tab_2);
         pushButton_7->setObjectName(QStringLiteral("pushButton_7"));
 
-        verticalLayout_3->addWidget(pushButton_7);
+        gridLayout_7->addWidget(pushButton_7, 0, 0, 1, 1);
+
+        pushButton_10 = new QPushButton(tab_2);
+        pushButton_10->setObjectName(QStringLiteral("pushButton_10"));
+
+        gridLayout_7->addWidget(pushButton_10, 0, 3, 1, 1);
+
+        doubleSpinBox = new QDoubleSpinBox(tab_2);
+        doubleSpinBox->setObjectName(QStringLiteral("doubleSpinBox"));
+        doubleSpinBox->setMaximum(1);
+        doubleSpinBox->setSingleStep(0.1);
+        doubleSpinBox->setValue(1);
+
+        gridLayout_7->addWidget(doubleSpinBox, 1, 0, 1, 1);
+
+        doubleSpinBox_2 = new QDoubleSpinBox(tab_2);
+        doubleSpinBox_2->setObjectName(QStringLiteral("doubleSpinBox_2"));
+        doubleSpinBox_2->setMaximum(1);
+        doubleSpinBox_2->setSingleStep(0.1);
+        doubleSpinBox_2->setValue(1);
+
+        gridLayout_7->addWidget(doubleSpinBox_2, 1, 1, 1, 1);
+
+        doubleSpinBox_3 = new QDoubleSpinBox(tab_2);
+        doubleSpinBox_3->setObjectName(QStringLiteral("doubleSpinBox_3"));
+        doubleSpinBox_3->setMaximum(1);
+        doubleSpinBox_3->setSingleStep(0.1);
+        doubleSpinBox_3->setValue(1);
+
+        gridLayout_7->addWidget(doubleSpinBox_3, 1, 2, 1, 1);
+
+
+        verticalLayout_3->addLayout(gridLayout_7);
 
         tabWidget_2->addTab(tab_2, QString());
 
@@ -313,7 +366,7 @@ public:
         MainWindowClass->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindowClass);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 768, 26));
+        menuBar->setGeometry(QRect(0, 0, 768, 17));
         menu_File = new QMenu(menuBar);
         menu_File->setObjectName(QStringLiteral("menu_File"));
         menu_Help = new QMenu(menuBar);
@@ -339,7 +392,7 @@ public:
 
         retranslateUi(MainWindowClass);
 
-        tabWidget_2->setCurrentIndex(0);
+        tabWidget_2->setCurrentIndex(2);
 
 
         QMetaObject::connectSlotsByName(MainWindowClass);
@@ -375,7 +428,10 @@ public:
         label_3->setText(QString());
         label_4->setText(QString());
         tabWidget_2->setTabText(tabWidget_2->indexOf(tab), QApplication::translate("MainWindowClass", "Renderings", Q_NULLPTR));
-        pushButton_7->setText(QApplication::translate("MainWindowClass", "PushButton", Q_NULLPTR));
+        pushButton_9->setText(QApplication::translate("MainWindowClass", "tf2", Q_NULLPTR));
+        pushButton_8->setText(QApplication::translate("MainWindowClass", "tf1", Q_NULLPTR));
+        pushButton_7->setText(QApplication::translate("MainWindowClass", "tf0", Q_NULLPTR));
+        pushButton_10->setText(QApplication::translate("MainWindowClass", "merge", Q_NULLPTR));
         tabWidget_2->setTabText(tabWidget_2->indexOf(tab_2), QApplication::translate("MainWindowClass", "Transfer Functions", Q_NULLPTR));
         menu_File->setTitle(QApplication::translate("MainWindowClass", "&File", Q_NULLPTR));
         menu_Help->setTitle(QApplication::translate("MainWindowClass", "&Help", Q_NULLPTR));

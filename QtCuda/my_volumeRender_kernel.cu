@@ -76,6 +76,8 @@ __device__ __managed__ float g9[R9*R9*R9] = { 0 };
 __device__ __managed__ float *saliencyVolume = NULL;
 __device__ __managed__ float *vwsVolume = NULL;
 bool saliency_once = false;
+// feature definition for visibility-weighted saliency optimization
+// Usually there are only several features, e.g. 3 features
 __device__ __managed__ unsigned char *featureVolume = NULL;
 __device__ __managed__ int feature_number = 0;
 __device__ __managed__ float feature_array[BIN_COUNT] = { 0 };
@@ -186,6 +188,26 @@ extern "C" int get_region_size()
 extern "C" float4* get_tf_array()
 {
 	return tf_array;
+}
+
+extern "C" float* get_tf_component0()
+{
+	return opacity_transfer_functions[0];
+}
+
+extern "C" float* get_tf_component1()
+{
+	return opacity_transfer_functions[1];
+}
+
+extern "C" float* get_tf_component2()
+{
+	return opacity_transfer_functions[2];
+}
+
+extern "C" float* get_tf_component3()
+{
+	return opacity_transfer_functions[3];
 }
 
 extern "C" void set_save_ppm(bool value = true)

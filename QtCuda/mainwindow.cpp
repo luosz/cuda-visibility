@@ -19,10 +19,10 @@ MainWindow::MainWindow(QWidget *parent)
 	ui.verticalLayout->addWidget(&chartView_global);
 	ui.verticalLayout->addWidget(&chartView_local);
 
+	ui.verticalLayout_3->addWidget(&chartView_feature0);
 	ui.verticalLayout_3->addWidget(&chartView_feature1);
 	ui.verticalLayout_3->addWidget(&chartView_feature2);
 	ui.verticalLayout_3->addWidget(&chartView_feature3);
-	ui.verticalLayout_3->addWidget(&chartView_all_features);
 	show_transfer_function_later(1000);
 	update_screenshots();
 }
@@ -242,4 +242,93 @@ void MainWindow::on_pushButton_5_clicked()
 void MainWindow::on_pushButton_6_clicked()
 {
 	update_screenshots();
+}
+
+void MainWindow::on_pushButton_7_clicked()
+{
+	const qreal N = D_BIN_COUNT - 1;
+	auto p_tf = get_tf_array();
+	auto tf_component = get_tf_component0();
+	auto histogram = get_relative_visibility_histogram();
+	for (int i = 0; i < D_BIN_COUNT; i++)
+	{
+		tf_component[i] = histogram[i] > 0 ? histogram[i] : 0;
+	}
+
+	auto chart_tf = chartView_feature0.chart();
+	chart_tf->removeAllSeries();
+	chart_tf->legend()->hide();
+	for (int i = 0; i < D_BIN_COUNT; i++)
+	{
+		auto c = QColor::fromRgbF((qreal)p_tf[i].x, (qreal)p_tf[i].y, (qreal)p_tf[i].z);
+		auto line = new QLineSeries();
+		line->append(i / N, 0);
+		line->append(i / N, (qreal)tf_component[i]);
+		line->setColor(c);
+		chart_tf->addSeries(line);
+	}
+	chart_tf->createDefaultAxes();
+	chart_tf->setTitle("Transfer function component 0");
+	chartView_feature0.setRenderHint(QPainter::Antialiasing);
+}
+
+void MainWindow::on_pushButton_8_clicked()
+{
+	const qreal N = D_BIN_COUNT - 1;
+	auto p_tf = get_tf_array();
+	auto tf_component = get_tf_component1();
+	auto histogram = get_relative_visibility_histogram();
+	for (int i = 0; i < D_BIN_COUNT; i++)
+	{
+		tf_component[i] = histogram[i] > 0 ? histogram[i] : 0;
+	}
+
+	auto chart_tf = chartView_feature1.chart();
+	chart_tf->removeAllSeries();
+	chart_tf->legend()->hide();
+	for (int i = 0; i < D_BIN_COUNT; i++)
+	{
+		auto c = QColor::fromRgbF((qreal)p_tf[i].x, (qreal)p_tf[i].y, (qreal)p_tf[i].z);
+		auto line = new QLineSeries();
+		line->append(i / N, 0);
+		line->append(i / N, (qreal)tf_component[i]);
+		line->setColor(c);
+		chart_tf->addSeries(line);
+	}
+	chart_tf->createDefaultAxes();
+	chart_tf->setTitle("Transfer function component 1");
+	chartView_feature1.setRenderHint(QPainter::Antialiasing);
+}
+
+void MainWindow::on_pushButton_9_clicked()
+{
+	const qreal N = D_BIN_COUNT - 1;
+	auto p_tf = get_tf_array();
+	auto tf_component = get_tf_component2();
+	auto histogram = get_relative_visibility_histogram();
+	for (int i = 0; i < D_BIN_COUNT; i++)
+	{
+		tf_component[i] = histogram[i] > 0 ? histogram[i] : 0;
+	}
+
+	auto chart_tf = chartView_feature2.chart();
+	chart_tf->removeAllSeries();
+	chart_tf->legend()->hide();
+	for (int i = 0; i < D_BIN_COUNT; i++)
+	{
+		auto c = QColor::fromRgbF((qreal)p_tf[i].x, (qreal)p_tf[i].y, (qreal)p_tf[i].z);
+		auto line = new QLineSeries();
+		line->append(i / N, 0);
+		line->append(i / N, (qreal)tf_component[i]);
+		line->setColor(c);
+		chart_tf->addSeries(line);
+	}
+	chart_tf->createDefaultAxes();
+	chart_tf->setTitle("Transfer function component 2");
+	chartView_feature2.setRenderHint(QPainter::Antialiasing);
+}
+
+void MainWindow::on_pushButton_10_clicked()
+{
+
 }
