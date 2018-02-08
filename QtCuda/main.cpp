@@ -2027,6 +2027,8 @@ extern "C" int iDivUp(int a, int b)
 
 void reshape(int w, int h)
 {
+	auto size = min(w, h);
+	glutReshapeWindow(size, size);
 	//width = w;
 	//height = h;
 	printf("reshape: pixel buffer size %d %d \t window size %d %d \n", width, height, w, h);

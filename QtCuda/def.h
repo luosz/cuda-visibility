@@ -8,10 +8,10 @@
 const float D_RGBA[] = { 1.f,1.f,0.f,1.f };
 const bool D_APPLY_ALPHA = true;
 const bool D_APPLY_COLOR = true;
-const int D_WIDTH = 1000;
-const int D_HEIGHT = 1000;
+const int D_WIDTH = 800;
+const int D_HEIGHT = 800;
 const int D_BIN_COUNT = 256;
-const int D_RADIUS = 32;
+const int D_RADIUS = 20;
 const bool D_TIME_VARYING_TF_EDITING = true;
 const bool D_TIME_VARYING_TF_RESET = true;
 const bool D_TIME_VARYING_VWS_OPTIMIZATION = false;

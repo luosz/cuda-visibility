@@ -96,7 +96,7 @@ public:
     {
         if (MainWindowClass->objectName().isEmpty())
             MainWindowClass->setObjectName(QStringLiteral("MainWindowClass"));
-        MainWindowClass->resize(768, 940);
+        MainWindowClass->resize(800, 1080);
         action_Open = new QAction(MainWindowClass);
         action_Open->setObjectName(QStringLiteral("action_Open"));
         action_Exit = new QAction(MainWindowClass);
@@ -366,7 +366,7 @@ public:
         MainWindowClass->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindowClass);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 768, 17));
+        menuBar->setGeometry(QRect(0, 0, 800, 17));
         menu_File = new QMenu(menuBar);
         menu_File->setObjectName(QStringLiteral("menu_File"));
         menu_Help = new QMenu(menuBar);
@@ -392,7 +392,7 @@ public:
 
         retranslateUi(MainWindowClass);
 
-        tabWidget_2->setCurrentIndex(2);
+        tabWidget_2->setCurrentIndex(0);
 
 
         QMetaObject::connectSlotsByName(MainWindowClass);
@@ -427,12 +427,12 @@ public:
         label_2->setText(QString());
         label_3->setText(QString());
         label_4->setText(QString());
-        tabWidget_2->setTabText(tabWidget_2->indexOf(tab), QApplication::translate("MainWindowClass", "Renderings", Q_NULLPTR));
+        tabWidget_2->setTabText(tabWidget_2->indexOf(tab), QApplication::translate("MainWindowClass", "History", Q_NULLPTR));
         pushButton_9->setText(QApplication::translate("MainWindowClass", "tf2", Q_NULLPTR));
         pushButton_8->setText(QApplication::translate("MainWindowClass", "tf1", Q_NULLPTR));
         pushButton_7->setText(QApplication::translate("MainWindowClass", "tf0", Q_NULLPTR));
         pushButton_10->setText(QApplication::translate("MainWindowClass", "merge", Q_NULLPTR));
-        tabWidget_2->setTabText(tabWidget_2->indexOf(tab_2), QApplication::translate("MainWindowClass", "Transfer Functions", Q_NULLPTR));
+        tabWidget_2->setTabText(tabWidget_2->indexOf(tab_2), QApplication::translate("MainWindowClass", "Components", Q_NULLPTR));
         menu_File->setTitle(QApplication::translate("MainWindowClass", "&File", Q_NULLPTR));
         menu_Help->setTitle(QApplication::translate("MainWindowClass", "&Help", Q_NULLPTR));
     } // retranslateUi

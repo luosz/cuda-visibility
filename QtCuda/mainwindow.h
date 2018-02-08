@@ -17,6 +17,7 @@
 #include <QTimer>
 #include <QPixmap>
 #include <QLabel>
+#include <helper_math.h>
 #include "ui_mainwindow.h"
 #include "def.h"
 
@@ -251,6 +252,30 @@ private slots:
 		ui.label_2->setPixmap(p2);
 		ui.label_3->setPixmap(p3);
 		ui.label_4->setPixmap(p4);
+	}
+
+	float4 build_color(float4 colors[], float v0, float v1, float v2)
+	{
+		float t = v0 + v1 + v2;
+		float w = t < 0 ? 0 : (t > 1 ? 1 : t);
+		float4 ans;
+		if (v0 > v1 && v0 > v2)
+		{
+			ans = colors[0];
+		}
+		else
+		{
+			if (v1 > v0 && v1 > v2)
+			{
+				ans = colors[1];
+			}
+			else
+			{
+				ans = colors[2];
+			}
+		}
+		ans.w = w;
+		return ans;
 	}
 
     void on_checkBox_6_clicked();

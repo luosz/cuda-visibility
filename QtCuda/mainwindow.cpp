@@ -11,7 +11,7 @@ MainWindow::MainWindow(QWidget *parent)
 			qApp->desktop()->availableGeometry()
 		)
 	);
-	this->move(this->pos() - QPoint(200, 200));
+	this->move(this->pos() - QPoint(400, 350));
 	ui.setupUi(this);
 	update_color(QColor::fromRgbF(D_RGBA[0], D_RGBA[1], D_RGBA[2], D_RGBA[3]));
 	ui.verticalLayout->addWidget(&chartView_tf);
@@ -330,5 +330,42 @@ void MainWindow::on_pushButton_9_clicked()
 
 void MainWindow::on_pushButton_10_clicked()
 {
+	const qreal N = D_BIN_COUNT - 1;
+	auto p_tf = get_tf_array();
+	auto tf_sum = get_tf_component3();
+	auto tf0 = get_tf_component0();
+	auto tf1 = get_tf_component1();
+	auto tf2 = get_tf_component2();
+	memset(tf_sum, 0, sizeof(float)*D_BIN_COUNT);
+	float4 sum[D_BIN_COUNT] = { 0 };
+	float4 colors[3] = { 0 };
+	colors[0] = make_float4(1, 0, 0, 0);
+	colors[1] = make_float4(0, 1, 0, 0);
+	colors[2] = make_float4(0, 0, 1, 0);
 
+	for (int i = 0; i < D_BIN_COUNT; i++)
+	{
+		float t = tf0[i] + tf1[i] + tf2[i];
+		tf_sum[i] = t < 0 ? 0 : (t > 1 ? 1 : t);
+		sum[i] = build_color(colors, tf0[i], tf1[i], tf2[i]);
+	}
+
+	auto chart_tf = chartView_feature3.chart();
+	chart_tf->removeAllSeries();
+	chart_tf->legend()->hide();
+	for (int i = 0; i < D_BIN_COUNT; i++)
+	{
+		auto c = QColor::fromRgbF((qreal)sum[i].x, (qreal)sum[i].y, (qreal)sum[i].z);
+		auto line = new QLineSeries();
+		line->append(i / N, 0);
+		line->append(i / N, (qreal)sum[i].w);
+		line->setColor(c);
+		chart_tf->addSeries(line);
+	}
+	chart_tf->createDefaultAxes();
+	chart_tf->setTitle("Transfer function merged");
+	chartView_feature3.setRenderHint(QPainter::Antialiasing);
+
+	memcpy(p_tf, sum, sizeof(float4)*D_BIN_COUNT);
+	bind_tf_texture();
 }
