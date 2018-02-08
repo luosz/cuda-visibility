@@ -23,7 +23,7 @@ MainWindow::MainWindow(QWidget *parent)
 	ui.verticalLayout_3->addWidget(&chartView_feature1);
 	ui.verticalLayout_3->addWidget(&chartView_feature2);
 	ui.verticalLayout_3->addWidget(&chartView_feature3);
-	show_transfer_function_later(1000);
+	delay_show_transfer_function(1000);
 	update_screenshots();
 }
 
@@ -36,24 +36,6 @@ void MainWindow::on_pushButton_clicked()
 	}
 }
 
-void MainWindow::on_checkBox_clicked()
-{
-	if (apply_alpha && apply_color)
-	{
-		*apply_alpha = ui.checkBox->isChecked();
-		std::cout << "Apply alpha: " << (*apply_alpha ? "true" : "false") << "\t Apply color: " << (*apply_color ? "true" : "false") << std::endl;
-	}
-}
-
-void MainWindow::on_checkBox_2_clicked()
-{
-	if (apply_alpha && apply_color)
-	{
-		*apply_color = ui.checkBox_2->isChecked();
-		std::cout << "Apply alpha: " << (*apply_alpha ? "true" : "false") << "\t Apply color: " << (*apply_color ? "true" : "false") << std::endl;
-	}
-}
-
 void MainWindow::on_pushButton_2_clicked()
 {
 	show_transfer_function();
@@ -62,7 +44,7 @@ void MainWindow::on_pushButton_2_clicked()
 void MainWindow::on_pushButton_3_clicked()
 {
 	apply_tf_editing();
-	show_transfer_function_later();
+	delay_show_transfer_function();
 
 	//const int n = 11;
 	//int r = 2;
@@ -85,7 +67,7 @@ void MainWindow::on_pushButton_3_clicked()
 void MainWindow::on_pushButton_4_clicked()
 {
 	reset_transfer_function();
-	show_transfer_function_later();
+	delay_show_transfer_function();
 
 	////float gaussian1[R1*R1*R1] = { 0 };
 	//float a;
@@ -236,7 +218,7 @@ void MainWindow::on_checkBox_6_clicked()
 void MainWindow::on_pushButton_5_clicked()
 {
 	apply_temporal_tf_editing();
-	show_transfer_function_later();
+	delay_show_transfer_function();
 }
 
 void MainWindow::on_pushButton_6_clicked()
@@ -246,86 +228,95 @@ void MainWindow::on_pushButton_6_clicked()
 
 void MainWindow::on_pushButton_7_clicked()
 {
-	const qreal N = D_BIN_COUNT - 1;
-	auto p_tf = get_tf_array();
-	auto tf_component = get_tf_component0();
-	auto histogram = get_relative_visibility_histogram();
-	for (int i = 0; i < D_BIN_COUNT; i++)
-	{
-		tf_component[i] = histogram[i] > 0 ? histogram[i] : 0;
-	}
+	calculate_visibility_without_editing_tf();
+	delay_add_transfer_function_component(get_tf_component0(), chartView_feature0, "Transfer function component 0");
 
-	auto chart_tf = chartView_feature0.chart();
-	chart_tf->removeAllSeries();
-	chart_tf->legend()->hide();
-	for (int i = 0; i < D_BIN_COUNT; i++)
-	{
-		auto c = QColor::fromRgbF((qreal)p_tf[i].x, (qreal)p_tf[i].y, (qreal)p_tf[i].z);
-		auto line = new QLineSeries();
-		line->append(i / N, 0);
-		line->append(i / N, (qreal)tf_component[i]);
-		line->setColor(c);
-		chart_tf->addSeries(line);
-	}
-	chart_tf->createDefaultAxes();
-	chart_tf->setTitle("Transfer function component 0");
-	chartView_feature0.setRenderHint(QPainter::Antialiasing);
+	//const qreal N = D_BIN_COUNT - 1;
+	//auto p_tf = get_tf_array();
+	//auto tf_component = get_tf_component0();
+	//auto histogram = get_relative_visibility_histogram();
+	//for (int i = 0; i < D_BIN_COUNT; i++)
+	//{
+	//	tf_component[i] = histogram[i] > 0 ? histogram[i] : 0;
+	//}
+
+	//auto chart_tf = chartView_feature0.chart();
+	//chart_tf->removeAllSeries();
+	//chart_tf->legend()->hide();
+	//for (int i = 0; i < D_BIN_COUNT; i++)
+	//{
+	//	auto c = QColor::fromRgbF((qreal)p_tf[i].x, (qreal)p_tf[i].y, (qreal)p_tf[i].z);
+	//	auto line = new QLineSeries();
+	//	line->append(i / N, 0);
+	//	line->append(i / N, (qreal)tf_component[i]);
+	//	line->setColor(c);
+	//	chart_tf->addSeries(line);
+	//}
+	//chart_tf->createDefaultAxes();
+	//chart_tf->setTitle("Transfer function component 0");
+	//chartView_feature0.setRenderHint(QPainter::Antialiasing);
 }
 
 void MainWindow::on_pushButton_8_clicked()
 {
-	const qreal N = D_BIN_COUNT - 1;
-	auto p_tf = get_tf_array();
-	auto tf_component = get_tf_component1();
-	auto histogram = get_relative_visibility_histogram();
-	for (int i = 0; i < D_BIN_COUNT; i++)
-	{
-		tf_component[i] = histogram[i] > 0 ? histogram[i] : 0;
-	}
+	calculate_visibility_without_editing_tf();
+	delay_add_transfer_function_component(get_tf_component1(), chartView_feature1, "Transfer function component 1");
 
-	auto chart_tf = chartView_feature1.chart();
-	chart_tf->removeAllSeries();
-	chart_tf->legend()->hide();
-	for (int i = 0; i < D_BIN_COUNT; i++)
-	{
-		auto c = QColor::fromRgbF((qreal)p_tf[i].x, (qreal)p_tf[i].y, (qreal)p_tf[i].z);
-		auto line = new QLineSeries();
-		line->append(i / N, 0);
-		line->append(i / N, (qreal)tf_component[i]);
-		line->setColor(c);
-		chart_tf->addSeries(line);
-	}
-	chart_tf->createDefaultAxes();
-	chart_tf->setTitle("Transfer function component 1");
-	chartView_feature1.setRenderHint(QPainter::Antialiasing);
+	//const qreal N = D_BIN_COUNT - 1;
+	//auto p_tf = get_tf_array();
+	//auto tf_component = get_tf_component1();
+	//auto histogram = get_relative_visibility_histogram();
+	//for (int i = 0; i < D_BIN_COUNT; i++)
+	//{
+	//	tf_component[i] = histogram[i] > 0 ? histogram[i] : 0;
+	//}
+
+	//auto chart_tf = chartView_feature1.chart();
+	//chart_tf->removeAllSeries();
+	//chart_tf->legend()->hide();
+	//for (int i = 0; i < D_BIN_COUNT; i++)
+	//{
+	//	auto c = QColor::fromRgbF((qreal)p_tf[i].x, (qreal)p_tf[i].y, (qreal)p_tf[i].z);
+	//	auto line = new QLineSeries();
+	//	line->append(i / N, 0);
+	//	line->append(i / N, (qreal)tf_component[i]);
+	//	line->setColor(c);
+	//	chart_tf->addSeries(line);
+	//}
+	//chart_tf->createDefaultAxes();
+	//chart_tf->setTitle("Transfer function component 1");
+	//chartView_feature1.setRenderHint(QPainter::Antialiasing);
 }
 
 void MainWindow::on_pushButton_9_clicked()
 {
-	const qreal N = D_BIN_COUNT - 1;
-	auto p_tf = get_tf_array();
-	auto tf_component = get_tf_component2();
-	auto histogram = get_relative_visibility_histogram();
-	for (int i = 0; i < D_BIN_COUNT; i++)
-	{
-		tf_component[i] = histogram[i] > 0 ? histogram[i] : 0;
-	}
+	calculate_visibility_without_editing_tf();
+	delay_add_transfer_function_component(get_tf_component2(), chartView_feature2, "Transfer function component 2");
 
-	auto chart_tf = chartView_feature2.chart();
-	chart_tf->removeAllSeries();
-	chart_tf->legend()->hide();
-	for (int i = 0; i < D_BIN_COUNT; i++)
-	{
-		auto c = QColor::fromRgbF((qreal)p_tf[i].x, (qreal)p_tf[i].y, (qreal)p_tf[i].z);
-		auto line = new QLineSeries();
-		line->append(i / N, 0);
-		line->append(i / N, (qreal)tf_component[i]);
-		line->setColor(c);
-		chart_tf->addSeries(line);
-	}
-	chart_tf->createDefaultAxes();
-	chart_tf->setTitle("Transfer function component 2");
-	chartView_feature2.setRenderHint(QPainter::Antialiasing);
+	//const qreal N = D_BIN_COUNT - 1;
+	//auto p_tf = get_tf_array();
+	//auto tf_component = get_tf_component2();
+	//auto histogram = get_relative_visibility_histogram();
+	//for (int i = 0; i < D_BIN_COUNT; i++)
+	//{
+	//	tf_component[i] = histogram[i] > 0 ? histogram[i] : 0;
+	//}
+
+	//auto chart_tf = chartView_feature2.chart();
+	//chart_tf->removeAllSeries();
+	//chart_tf->legend()->hide();
+	//for (int i = 0; i < D_BIN_COUNT; i++)
+	//{
+	//	auto c = QColor::fromRgbF((qreal)p_tf[i].x, (qreal)p_tf[i].y, (qreal)p_tf[i].z);
+	//	auto line = new QLineSeries();
+	//	line->append(i / N, 0);
+	//	line->append(i / N, (qreal)tf_component[i]);
+	//	line->setColor(c);
+	//	chart_tf->addSeries(line);
+	//}
+	//chart_tf->createDefaultAxes();
+	//chart_tf->setTitle("Transfer function component 2");
+	//chartView_feature2.setRenderHint(QPainter::Antialiasing);
 }
 
 void MainWindow::on_pushButton_10_clicked()
@@ -368,4 +359,22 @@ void MainWindow::on_pushButton_10_clicked()
 
 	memcpy(p_tf, sum, sizeof(float4)*D_BIN_COUNT);
 	bind_tf_texture();
+}
+
+void MainWindow::on_checkBox_stateChanged(int arg1)
+{
+	if (apply_alpha && apply_color)
+	{
+		*apply_alpha = ui.checkBox->isChecked();
+		std::cout << "on_checkBox_stateChanged \t Apply alpha: " << (*apply_alpha ? "true" : "false") << "\t Apply color: " << (*apply_color ? "true" : "false") << std::endl;
+	}
+}
+
+void MainWindow::on_checkBox_2_stateChanged(int arg1)
+{
+	if (apply_alpha && apply_color)
+	{
+		*apply_color = ui.checkBox_2->isChecked();
+		std::cout << "on_checkBox_2_stateChanged \t Apply alpha: " << (*apply_alpha ? "true" : "false") << "\t Apply color: " << (*apply_color ? "true" : "false") << std::endl;
+	}
 }

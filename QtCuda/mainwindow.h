@@ -90,7 +90,7 @@ public:
 		calc_temporal_visibility = temporal_visibility;
 	}
 
-	void show_transfer_function_later(int msec=10)
+	void delay_show_transfer_function(int msec=10)
 	{
 		QTimer::singleShot(msec, this, SLOT(show_transfer_function()));
 	}
@@ -125,12 +125,22 @@ public:
 		return ui.checkBox_7->isChecked();
 	}
 
+	void calculate_visibility_without_editing_tf()
+	{
+		ui.checkBox->setChecked(false);
+		ui.checkBox_2->setChecked(false);
+		apply_tf_editing();
+		delay_show_transfer_function();
+	}
+
+	void delay_add_transfer_function_component(float *tf_component, QChartView &chartView, QString title, int msec = 10)
+	{
+		// Use a lambda expression with a capture list for the Qt slot with arguments
+		QTimer::singleShot(msec, this, [this, tf_component, &chartView, title]() {add_transfer_function_component(tf_component, chartView, title); });
+	}
+
 private slots:
     void on_pushButton_clicked();
-
-    void on_checkBox_clicked();
-
-    void on_checkBox_2_clicked();
 
     void on_pushButton_2_clicked();
 
@@ -233,6 +243,34 @@ private slots:
 		chartView_local.setRenderHint(QPainter::Antialiasing);
 	}
 
+	void add_transfer_function_component(float *tf_component, QChartView &chartView, QString title)
+	{
+		const qreal N = D_BIN_COUNT - 1;
+		auto p_tf = get_tf_array();
+		//auto tf_component = get_tf_component1();
+		auto histogram = get_relative_visibility_histogram();
+		for (int i = 0; i < D_BIN_COUNT; i++)
+		{
+			tf_component[i] = histogram[i] > 0 ? histogram[i] : 0;
+		}
+
+		auto chart_tf = chartView.chart();
+		chart_tf->removeAllSeries();
+		chart_tf->legend()->hide();
+		for (int i = 0; i < D_BIN_COUNT; i++)
+		{
+			auto c = QColor::fromRgbF((qreal)p_tf[i].x, (qreal)p_tf[i].y, (qreal)p_tf[i].z);
+			auto line = new QLineSeries();
+			line->append(i / N, 0);
+			line->append(i / N, (qreal)tf_component[i]);
+			line->setColor(c);
+			chart_tf->addSeries(line);
+		}
+		chart_tf->createDefaultAxes();
+		chart_tf->setTitle(title);
+		chartView.setRenderHint(QPainter::Antialiasing);
+	}
+
 	void update_screenshots()
 	{
 		int n = get_next_screenshot_id(get_screenshot_id());
@@ -291,6 +329,10 @@ private slots:
     void on_pushButton_9_clicked();
 
     void on_pushButton_10_clicked();
+
+    void on_checkBox_stateChanged(int arg1);
+
+    void on_checkBox_2_stateChanged(int arg1);
 
 private:
 	Ui::MainWindowClass ui;

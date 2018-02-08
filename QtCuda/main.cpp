@@ -1389,7 +1389,7 @@ void load_a_volume_and_optimize()
 
 		if (qt_window)
 		{
-			qt_window->show_transfer_function_later();
+			qt_window->delay_show_transfer_function();
 		}
 	}
 }
@@ -1749,7 +1749,7 @@ void keyboard(unsigned char key, int x, int y)
 			set_apply(true);
 			if (qt_window)
 			{
-				qt_window->show_transfer_function_later();
+				qt_window->delay_show_transfer_function();
 			}
 			break;
 
@@ -1757,7 +1757,7 @@ void keyboard(unsigned char key, int x, int y)
 			set_discard(true);
 			if (qt_window)
 			{
-				qt_window->show_transfer_function_later();
+				qt_window->delay_show_transfer_function();
 			}
 			break;
 
@@ -1769,7 +1769,7 @@ void keyboard(unsigned char key, int x, int y)
 			set_gaussian(true);
 			if (qt_window)
 			{
-				qt_window->show_transfer_function_later();
+				qt_window->delay_show_transfer_function();
 			}
 			break;
 
@@ -1980,7 +1980,7 @@ void passive_motion(int x, int y)
 		//std::cout << "qt_window is " << (qt_window ? "valid" : "null") << std::endl;
 		if (qt_window)
 		{
-			qt_window->show_transfer_function_later();
+			qt_window->delay_show_transfer_function();
 		}
 	}
 }
@@ -2027,8 +2027,6 @@ extern "C" int iDivUp(int a, int b)
 
 void reshape(int w, int h)
 {
-	auto size = min(w, h);
-	glutReshapeWindow(size, size);
 	//width = w;
 	//height = h;
 	printf("reshape: pixel buffer size %d %d \t window size %d %d \n", width, height, w, h);

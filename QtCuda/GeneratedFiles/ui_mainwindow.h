@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created by: Qt User Interface Compiler version 5.9.3
+** Created by: Qt User Interface Compiler version 5.10.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -400,41 +400,41 @@ public:
 
     void retranslateUi(QMainWindow *MainWindowClass)
     {
-        MainWindowClass->setWindowTitle(QApplication::translate("MainWindowClass", "Options", Q_NULLPTR));
-        action_Open->setText(QApplication::translate("MainWindowClass", "Open &MetaImage (MHD) file...", Q_NULLPTR));
-        action_Exit->setText(QApplication::translate("MainWindowClass", "&Exit", Q_NULLPTR));
-        action_About->setText(QApplication::translate("MainWindowClass", "&About", Q_NULLPTR));
-        actionOpen_Files->setText(QApplication::translate("MainWindowClass", "Open &RAW files (time-varying data)...", Q_NULLPTR));
-        actionOpen_transfer_function->setText(QApplication::translate("MainWindowClass", "&Open transfer function...", Q_NULLPTR));
-        actionSave_transfer_function_as->setText(QApplication::translate("MainWindowClass", "&Save transfer function as...", Q_NULLPTR));
-        actionLoad_view_and_region->setText(QApplication::translate("MainWindowClass", "Load &view and region...", Q_NULLPTR));
-        actionSave_view_and_region_as->setText(QApplication::translate("MainWindowClass", "Save view and region &as...", Q_NULLPTR));
-        pushButton_3->setText(QApplication::translate("MainWindowClass", "Apply alpha/color editing", Q_NULLPTR));
-        pushButton_4->setText(QApplication::translate("MainWindowClass", "Reset transfer function", Q_NULLPTR));
-        pushButton_2->setText(QApplication::translate("MainWindowClass", "Show transfer function", Q_NULLPTR));
-        pushButton->setText(QApplication::translate("MainWindowClass", "Pick color", Q_NULLPTR));
-        checkBox->setText(QApplication::translate("MainWindowClass", "Adjust alpha", Q_NULLPTR));
-        checkBox_2->setText(QApplication::translate("MainWindowClass", "Adjust color", Q_NULLPTR));
-        pushButton_5->setText(QApplication::translate("MainWindowClass", "Temporal TF editing", Q_NULLPTR));
-        checkBox_6->setText(QApplication::translate("MainWindowClass", "Accumulate visibility", Q_NULLPTR));
-        checkBox_4->setText(QApplication::translate("MainWindowClass", "Reset TF before editing", Q_NULLPTR));
-        checkBox_3->setText(QApplication::translate("MainWindowClass", "Apply TF editing", Q_NULLPTR));
-        checkBox_5->setText(QApplication::translate("MainWindowClass", "VWS optimization", Q_NULLPTR));
-        tabWidget_2->setTabText(tabWidget_2->indexOf(tabWidget_2Page1), QApplication::translate("MainWindowClass", "Histograms", Q_NULLPTR));
-        pushButton_6->setText(QApplication::translate("MainWindowClass", "Show renderings", Q_NULLPTR));
-        checkBox_7->setText(QApplication::translate("MainWindowClass", "Save and display previous renderings", Q_NULLPTR));
+        MainWindowClass->setWindowTitle(QApplication::translate("MainWindowClass", "Options", nullptr));
+        action_Open->setText(QApplication::translate("MainWindowClass", "Open &MetaImage (MHD) file...", nullptr));
+        action_Exit->setText(QApplication::translate("MainWindowClass", "&Exit", nullptr));
+        action_About->setText(QApplication::translate("MainWindowClass", "&About", nullptr));
+        actionOpen_Files->setText(QApplication::translate("MainWindowClass", "Open &RAW files (time-varying data)...", nullptr));
+        actionOpen_transfer_function->setText(QApplication::translate("MainWindowClass", "&Open transfer function...", nullptr));
+        actionSave_transfer_function_as->setText(QApplication::translate("MainWindowClass", "&Save transfer function as...", nullptr));
+        actionLoad_view_and_region->setText(QApplication::translate("MainWindowClass", "Load &view and region...", nullptr));
+        actionSave_view_and_region_as->setText(QApplication::translate("MainWindowClass", "Save view and region &as...", nullptr));
+        pushButton_3->setText(QApplication::translate("MainWindowClass", "Apply alpha/color editing", nullptr));
+        pushButton_4->setText(QApplication::translate("MainWindowClass", "Reset transfer function", nullptr));
+        pushButton_2->setText(QApplication::translate("MainWindowClass", "Show transfer function", nullptr));
+        pushButton->setText(QApplication::translate("MainWindowClass", "Pick color", nullptr));
+        checkBox->setText(QApplication::translate("MainWindowClass", "Adjust alpha", nullptr));
+        checkBox_2->setText(QApplication::translate("MainWindowClass", "Adjust color", nullptr));
+        pushButton_5->setText(QApplication::translate("MainWindowClass", "Temporal TF editing", nullptr));
+        checkBox_6->setText(QApplication::translate("MainWindowClass", "Accumulate visibility", nullptr));
+        checkBox_4->setText(QApplication::translate("MainWindowClass", "Reset TF before editing", nullptr));
+        checkBox_3->setText(QApplication::translate("MainWindowClass", "Apply TF editing", nullptr));
+        checkBox_5->setText(QApplication::translate("MainWindowClass", "VWS optimization", nullptr));
+        tabWidget_2->setTabText(tabWidget_2->indexOf(tabWidget_2Page1), QApplication::translate("MainWindowClass", "Histograms", nullptr));
+        pushButton_6->setText(QApplication::translate("MainWindowClass", "Show renderings", nullptr));
+        checkBox_7->setText(QApplication::translate("MainWindowClass", "Save and display previous renderings", nullptr));
         label->setText(QString());
         label_2->setText(QString());
         label_3->setText(QString());
         label_4->setText(QString());
-        tabWidget_2->setTabText(tabWidget_2->indexOf(tab), QApplication::translate("MainWindowClass", "History", Q_NULLPTR));
-        pushButton_9->setText(QApplication::translate("MainWindowClass", "tf2", Q_NULLPTR));
-        pushButton_8->setText(QApplication::translate("MainWindowClass", "tf1", Q_NULLPTR));
-        pushButton_7->setText(QApplication::translate("MainWindowClass", "tf0", Q_NULLPTR));
-        pushButton_10->setText(QApplication::translate("MainWindowClass", "merge", Q_NULLPTR));
-        tabWidget_2->setTabText(tabWidget_2->indexOf(tab_2), QApplication::translate("MainWindowClass", "Components", Q_NULLPTR));
-        menu_File->setTitle(QApplication::translate("MainWindowClass", "&File", Q_NULLPTR));
-        menu_Help->setTitle(QApplication::translate("MainWindowClass", "&Help", Q_NULLPTR));
+        tabWidget_2->setTabText(tabWidget_2->indexOf(tab), QApplication::translate("MainWindowClass", "History", nullptr));
+        pushButton_9->setText(QApplication::translate("MainWindowClass", "tf2", nullptr));
+        pushButton_8->setText(QApplication::translate("MainWindowClass", "tf1", nullptr));
+        pushButton_7->setText(QApplication::translate("MainWindowClass", "tf0", nullptr));
+        pushButton_10->setText(QApplication::translate("MainWindowClass", "merge...", nullptr));
+        tabWidget_2->setTabText(tabWidget_2->indexOf(tab_2), QApplication::translate("MainWindowClass", "Components", nullptr));
+        menu_File->setTitle(QApplication::translate("MainWindowClass", "&File", nullptr));
+        menu_Help->setTitle(QApplication::translate("MainWindowClass", "&Help", nullptr));
     } // retranslateUi
 
 };
