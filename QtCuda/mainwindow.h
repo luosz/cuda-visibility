@@ -84,7 +84,7 @@ public:
 		ui.lineEdit->setText(c.name());
 	}
 
-	void set_button_color(QPushButton &button, const QColor &c)
+	void set_button_color(QAbstractButton &button, const QColor &c)
 	{
 		auto c2 = QColor(255 - c.red(), 255 - c.green(), 255 - c.blue());
 		QPalette sample_palette;
@@ -93,7 +93,7 @@ public:
 		button.setPalette(sample_palette);
 	}
 
-	void set_button_color_dialog(QPushButton &button)
+	void set_button_color_dialog(QAbstractButton &button)
 	{
 		auto c = QColorDialog::getColor(button.palette().color(QPalette::Button));
 		if (c.isValid())
@@ -102,7 +102,7 @@ public:
 		}
 	}
 
-	float4 get_button_color(const QPushButton &button)
+	float4 get_button_color(const QAbstractButton &button)
 	{
 		auto c = button.palette().color(QPalette::Button);
 		return make_float4(c.redF(), c.greenF(), c.blueF(), 0);
@@ -372,11 +372,11 @@ private slots:
 
     void on_pushButton_11_clicked();
 
-    void on_pushButton_12_clicked();
+    void on_toolButton_clicked();
 
-    void on_pushButton_13_clicked();
+    void on_toolButton_2_clicked();
 
-    void on_pushButton_14_clicked();
+    void on_toolButton_3_clicked();
 
 private:
 	Ui::MainWindowClass ui;

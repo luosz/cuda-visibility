@@ -14,7 +14,7 @@ MainWindow::MainWindow(QWidget *parent)
 	this->move(this->pos() - QPoint(400, 350));
 	ui.setupUi(this);
 
-	// let the widget background to be filled automatically
+	// enable auto fill background
 	ui.pushButton->setAutoFillBackground(true);
 	ui.lineEdit->setAutoFillBackground(true);
 	ui.pushButton_12->setAutoFillBackground(true);
@@ -274,9 +274,9 @@ void MainWindow::on_pushButton_10_clicked()
 	memset(tf_sum, 0, sizeof(float)*D_BIN_COUNT);
 	float4 sum[D_BIN_COUNT] = { 0 };
 	float4 colors[3] = { 0 };
-	colors[0] = get_button_color(*ui.pushButton_12);
-	colors[1] = get_button_color(*ui.pushButton_13);
-	colors[2] = get_button_color(*ui.pushButton_14);
+	colors[0] = get_button_color(*ui.toolButton);
+	colors[1] = get_button_color(*ui.toolButton_2);
+	colors[2] = get_button_color(*ui.toolButton_3);
 
 	for (int i = 0; i < D_BIN_COUNT; i++)
 	{
@@ -330,17 +330,18 @@ void MainWindow::on_pushButton_11_clicked()
 	clear_transfer_function_components();
 }
 
-void MainWindow::on_pushButton_12_clicked()
+void MainWindow::on_toolButton_clicked()
 {
-	set_button_color_dialog(*ui.pushButton_12);
+	set_button_color_dialog(*ui.toolButton);
+
 }
 
-void MainWindow::on_pushButton_13_clicked()
+void MainWindow::on_toolButton_2_clicked()
 {
-	set_button_color_dialog(*ui.pushButton_13);
+	set_button_color_dialog(*ui.toolButton_2);
 }
 
-void MainWindow::on_pushButton_14_clicked()
+void MainWindow::on_toolButton_3_clicked()
 {
-	set_button_color_dialog(*ui.pushButton_14);
+	set_button_color_dialog(*ui.toolButton_3);
 }

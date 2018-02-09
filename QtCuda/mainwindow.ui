@@ -53,32 +53,7 @@
          <property name="bottomMargin">
           <number>6</number>
          </property>
-         <item row="8" column="1" colspan="5">
-          <layout class="QGridLayout" name="gridLayout_3">
-           <item row="0" column="1">
-            <widget class="QPushButton" name="pushButton_3">
-             <property name="text">
-              <string>Apply alpha/color editing</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="2">
-            <widget class="QPushButton" name="pushButton_4">
-             <property name="text">
-              <string>Reset transfer function</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="0">
-            <widget class="QPushButton" name="pushButton_2">
-             <property name="text">
-              <string>Show transfer function</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item row="1" column="1">
+         <item row="0" column="1">
           <widget class="QPushButton" name="pushButton">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -94,21 +69,40 @@
            </property>
           </widget>
          </item>
-         <item row="0" column="1">
-          <widget class="QLineEdit" name="lineEdit">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
+         <item row="0" column="3">
+          <widget class="QCheckBox" name="checkBox_2">
+           <property name="text">
+            <string>Adjust color</string>
            </property>
-           <property name="autoFillBackground">
-            <bool>true</bool>
-           </property>
-           <property name="readOnly">
+           <property name="checked">
             <bool>true</bool>
            </property>
           </widget>
+         </item>
+         <item row="1" column="0" colspan="5">
+          <layout class="QGridLayout" name="gridLayout_3">
+           <item row="0" column="1">
+            <widget class="QPushButton" name="pushButton_3">
+             <property name="text">
+              <string>Apply alpha/color editing</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QPushButton" name="pushButton_2">
+             <property name="text">
+              <string>Show transfer function</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QPushButton" name="pushButton_4">
+             <property name="text">
+              <string>Reset transfer function</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
          <item row="0" column="2">
           <widget class="QCheckBox" name="checkBox">
@@ -126,31 +120,23 @@
            </property>
           </widget>
          </item>
-         <item row="1" column="2">
-          <widget class="QCheckBox" name="checkBox_2">
-           <property name="text">
-            <string>Adjust color</string>
+         <item row="0" column="0">
+          <widget class="QLineEdit" name="lineEdit">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
            </property>
-           <property name="checked">
+           <property name="autoFillBackground">
+            <bool>true</bool>
+           </property>
+           <property name="readOnly">
             <bool>true</bool>
            </property>
           </widget>
          </item>
-         <item row="1" column="3" colspan="3">
-          <widget class="QPushButton" name="pushButton_5">
-           <property name="text">
-            <string>Temporal TF editing</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="3" colspan="3">
-          <widget class="QCheckBox" name="checkBox_6">
-           <property name="text">
-            <string>Accumulate visibility</string>
-           </property>
-          </widget>
-         </item>
-         <item row="9" column="1" colspan="5">
+         <item row="2" column="0" colspan="5">
           <layout class="QGridLayout" name="gridLayout_5">
            <property name="leftMargin">
             <number>0</number>
@@ -164,13 +150,10 @@
            <property name="bottomMargin">
             <number>0</number>
            </property>
-           <item row="0" column="1">
-            <widget class="QCheckBox" name="checkBox_4">
+           <item row="0" column="2">
+            <widget class="QCheckBox" name="checkBox_5">
              <property name="text">
-              <string>Reset TF before editing</string>
-             </property>
-             <property name="checked">
-              <bool>true</bool>
+              <string>VWS optimization</string>
              </property>
             </widget>
            </item>
@@ -184,10 +167,27 @@
              </property>
             </widget>
            </item>
-           <item row="0" column="2">
-            <widget class="QCheckBox" name="checkBox_5">
+           <item row="0" column="1">
+            <widget class="QCheckBox" name="checkBox_4">
              <property name="text">
-              <string>VWS optimization</string>
+              <string>Reset TF before editing</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="4">
+            <widget class="QPushButton" name="pushButton_5">
+             <property name="text">
+              <string>Temporal TF</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="3">
+            <widget class="QCheckBox" name="checkBox_6">
+             <property name="text">
+              <string>Temporal visibility</string>
              </property>
             </widget>
            </item>
@@ -290,60 +290,69 @@
           </attribute>
           <layout class="QVBoxLayout" name="verticalLayout_3">
            <item>
-            <layout class="QGridLayout" name="gridLayout_7">
-             <item row="0" column="3">
-              <widget class="QPushButton" name="pushButton_13">
-               <property name="text">
-                <string>PushButton</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="1">
-              <widget class="QPushButton" name="pushButton_12">
-               <property name="text">
-                <string>PushButton</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="7">
-              <widget class="QPushButton" name="pushButton_11">
-               <property name="text">
-                <string>clear</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="0">
+            <layout class="QHBoxLayout" name="horizontalLayout">
+             <item>
               <widget class="QPushButton" name="pushButton_7">
                <property name="text">
                 <string>tf0</string>
                </property>
               </widget>
              </item>
-             <item row="0" column="2">
+             <item>
+              <widget class="QToolButton" name="toolButton">
+               <property name="autoFillBackground">
+                <bool>true</bool>
+               </property>
+               <property name="text">
+                <string>...</string>
+               </property>
+              </widget>
+             </item>
+             <item>
               <widget class="QPushButton" name="pushButton_8">
                <property name="text">
                 <string>tf1</string>
                </property>
               </widget>
              </item>
-             <item row="0" column="4">
+             <item>
+              <widget class="QToolButton" name="toolButton_2">
+               <property name="autoFillBackground">
+                <bool>true</bool>
+               </property>
+               <property name="text">
+                <string>...</string>
+               </property>
+              </widget>
+             </item>
+             <item>
               <widget class="QPushButton" name="pushButton_9">
                <property name="text">
                 <string>tf2</string>
                </property>
               </widget>
              </item>
-             <item row="0" column="6">
+             <item>
+              <widget class="QToolButton" name="toolButton_3">
+               <property name="autoFillBackground">
+                <bool>true</bool>
+               </property>
+               <property name="text">
+                <string>...</string>
+               </property>
+              </widget>
+             </item>
+             <item>
               <widget class="QPushButton" name="pushButton_10">
                <property name="text">
                 <string>merge</string>
                </property>
               </widget>
              </item>
-             <item row="0" column="5">
-              <widget class="QPushButton" name="pushButton_14">
+             <item>
+              <widget class="QPushButton" name="pushButton_11">
                <property name="text">
-                <string>PushButton</string>
+                <string>clear</string>
                </property>
               </widget>
              </item>
@@ -364,7 +373,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>17</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
