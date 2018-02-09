@@ -133,10 +133,40 @@ public:
 		delay_show_transfer_function();
 	}
 
-	void delay_add_transfer_function_component(float *tf_component, QChartView &chartView, QString title, int msec = 10)
+	void delay_add_transfer_function_component(float tf_component[], QChartView &chartView, QString title, int msec = 10)
 	{
 		// Use a lambda expression with a capture list for the Qt slot with arguments
 		QTimer::singleShot(msec, this, [this, tf_component, &chartView, title]() {add_transfer_function_component(tf_component, chartView, title); });
+	}
+
+	inline qreal get_line_width(qreal chart_width)
+	{
+		return chart_width / D_BIN_COUNT + 1. / 6.;
+	}
+
+	void draw_histogram(float histogram[], QChartView &chartView, const QString &title)
+	{
+		const qreal N = D_BIN_COUNT - 1;
+		//auto p = get_global_visibility_histogram();
+		auto chart = chartView.chart();
+		chart->removeAllSeries();
+		chart->legend()->hide();
+		auto line_width = get_line_width(chart->size().width());
+		for (int i = 0; i < D_BIN_COUNT; i++)
+		{
+			auto c = QColor::fromRgbF(0.5, 0.5, 0.5);
+			auto line = new QLineSeries();
+			line->append(i / N, 0);
+			line->append(i / N, (qreal)histogram[i]);
+			//line->setColor(c);
+			QPen pen(c);
+			pen.setWidth(line_width);
+			line->setPen(pen);
+			chart->addSeries(line);
+		}
+		chart->createDefaultAxes();
+		chart->setTitle(title);
+		chartView.setRenderHint(QPainter::Antialiasing);
 	}
 
 private slots:
@@ -178,72 +208,89 @@ private slots:
 		auto chart_tf = chartView_tf.chart();
 		chart_tf->removeAllSeries();
 		chart_tf->legend()->hide();
+		auto line_width = get_line_width(chart_tf->size().width());
 		for (int i = 0; i < D_BIN_COUNT; i++)
 		{
 			auto c = QColor::fromRgbF((qreal)p_tf[i].x, (qreal)p_tf[i].y, (qreal)p_tf[i].z);
 			auto line = new QLineSeries();
 			line->append(i / N, (qreal)p_tf[i].w);
 			line->append(i / N, 0);
-			line->setColor(c);
+			//line->setColor(c);
+			QPen pen(c);
+			pen.setWidth(line_width);
+			line->setPen(pen);
 			chart_tf->addSeries(line);
 		}
 		chart_tf->createDefaultAxes();
 		chart_tf->setTitle("Transfer function");
 		chartView_tf.setRenderHint(QPainter::Antialiasing);
 
-		auto p4 = get_relative_visibility_histogram();
-		auto chart4 = chartView_relative.chart();
-		chart4->removeAllSeries();
-		chart4->legend()->hide();
-		for (int i = 0; i < D_BIN_COUNT; i++)
-		{
-			auto c = QColor::fromRgbF(0.5, 0.5, 0.5);
-			auto line = new QLineSeries();
-			line->append(i / N, 0);
-			line->append(i / N, (qreal)p4[i]);
-			line->setColor(c);
-			chart4->addSeries(line);
-		}
-		chart4->createDefaultAxes();
-		chart4->setTitle("Relative visibility histogram");
-		chartView_relative.setRenderHint(QPainter::Antialiasing);
+		draw_histogram(get_relative_visibility_histogram(), chartView_relative, "Relative visibility histogram");
+		draw_histogram(get_global_visibility_histogram(), chartView_global, "Global visibility histogram");
+		draw_histogram(get_local_visibility_histogram(), chartView_local, "Local visibility histogram");
 
-		auto p = get_global_visibility_histogram();
-		auto chart = chartView_global.chart();
-		chart->removeAllSeries();
-		chart->legend()->hide();
-		for (int i = 0; i < D_BIN_COUNT; i++)
-		{
-			auto c = QColor::fromRgbF(0.5, 0.5, 0.5);
-			auto line = new QLineSeries();
-			line->append(i / N, 0);
-			line->append(i / N, (qreal)p[i]);
-			line->setColor(c);
-			chart->addSeries(line);
-		}
-		chart->createDefaultAxes();
-		chart->setTitle("Global visibility histogram");
-		chartView_global.setRenderHint(QPainter::Antialiasing);
+		//auto p4 = get_relative_visibility_histogram();
+		//auto chart4 = chartView_relative.chart();
+		//chart4->removeAllSeries();
+		//chart4->legend()->hide();
+		//for (int i = 0; i < D_BIN_COUNT; i++)
+		//{
+		//	auto c = QColor::fromRgbF(0.5, 0.5, 0.5);
+		//	auto line = new QLineSeries();
+		//	line->append(i / N, 0);
+		//	line->append(i / N, (qreal)p4[i]);
+		//	//line->setColor(c);
+		//	QPen pen(c);
+		//	pen.setWidth(line_width);
+		//	line->setPen(pen);
+		//	chart4->addSeries(line);
+		//}
+		//chart4->createDefaultAxes();
+		//chart4->setTitle("Relative visibility histogram");
+		//chartView_relative.setRenderHint(QPainter::Antialiasing);
 
-		auto p2 = get_local_visibility_histogram();
-		auto chart2 = chartView_local.chart();
-		chart2->removeAllSeries();
-		chart2->legend()->hide();
-		for (int i = 0; i < D_BIN_COUNT; i++)
-		{
-			auto c = QColor::fromRgbF(0.5, 0.5, 0.5);
-			auto line = new QLineSeries();
-			line->append(i / N, 0);
-			line->append(i / N, (qreal)p2[i]);
-			line->setColor(c);
-			chart2->addSeries(line);
-		}
-		chart2->createDefaultAxes();
-		chart2->setTitle("Local visibility histogram");
-		chartView_local.setRenderHint(QPainter::Antialiasing);
+		//auto p = get_global_visibility_histogram();
+		//auto chart = chartView_global.chart();
+		//chart->removeAllSeries();
+		//chart->legend()->hide();
+		//for (int i = 0; i < D_BIN_COUNT; i++)
+		//{
+		//	auto c = QColor::fromRgbF(0.5, 0.5, 0.5);
+		//	auto line = new QLineSeries();
+		//	line->append(i / N, 0);
+		//	line->append(i / N, (qreal)p[i]);
+		//	//line->setColor(c);
+		//	QPen pen(c);
+		//	pen.setWidth(line_width);
+		//	line->setPen(pen);
+		//	chart->addSeries(line);
+		//}
+		//chart->createDefaultAxes();
+		//chart->setTitle("Global visibility histogram");
+		//chartView_global.setRenderHint(QPainter::Antialiasing);
+
+		//auto p2 = get_local_visibility_histogram();
+		//auto chart2 = chartView_local.chart();
+		//chart2->removeAllSeries();
+		//chart2->legend()->hide();
+		//for (int i = 0; i < D_BIN_COUNT; i++)
+		//{
+		//	auto c = QColor::fromRgbF(0.5, 0.5, 0.5);
+		//	auto line = new QLineSeries();
+		//	line->append(i / N, 0);
+		//	line->append(i / N, (qreal)p2[i]);
+		//	//line->setColor(c);
+		//	QPen pen(c);
+		//	pen.setWidth(line_width);
+		//	line->setPen(pen);
+		//	chart2->addSeries(line);
+		//}
+		//chart2->createDefaultAxes();
+		//chart2->setTitle("Local visibility histogram");
+		//chartView_local.setRenderHint(QPainter::Antialiasing);
 	}
 
-	void add_transfer_function_component(float *tf_component, QChartView &chartView, QString title)
+	void add_transfer_function_component(float tf_component[], QChartView &chartView, QString title)
 	{
 		const qreal N = D_BIN_COUNT - 1;
 		auto p_tf = get_tf_array();
@@ -257,13 +304,17 @@ private slots:
 		auto chart_tf = chartView.chart();
 		chart_tf->removeAllSeries();
 		chart_tf->legend()->hide();
+		auto line_width = get_line_width(chart_tf->size().width());
 		for (int i = 0; i < D_BIN_COUNT; i++)
 		{
 			auto c = QColor::fromRgbF((qreal)p_tf[i].x, (qreal)p_tf[i].y, (qreal)p_tf[i].z);
 			auto line = new QLineSeries();
 			line->append(i / N, 0);
 			line->append(i / N, (qreal)tf_component[i]);
-			line->setColor(c);
+			//line->setColor(c);
+			QPen pen(c);
+			pen.setWidth(line_width);
+			line->setPen(pen);
 			chart_tf->addSeries(line);
 		}
 		chart_tf->createDefaultAxes();

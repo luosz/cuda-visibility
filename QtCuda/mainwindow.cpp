@@ -348,13 +348,17 @@ void MainWindow::on_pushButton_10_clicked()
 	auto chart_tf = chartView_sum.chart();
 	chart_tf->removeAllSeries();
 	chart_tf->legend()->hide();
+	auto line_width = get_line_width(chart_tf->size().width());
 	for (int i = 0; i < D_BIN_COUNT; i++)
 	{
 		auto c = QColor::fromRgbF((qreal)p_tf[i].x, (qreal)p_tf[i].y, (qreal)p_tf[i].z);
 		auto line = new QLineSeries();
 		line->append(i / N, 0);
 		line->append(i / N, (qreal)p_tf[i].w);
-		line->setColor(c);
+		//line->setColor(c);
+		QPen pen(c);
+		pen.setWidth(line_width);
+		line->setPen(pen);
 		chart_tf->addSeries(line);
 	}
 	chart_tf->createDefaultAxes();
