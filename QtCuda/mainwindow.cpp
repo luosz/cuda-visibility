@@ -22,9 +22,18 @@ MainWindow::MainWindow(QWidget *parent)
 	ui.verticalLayout_3->addWidget(&chartView_features[0]);
 	ui.verticalLayout_3->addWidget(&chartView_features[1]);
 	ui.verticalLayout_3->addWidget(&chartView_features[2]);
-	//ui.verticalLayout_3->addWidget(&chartView_features[3]);
-	//chartView_features[3].setVisible(false);
+
+	chartView_tf.chart()->setTitle("Transfer function");
+	chartView_relative.chart()->setTitle("Relative visibility histogram");
+	chartView_global.chart()->setTitle("Global visibility histogram");
+	chartView_local.chart()->setTitle("Local visibility histogram");
+	chartView_features[0].chart()->setTitle("Transfer function component 0");
+	chartView_features[1].chart()->setTitle("Transfer function component 1");
+	chartView_features[2].chart()->setTitle("Transfer function component 2");
+
 	ui.verticalLayout_3->addWidget(&chartView_sum);
+	chartView_sum.chart()->setTitle("Merged transfer function");
+
 	delay_show_transfer_function(1000);
 	update_screenshots();
 }
@@ -231,7 +240,7 @@ void MainWindow::on_pushButton_6_clicked()
 void MainWindow::on_pushButton_7_clicked()
 {
 	calculate_visibility_without_editing_tf();
-	delay_add_transfer_function_component(get_tf_component0(), chartView_features[0], "Transfer function component 0");
+	delay_add_transfer_function_component(get_tf_component0(), chartView_features[0]);
 
 	//const qreal N = D_BIN_COUNT - 1;
 	//auto p_tf = get_tf_array();
@@ -262,7 +271,7 @@ void MainWindow::on_pushButton_7_clicked()
 void MainWindow::on_pushButton_8_clicked()
 {
 	calculate_visibility_without_editing_tf();
-	delay_add_transfer_function_component(get_tf_component1(), chartView_features[1], "Transfer function component 1");
+	delay_add_transfer_function_component(get_tf_component1(), chartView_features[1]);
 
 	//const qreal N = D_BIN_COUNT - 1;
 	//auto p_tf = get_tf_array();
@@ -293,7 +302,7 @@ void MainWindow::on_pushButton_8_clicked()
 void MainWindow::on_pushButton_9_clicked()
 {
 	calculate_visibility_without_editing_tf();
-	delay_add_transfer_function_component(get_tf_component2(), chartView_features[2], "Transfer function component 2");
+	delay_add_transfer_function_component(get_tf_component2(), chartView_features[2]);
 
 	//const qreal N = D_BIN_COUNT - 1;
 	//auto p_tf = get_tf_array();
@@ -362,7 +371,7 @@ void MainWindow::on_pushButton_10_clicked()
 		chart_tf->addSeries(line);
 	}
 	chart_tf->createDefaultAxes();
-	chart_tf->setTitle("Transfer function merged");
+	//chart_tf->setTitle("Transfer function merged");
 	chartView_sum.setRenderHint(QPainter::Antialiasing);
 }
 
@@ -382,4 +391,34 @@ void MainWindow::on_checkBox_2_stateChanged(int arg1)
 		*apply_color = ui.checkBox_2->isChecked();
 		std::cout << "on_checkBox_2_stateChanged \t Apply alpha: " << (*apply_alpha ? "true" : "false") << "\t Apply color: " << (*apply_color ? "true" : "false") << std::endl;
 	}
+}
+
+void MainWindow::on_pushButton_11_clicked()
+{
+	clear_transfer_function_components();
+}
+
+void MainWindow::on_pushButton_12_clicked()
+{
+	auto c = QColorDialog::getColor(color);
+	if (c.isValid())
+	{
+		auto c2 = QColor(255 - c.red(), 255 - c.green(), 255 - c.blue());
+		QPalette sample_palette;
+		sample_palette.setColor(QPalette::Button, c);
+		sample_palette.setColor(QPalette::Base, c);
+		//sample_palette.setColor(QPalette::ButtonText, c2);
+		sample_palette.setColor(QPalette::Text, c2);
+		ui.pushButton_12->setPalette(sample_palette);
+	}
+}
+
+void MainWindow::on_pushButton_13_clicked()
+{
+
+}
+
+void MainWindow::on_pushButton_14_clicked()
+{
+
 }

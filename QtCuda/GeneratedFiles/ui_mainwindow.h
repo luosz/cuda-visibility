@@ -78,10 +78,14 @@ public:
     QWidget *tab_2;
     QVBoxLayout *verticalLayout_3;
     QGridLayout *gridLayout_7;
+    QPushButton *pushButton_13;
+    QPushButton *pushButton_12;
+    QPushButton *pushButton_11;
+    QPushButton *pushButton_7;
     QPushButton *pushButton_8;
     QPushButton *pushButton_9;
-    QPushButton *pushButton_7;
     QPushButton *pushButton_10;
+    QPushButton *pushButton_14;
     QMenuBar *menuBar;
     QMenu *menu_File;
     QMenu *menu_Help;
@@ -305,25 +309,45 @@ public:
         gridLayout_7 = new QGridLayout();
         gridLayout_7->setSpacing(6);
         gridLayout_7->setObjectName(QStringLiteral("gridLayout_7"));
-        pushButton_8 = new QPushButton(tab_2);
-        pushButton_8->setObjectName(QStringLiteral("pushButton_8"));
+        pushButton_13 = new QPushButton(tab_2);
+        pushButton_13->setObjectName(QStringLiteral("pushButton_13"));
 
-        gridLayout_7->addWidget(pushButton_8, 0, 1, 1, 1);
+        gridLayout_7->addWidget(pushButton_13, 0, 3, 1, 1);
 
-        pushButton_9 = new QPushButton(tab_2);
-        pushButton_9->setObjectName(QStringLiteral("pushButton_9"));
+        pushButton_12 = new QPushButton(tab_2);
+        pushButton_12->setObjectName(QStringLiteral("pushButton_12"));
 
-        gridLayout_7->addWidget(pushButton_9, 0, 2, 1, 1);
+        gridLayout_7->addWidget(pushButton_12, 0, 1, 1, 1);
+
+        pushButton_11 = new QPushButton(tab_2);
+        pushButton_11->setObjectName(QStringLiteral("pushButton_11"));
+
+        gridLayout_7->addWidget(pushButton_11, 0, 7, 1, 1);
 
         pushButton_7 = new QPushButton(tab_2);
         pushButton_7->setObjectName(QStringLiteral("pushButton_7"));
 
         gridLayout_7->addWidget(pushButton_7, 0, 0, 1, 1);
 
+        pushButton_8 = new QPushButton(tab_2);
+        pushButton_8->setObjectName(QStringLiteral("pushButton_8"));
+
+        gridLayout_7->addWidget(pushButton_8, 0, 2, 1, 1);
+
+        pushButton_9 = new QPushButton(tab_2);
+        pushButton_9->setObjectName(QStringLiteral("pushButton_9"));
+
+        gridLayout_7->addWidget(pushButton_9, 0, 4, 1, 1);
+
         pushButton_10 = new QPushButton(tab_2);
         pushButton_10->setObjectName(QStringLiteral("pushButton_10"));
 
-        gridLayout_7->addWidget(pushButton_10, 0, 3, 1, 1);
+        gridLayout_7->addWidget(pushButton_10, 0, 6, 1, 1);
+
+        pushButton_14 = new QPushButton(tab_2);
+        pushButton_14->setObjectName(QStringLiteral("pushButton_14"));
+
+        gridLayout_7->addWidget(pushButton_14, 0, 5, 1, 1);
 
 
         verticalLayout_3->addLayout(gridLayout_7);
@@ -400,10 +424,14 @@ public:
         label_3->setText(QString());
         label_4->setText(QString());
         tabWidget_2->setTabText(tabWidget_2->indexOf(tab), QApplication::translate("MainWindowClass", "History", nullptr));
+        pushButton_13->setText(QApplication::translate("MainWindowClass", "PushButton", nullptr));
+        pushButton_12->setText(QApplication::translate("MainWindowClass", "PushButton", nullptr));
+        pushButton_11->setText(QApplication::translate("MainWindowClass", "clear", nullptr));
+        pushButton_7->setText(QApplication::translate("MainWindowClass", "tf0", nullptr));
         pushButton_8->setText(QApplication::translate("MainWindowClass", "tf1", nullptr));
         pushButton_9->setText(QApplication::translate("MainWindowClass", "tf2", nullptr));
-        pushButton_7->setText(QApplication::translate("MainWindowClass", "tf0", nullptr));
-        pushButton_10->setText(QApplication::translate("MainWindowClass", "merge...", nullptr));
+        pushButton_10->setText(QApplication::translate("MainWindowClass", "merge", nullptr));
+        pushButton_14->setText(QApplication::translate("MainWindowClass", "PushButton", nullptr));
         tabWidget_2->setTabText(tabWidget_2->indexOf(tab_2), QApplication::translate("MainWindowClass", "Components", nullptr));
         menu_File->setTitle(QApplication::translate("MainWindowClass", "&File", nullptr));
         menu_Help->setTitle(QApplication::translate("MainWindowClass", "&Help", nullptr));

@@ -291,17 +291,24 @@
           <layout class="QVBoxLayout" name="verticalLayout_3">
            <item>
             <layout class="QGridLayout" name="gridLayout_7">
-             <item row="0" column="1">
-              <widget class="QPushButton" name="pushButton_8">
+             <item row="0" column="3">
+              <widget class="QPushButton" name="pushButton_13">
                <property name="text">
-                <string>tf1</string>
+                <string>PushButton</string>
                </property>
               </widget>
              </item>
-             <item row="0" column="2">
-              <widget class="QPushButton" name="pushButton_9">
+             <item row="0" column="1">
+              <widget class="QPushButton" name="pushButton_12">
                <property name="text">
-                <string>tf2</string>
+                <string>PushButton</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="7">
+              <widget class="QPushButton" name="pushButton_11">
+               <property name="text">
+                <string>clear</string>
                </property>
               </widget>
              </item>
@@ -312,10 +319,31 @@
                </property>
               </widget>
              </item>
-             <item row="0" column="3">
+             <item row="0" column="2">
+              <widget class="QPushButton" name="pushButton_8">
+               <property name="text">
+                <string>tf1</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="4">
+              <widget class="QPushButton" name="pushButton_9">
+               <property name="text">
+                <string>tf2</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="6">
               <widget class="QPushButton" name="pushButton_10">
                <property name="text">
-                <string>merge...</string>
+                <string>merge</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="5">
+              <widget class="QPushButton" name="pushButton_14">
+               <property name="text">
+                <string>PushButton</string>
                </property>
               </widget>
              </item>
