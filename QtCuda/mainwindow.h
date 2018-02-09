@@ -349,9 +349,9 @@ private:
 	QChartView chartView_global;
 	QChartView chartView_local;
 
-	QChartView chartView_feature0;
-	QChartView chartView_feature1;
-	QChartView chartView_feature2;
-	QChartView chartView_feature3;
-	//QChartView chartView_all_features;
+	//QChartView chartView_feature0;
+	//QChartView chartView_feature1;
+	//QChartView chartView_feature2;
+	QChartView chartView_sum;
+	QChartView chartView_features[D_MAX_TF_COMPONENTS];
 };

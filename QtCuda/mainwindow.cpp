@@ -19,10 +19,12 @@ MainWindow::MainWindow(QWidget *parent)
 	ui.verticalLayout->addWidget(&chartView_global);
 	ui.verticalLayout->addWidget(&chartView_local);
 
-	ui.verticalLayout_3->addWidget(&chartView_feature0);
-	ui.verticalLayout_3->addWidget(&chartView_feature1);
-	ui.verticalLayout_3->addWidget(&chartView_feature2);
-	ui.verticalLayout_3->addWidget(&chartView_feature3);
+	ui.verticalLayout_3->addWidget(&chartView_features[0]);
+	ui.verticalLayout_3->addWidget(&chartView_features[1]);
+	ui.verticalLayout_3->addWidget(&chartView_features[2]);
+	//ui.verticalLayout_3->addWidget(&chartView_features[3]);
+	//chartView_features[3].setVisible(false);
+	ui.verticalLayout_3->addWidget(&chartView_sum);
 	delay_show_transfer_function(1000);
 	update_screenshots();
 }
@@ -229,7 +231,7 @@ void MainWindow::on_pushButton_6_clicked()
 void MainWindow::on_pushButton_7_clicked()
 {
 	calculate_visibility_without_editing_tf();
-	delay_add_transfer_function_component(get_tf_component0(), chartView_feature0, "Transfer function component 0");
+	delay_add_transfer_function_component(get_tf_component0(), chartView_features[0], "Transfer function component 0");
 
 	//const qreal N = D_BIN_COUNT - 1;
 	//auto p_tf = get_tf_array();
@@ -260,7 +262,7 @@ void MainWindow::on_pushButton_7_clicked()
 void MainWindow::on_pushButton_8_clicked()
 {
 	calculate_visibility_without_editing_tf();
-	delay_add_transfer_function_component(get_tf_component1(), chartView_feature1, "Transfer function component 1");
+	delay_add_transfer_function_component(get_tf_component1(), chartView_features[1], "Transfer function component 1");
 
 	//const qreal N = D_BIN_COUNT - 1;
 	//auto p_tf = get_tf_array();
@@ -291,7 +293,7 @@ void MainWindow::on_pushButton_8_clicked()
 void MainWindow::on_pushButton_9_clicked()
 {
 	calculate_visibility_without_editing_tf();
-	delay_add_transfer_function_component(get_tf_component2(), chartView_feature2, "Transfer function component 2");
+	delay_add_transfer_function_component(get_tf_component2(), chartView_features[2], "Transfer function component 2");
 
 	//const qreal N = D_BIN_COUNT - 1;
 	//auto p_tf = get_tf_array();
@@ -340,25 +342,24 @@ void MainWindow::on_pushButton_10_clicked()
 		tf_sum[i] = t < 0 ? 0 : (t > 1 ? 1 : t);
 		sum[i] = build_color(colors, tf0[i], tf1[i], tf2[i]);
 	}
+	memcpy(p_tf, sum, sizeof(float4)*D_BIN_COUNT);
+	bind_tf_texture();
 
-	auto chart_tf = chartView_feature3.chart();
+	auto chart_tf = chartView_sum.chart();
 	chart_tf->removeAllSeries();
 	chart_tf->legend()->hide();
 	for (int i = 0; i < D_BIN_COUNT; i++)
 	{
-		auto c = QColor::fromRgbF((qreal)sum[i].x, (qreal)sum[i].y, (qreal)sum[i].z);
+		auto c = QColor::fromRgbF((qreal)p_tf[i].x, (qreal)p_tf[i].y, (qreal)p_tf[i].z);
 		auto line = new QLineSeries();
 		line->append(i / N, 0);
-		line->append(i / N, (qreal)sum[i].w);
+		line->append(i / N, (qreal)p_tf[i].w);
 		line->setColor(c);
 		chart_tf->addSeries(line);
 	}
 	chart_tf->createDefaultAxes();
 	chart_tf->setTitle("Transfer function merged");
-	chartView_feature3.setRenderHint(QPainter::Antialiasing);
-
-	memcpy(p_tf, sum, sizeof(float4)*D_BIN_COUNT);
-	bind_tf_texture();
+	chartView_sum.setRenderHint(QPainter::Antialiasing);
 }
 
 void MainWindow::on_checkBox_stateChanged(int arg1)

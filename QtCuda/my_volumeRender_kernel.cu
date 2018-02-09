@@ -84,7 +84,7 @@ __device__ __managed__ float feature_array[BIN_COUNT] = { 0 };
 __device__ __managed__ float feature_vws_array[BIN_COUNT] = { 0 };
 __device__ __managed__ bool display_selection = true;
 // transfer function components
-__device__ __managed__ float opacity_transfer_functions[4][BIN_COUNT] = { 0 };
+__device__ __managed__ float opacity_transfer_functions[D_MAX_TF_COMPONENTS][BIN_COUNT] = { 0 };
 
 // GUI settings
 //float g_SelectedColor[] = { 1.f,1.f,0.f,1.f };
