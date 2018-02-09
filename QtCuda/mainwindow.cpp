@@ -39,6 +39,8 @@ MainWindow::MainWindow(QWidget *parent)
 	ui.verticalLayout_3->addWidget(&chartView_sum);
 	chartView_sum.chart()->setTitle("Merged transfer function");
 
+	ui.pushButton_11->setVisible(false);
+
 	delay_show_transfer_function(1000);
 	update_screenshots();
 }
