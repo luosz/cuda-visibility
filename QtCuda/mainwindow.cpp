@@ -13,6 +13,14 @@ MainWindow::MainWindow(QWidget *parent)
 	);
 	this->move(this->pos() - QPoint(400, 350));
 	ui.setupUi(this);
+
+	// let the widget background to be filled automatically
+	ui.pushButton->setAutoFillBackground(true);
+	ui.lineEdit->setAutoFillBackground(true);
+	ui.pushButton_12->setAutoFillBackground(true);
+	ui.pushButton_13->setAutoFillBackground(true);
+	ui.pushButton_14->setAutoFillBackground(true);
+
 	update_color(QColor::fromRgbF(D_RGBA[0], D_RGBA[1], D_RGBA[2], D_RGBA[3]));
 	ui.verticalLayout->addWidget(&chartView_tf);
 	ui.verticalLayout->addWidget(&chartView_relative);
@@ -241,93 +249,18 @@ void MainWindow::on_pushButton_7_clicked()
 {
 	calculate_visibility_without_editing_tf();
 	delay_add_transfer_function_component(get_tf_component0(), chartView_features[0]);
-
-	//const qreal N = D_BIN_COUNT - 1;
-	//auto p_tf = get_tf_array();
-	//auto tf_component = get_tf_component0();
-	//auto histogram = get_relative_visibility_histogram();
-	//for (int i = 0; i < D_BIN_COUNT; i++)
-	//{
-	//	tf_component[i] = histogram[i] > 0 ? histogram[i] : 0;
-	//}
-
-	//auto chart_tf = chartView_feature0.chart();
-	//chart_tf->removeAllSeries();
-	//chart_tf->legend()->hide();
-	//for (int i = 0; i < D_BIN_COUNT; i++)
-	//{
-	//	auto c = QColor::fromRgbF((qreal)p_tf[i].x, (qreal)p_tf[i].y, (qreal)p_tf[i].z);
-	//	auto line = new QLineSeries();
-	//	line->append(i / N, 0);
-	//	line->append(i / N, (qreal)tf_component[i]);
-	//	line->setColor(c);
-	//	chart_tf->addSeries(line);
-	//}
-	//chart_tf->createDefaultAxes();
-	//chart_tf->setTitle("Transfer function component 0");
-	//chartView_feature0.setRenderHint(QPainter::Antialiasing);
 }
 
 void MainWindow::on_pushButton_8_clicked()
 {
 	calculate_visibility_without_editing_tf();
 	delay_add_transfer_function_component(get_tf_component1(), chartView_features[1]);
-
-	//const qreal N = D_BIN_COUNT - 1;
-	//auto p_tf = get_tf_array();
-	//auto tf_component = get_tf_component1();
-	//auto histogram = get_relative_visibility_histogram();
-	//for (int i = 0; i < D_BIN_COUNT; i++)
-	//{
-	//	tf_component[i] = histogram[i] > 0 ? histogram[i] : 0;
-	//}
-
-	//auto chart_tf = chartView_feature1.chart();
-	//chart_tf->removeAllSeries();
-	//chart_tf->legend()->hide();
-	//for (int i = 0; i < D_BIN_COUNT; i++)
-	//{
-	//	auto c = QColor::fromRgbF((qreal)p_tf[i].x, (qreal)p_tf[i].y, (qreal)p_tf[i].z);
-	//	auto line = new QLineSeries();
-	//	line->append(i / N, 0);
-	//	line->append(i / N, (qreal)tf_component[i]);
-	//	line->setColor(c);
-	//	chart_tf->addSeries(line);
-	//}
-	//chart_tf->createDefaultAxes();
-	//chart_tf->setTitle("Transfer function component 1");
-	//chartView_feature1.setRenderHint(QPainter::Antialiasing);
 }
 
 void MainWindow::on_pushButton_9_clicked()
 {
 	calculate_visibility_without_editing_tf();
 	delay_add_transfer_function_component(get_tf_component2(), chartView_features[2]);
-
-	//const qreal N = D_BIN_COUNT - 1;
-	//auto p_tf = get_tf_array();
-	//auto tf_component = get_tf_component2();
-	//auto histogram = get_relative_visibility_histogram();
-	//for (int i = 0; i < D_BIN_COUNT; i++)
-	//{
-	//	tf_component[i] = histogram[i] > 0 ? histogram[i] : 0;
-	//}
-
-	//auto chart_tf = chartView_feature2.chart();
-	//chart_tf->removeAllSeries();
-	//chart_tf->legend()->hide();
-	//for (int i = 0; i < D_BIN_COUNT; i++)
-	//{
-	//	auto c = QColor::fromRgbF((qreal)p_tf[i].x, (qreal)p_tf[i].y, (qreal)p_tf[i].z);
-	//	auto line = new QLineSeries();
-	//	line->append(i / N, 0);
-	//	line->append(i / N, (qreal)tf_component[i]);
-	//	line->setColor(c);
-	//	chart_tf->addSeries(line);
-	//}
-	//chart_tf->createDefaultAxes();
-	//chart_tf->setTitle("Transfer function component 2");
-	//chartView_feature2.setRenderHint(QPainter::Antialiasing);
 }
 
 void MainWindow::on_pushButton_10_clicked()
@@ -341,9 +274,9 @@ void MainWindow::on_pushButton_10_clicked()
 	memset(tf_sum, 0, sizeof(float)*D_BIN_COUNT);
 	float4 sum[D_BIN_COUNT] = { 0 };
 	float4 colors[3] = { 0 };
-	colors[0] = make_float4(1, 0, 0, 0);
-	colors[1] = make_float4(0, 1, 0, 0);
-	colors[2] = make_float4(0, 0, 1, 0);
+	colors[0] = get_button_color(*ui.pushButton_12);
+	colors[1] = get_button_color(*ui.pushButton_13);
+	colors[2] = get_button_color(*ui.pushButton_14);
 
 	for (int i = 0; i < D_BIN_COUNT; i++)
 	{
@@ -371,7 +304,6 @@ void MainWindow::on_pushButton_10_clicked()
 		chart_tf->addSeries(line);
 	}
 	chart_tf->createDefaultAxes();
-	//chart_tf->setTitle("Transfer function merged");
 	chartView_sum.setRenderHint(QPainter::Antialiasing);
 }
 
@@ -400,25 +332,15 @@ void MainWindow::on_pushButton_11_clicked()
 
 void MainWindow::on_pushButton_12_clicked()
 {
-	auto c = QColorDialog::getColor(color);
-	if (c.isValid())
-	{
-		auto c2 = QColor(255 - c.red(), 255 - c.green(), 255 - c.blue());
-		QPalette sample_palette;
-		sample_palette.setColor(QPalette::Button, c);
-		sample_palette.setColor(QPalette::Base, c);
-		//sample_palette.setColor(QPalette::ButtonText, c2);
-		sample_palette.setColor(QPalette::Text, c2);
-		ui.pushButton_12->setPalette(sample_palette);
-	}
+	set_button_color_dialog(*ui.pushButton_12);
 }
 
 void MainWindow::on_pushButton_13_clicked()
 {
-
+	set_button_color_dialog(*ui.pushButton_13);
 }
 
 void MainWindow::on_pushButton_14_clicked()
 {
-
+	set_button_color_dialog(*ui.pushButton_14);
 }
