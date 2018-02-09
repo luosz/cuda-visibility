@@ -11,15 +11,12 @@ MainWindow::MainWindow(QWidget *parent)
 			qApp->desktop()->availableGeometry()
 		)
 	);
-	this->move(this->pos() - QPoint(400, 350));
+	this->move(this->pos() - QPoint(400, 300));
 	ui.setupUi(this);
 
-	// enable auto fill background
-	ui.pushButton->setAutoFillBackground(true);
-	ui.lineEdit->setAutoFillBackground(true);
-	ui.pushButton_12->setAutoFillBackground(true);
-	ui.pushButton_13->setAutoFillBackground(true);
-	ui.pushButton_14->setAutoFillBackground(true);
+	//// enable auto fill background
+	//ui.pushButton->setAutoFillBackground(true);
+	//ui.lineEdit->setAutoFillBackground(true);
 
 	update_color(QColor::fromRgbF(D_RGBA[0], D_RGBA[1], D_RGBA[2], D_RGBA[3]));
 	ui.verticalLayout->addWidget(&chartView_tf);
@@ -46,14 +43,14 @@ MainWindow::MainWindow(QWidget *parent)
 	update_screenshots();
 }
 
-void MainWindow::on_pushButton_clicked()
-{
-	auto c = QColorDialog::getColor(color);
-	if (c.isValid())
-	{
-		update_color(c);
-	}
-}
+//void MainWindow::on_pushButton_clicked()
+//{
+//	auto c = QColorDialog::getColor(color);
+//	if (c.isValid())
+//	{
+//		update_color(c);
+//	}
+//}
 
 void MainWindow::on_pushButton_2_clicked()
 {
@@ -249,18 +246,21 @@ void MainWindow::on_pushButton_7_clicked()
 {
 	calculate_visibility_without_editing_tf();
 	delay_add_transfer_function_component(get_tf_component0(), chartView_features[0]);
+	delay_set_button_color_to_component_peak_color(*ui.toolButton, get_tf_component0());
 }
 
 void MainWindow::on_pushButton_8_clicked()
 {
 	calculate_visibility_without_editing_tf();
 	delay_add_transfer_function_component(get_tf_component1(), chartView_features[1]);
+	delay_set_button_color_to_component_peak_color(*ui.toolButton_2, get_tf_component1());
 }
 
 void MainWindow::on_pushButton_9_clicked()
 {
 	calculate_visibility_without_editing_tf();
 	delay_add_transfer_function_component(get_tf_component2(), chartView_features[2]);
+	delay_set_button_color_to_component_peak_color(*ui.toolButton_3, get_tf_component2());
 }
 
 void MainWindow::on_pushButton_10_clicked()
@@ -293,7 +293,7 @@ void MainWindow::on_pushButton_10_clicked()
 	auto line_width = get_line_width(chart_tf->size().width());
 	for (int i = 0; i < D_BIN_COUNT; i++)
 	{
-		auto c = QColor::fromRgbF((qreal)p_tf[i].x, (qreal)p_tf[i].y, (qreal)p_tf[i].z);
+		auto c = float4_to_QColor(p_tf[i]);
 		auto line = new QLineSeries();
 		line->append(i / N, 0);
 		line->append(i / N, (qreal)p_tf[i].w);
@@ -333,7 +333,6 @@ void MainWindow::on_pushButton_11_clicked()
 void MainWindow::on_toolButton_clicked()
 {
 	set_button_color_dialog(*ui.toolButton);
-
 }
 
 void MainWindow::on_toolButton_2_clicked()
@@ -344,4 +343,13 @@ void MainWindow::on_toolButton_2_clicked()
 void MainWindow::on_toolButton_3_clicked()
 {
 	set_button_color_dialog(*ui.toolButton_3);
+}
+
+void MainWindow::on_toolButton_4_clicked()
+{
+	auto c = QColorDialog::getColor(color);
+	if (c.isValid())
+	{
+		update_color(c);
+	}
 }

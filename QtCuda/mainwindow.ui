@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>800</width>
-    <height>1080</height>
+    <height>1000</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -42,102 +42,19 @@
        <item row="0" column="0">
         <layout class="QGridLayout" name="gridLayout_4">
          <property name="leftMargin">
-          <number>6</number>
+          <number>0</number>
          </property>
          <property name="topMargin">
-          <number>6</number>
+          <number>0</number>
          </property>
          <property name="rightMargin">
-          <number>6</number>
+          <number>0</number>
          </property>
          <property name="bottomMargin">
-          <number>6</number>
+          <number>0</number>
          </property>
-         <item row="0" column="1">
-          <widget class="QPushButton" name="pushButton">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="autoFillBackground">
-            <bool>true</bool>
-           </property>
-           <property name="text">
-            <string>Pick color</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="3">
-          <widget class="QCheckBox" name="checkBox_2">
-           <property name="text">
-            <string>Adjust color</string>
-           </property>
-           <property name="checked">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0" colspan="5">
+         <item row="0" column="0" colspan="2">
           <layout class="QGridLayout" name="gridLayout_3">
-           <item row="0" column="1">
-            <widget class="QPushButton" name="pushButton_3">
-             <property name="text">
-              <string>Apply alpha/color editing</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="0">
-            <widget class="QPushButton" name="pushButton_2">
-             <property name="text">
-              <string>Show transfer function</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="2">
-            <widget class="QPushButton" name="pushButton_4">
-             <property name="text">
-              <string>Reset transfer function</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item row="0" column="2">
-          <widget class="QCheckBox" name="checkBox">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="text">
-            <string>Adjust alpha</string>
-           </property>
-           <property name="checked">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="0">
-          <widget class="QLineEdit" name="lineEdit">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="autoFillBackground">
-            <bool>true</bool>
-           </property>
-           <property name="readOnly">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0" colspan="5">
-          <layout class="QGridLayout" name="gridLayout_5">
            <property name="leftMargin">
             <number>0</number>
            </property>
@@ -151,12 +68,81 @@
             <number>0</number>
            </property>
            <item row="0" column="2">
-            <widget class="QCheckBox" name="checkBox_5">
+            <widget class="QToolButton" name="toolButton_4">
+             <property name="autoFillBackground">
+              <bool>true</bool>
+             </property>
              <property name="text">
-              <string>VWS optimization</string>
+              <string>...</string>
+             </property>
+             <property name="autoRaise">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
+           <item row="0" column="5">
+            <widget class="QPushButton" name="pushButton_4">
+             <property name="text">
+              <string>Reset TF</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="3">
+            <widget class="QPushButton" name="pushButton_3">
+             <property name="text">
+              <string>Apply alpha/color editing</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QCheckBox" name="checkBox_2">
+             <property name="text">
+              <string>Adjust color</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="4">
+            <widget class="QPushButton" name="pushButton_2">
+             <property name="text">
+              <string>Update TF</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QCheckBox" name="checkBox">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Adjust alpha</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="1" column="0" colspan="2">
+          <layout class="QGridLayout" name="gridLayout_5">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
            <item row="0" column="0">
             <widget class="QCheckBox" name="checkBox_3">
              <property name="text">
@@ -177,10 +163,10 @@
              </property>
             </widget>
            </item>
-           <item row="0" column="4">
-            <widget class="QPushButton" name="pushButton_5">
+           <item row="0" column="2">
+            <widget class="QCheckBox" name="checkBox_5">
              <property name="text">
-              <string>Temporal TF</string>
+              <string>VWS optimization</string>
              </property>
             </widget>
            </item>
@@ -188,6 +174,13 @@
             <widget class="QCheckBox" name="checkBox_6">
              <property name="text">
               <string>Temporal visibility</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="4">
+            <widget class="QPushButton" name="pushButton_5">
+             <property name="text">
+              <string>Temporal TF</string>
              </property>
             </widget>
            </item>
@@ -306,6 +299,9 @@
                <property name="text">
                 <string>...</string>
                </property>
+               <property name="autoRaise">
+                <bool>true</bool>
+               </property>
               </widget>
              </item>
              <item>
@@ -323,6 +319,9 @@
                <property name="text">
                 <string>...</string>
                </property>
+               <property name="autoRaise">
+                <bool>true</bool>
+               </property>
               </widget>
              </item>
              <item>
@@ -339,6 +338,9 @@
                </property>
                <property name="text">
                 <string>...</string>
+               </property>
+               <property name="autoRaise">
+                <bool>true</bool>
                </property>
               </widget>
              </item>

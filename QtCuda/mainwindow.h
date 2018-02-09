@@ -73,15 +73,18 @@ public:
 
 		// for pushButton
 		sample_palette.setColor(QPalette::Button, c);
-		sample_palette.setColor(QPalette::ButtonText, c);
+		sample_palette.setColor(QPalette::ButtonText, c2);
 
 		// for lineEdit
 		sample_palette.setColor(QPalette::Base, c);
 		sample_palette.setColor(QPalette::Text, c2);
 
-		ui.pushButton->setPalette(sample_palette);
-		ui.lineEdit->setPalette(sample_palette);
-		ui.lineEdit->setText(c.name());
+		//ui.pushButton->setPalette(sample_palette);
+		//ui.lineEdit->setPalette(sample_palette);
+		//ui.lineEdit->setText(c.name());
+
+		ui.toolButton_4->setPalette(sample_palette);
+		ui.toolButton_4->setText(c.name());
 	}
 
 	void set_button_color(QAbstractButton &button, const QColor &c)
@@ -89,8 +92,9 @@ public:
 		auto c2 = QColor(255 - c.red(), 255 - c.green(), 255 - c.blue());
 		QPalette sample_palette;
 		sample_palette.setColor(QPalette::Button, c);
-		sample_palette.setColor(QPalette::ButtonText, c);
+		sample_palette.setColor(QPalette::ButtonText, c2);
 		button.setPalette(sample_palette);
+		button.setText(c.name());
 	}
 
 	void set_button_color_dialog(QAbstractButton &button)
@@ -105,7 +109,13 @@ public:
 	float4 get_button_color(const QAbstractButton &button)
 	{
 		auto c = button.palette().color(QPalette::Button);
-		return make_float4(c.redF(), c.greenF(), c.blueF(), 0);
+		return make_float4(c.redF(), c.greenF(), c.blueF(), c.alphaF());
+	}
+
+	QColor float4_to_QColor(float4 c)
+	{
+		//return QColor::fromRgbF(c.x, c.y, c.z, c.w);
+		return QColor::fromRgbF(c.x, c.y, c.z);
 	}
 
 	void set_pointers(Pointer picked_color, bool *alpha, bool *color, bool *time_varying_tf_editing, bool *time_varying_tf_reset, bool *time_varying_vws_optimization, bool *temporal_visibility)
@@ -172,7 +182,7 @@ public:
 		auto line_width = get_line_width(chart_tf->size().width());
 		for (int i = 0; i < D_BIN_COUNT; i++)
 		{
-			auto c = QColor::fromRgbF((qreal)p_tf[i].x, (qreal)p_tf[i].y, (qreal)p_tf[i].z);
+			auto c = float4_to_QColor(p_tf[i]);
 			auto line = new QLineSeries();
 			line->append(i / N, 0);
 			line->append(i / N, (qreal)tf_component[i]);
@@ -236,8 +246,14 @@ public:
 		draw_transfer_function_component(tf2, chartView_features[2]);
 	}
 
+	void delay_set_button_color_to_component_peak_color(QAbstractButton &button, const float tf_component[], int msec = 10)
+	{
+		// Use a lambda expression with a capture list for the Qt slot with arguments
+		QTimer::singleShot(msec, this, [this, tf_component, &button]() {set_button_color_to_component_peak_color(button, tf_component); });
+	}
+
 private slots:
-    void on_pushButton_clicked();
+    //void on_pushButton_clicked();
 
     void on_pushButton_2_clicked();
 
@@ -278,7 +294,7 @@ private slots:
 		auto line_width = get_line_width(chart_tf->size().width());
 		for (int i = 0; i < D_BIN_COUNT; i++)
 		{
-			auto c = QColor::fromRgbF((qreal)p_tf[i].x, (qreal)p_tf[i].y, (qreal)p_tf[i].z);
+			auto c = float4_to_QColor(p_tf[i]);
 			auto line = new QLineSeries();
 			line->append(i / N, (qreal)p_tf[i].w);
 			line->append(i / N, 0);
@@ -307,6 +323,26 @@ private slots:
 		draw_transfer_function_component(tf_component, chartView);
 	}
 
+	void set_button_color_to_component_peak_color(QAbstractButton &button, const float tf_component[])
+	{
+		auto p_tf = get_tf_array();
+		float max = 0;
+		int index = -1;
+		for (int i = 0; i < D_BIN_COUNT; i++)
+		{
+			if (tf_component[i] > max)
+			{
+				index = i;
+				max = tf_component[i];
+			}
+		}
+		if (-1 != index)
+		{
+			set_button_color(button, float4_to_QColor(p_tf[index]));
+		}
+		std::cout << "index=" << index << "\t max=" << max << std::endl;
+	}
+
 	void update_screenshots()
 	{
 		int n = get_next_screenshot_id(get_screenshot_id());
@@ -333,13 +369,13 @@ private slots:
 		float t = v0 + v1 + v2;
 		float w = t < 0 ? 0 : (t > 1 ? 1 : t);
 		float4 ans;
-		if (v0 > v1 && v0 > v2)
+		if (v0 >= v1 && v0 >= v2)
 		{
 			ans = colors[0];
 		}
 		else
 		{
-			if (v1 > v0 && v1 > v2)
+			if (v1 >= v0 && v1 >= v2)
 			{
 				ans = colors[1];
 			}
@@ -377,6 +413,8 @@ private slots:
     void on_toolButton_2_clicked();
 
     void on_toolButton_3_clicked();
+
+    void on_toolButton_4_clicked();
 
 private:
 	Ui::MainWindowClass ui;
