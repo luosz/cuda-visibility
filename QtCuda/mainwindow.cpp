@@ -278,9 +278,12 @@ void MainWindow::on_pushButton_10_clicked()
 
 	for (int i = 0; i < D_BIN_COUNT; i++)
 	{
-		float t = tf0[i] + tf1[i] + tf2[i];
+		float t0 = tf0[i] * tf_component_weights[0];
+		float t1 = tf1[i] * tf_component_weights[1];
+		float t2 = tf2[i] * tf_component_weights[2];
+		float t = t0 + t1 + t2;
 		tf_sum[i] = t < 0 ? 0 : (t > 1 ? 1 : t);
-		sum[i] = build_color(colors, tf0[i], tf1[i], tf2[i]);
+		sum[i] = build_color(colors, t0, t1, t2);
 	}
 	memcpy(p_tf, sum, sizeof(float4)*D_BIN_COUNT);
 	bind_tf_texture();
@@ -351,13 +354,19 @@ void MainWindow::on_actionTF_componment_weights_triggered()
 {
 	char str[_MAX_PATH];
 	sprintf(str, "%g %g %g %g", tf_component_weights[0], tf_component_weights[1], tf_component_weights[2], tf_component_weights[3]);
+	char label[_MAX_PATH];
+	sprintf(label, "Enter transfer function component weights (%d numbers in range [0,1] separated by space)", D_MAX_TF_COMPONENTS);
 	bool ok;
-	QString text = QInputDialog::getText(this, tr("TF component weights"),
-		tr("Enter TF component weights (separated by space)"), QLineEdit::Normal, tr(str), &ok);
+	QString text = QInputDialog::getText(this, tr("Transfer function component weights"),
+		tr(label), QLineEdit::Normal, tr(str), &ok);
 	if (ok && !text.isEmpty())
 	{
 		QTextStream s(&text);
 		s >> tf_component_weights[0] >> tf_component_weights[1] >> tf_component_weights[2] >> tf_component_weights[3];
+		for (int i = 0; i < D_MAX_TF_COMPONENTS; i++)
+		{
+			tf_component_weights[i] = tf_component_weights[i] < 0 ? 0 : (tf_component_weights[i] > 1 ? 1 : tf_component_weights[i]);
+		}
 		std::cout << "tf_component_weights " << tf_component_weights[0] << " " << tf_component_weights[1] << " " << tf_component_weights[2] << " " << tf_component_weights[3] << std::endl;
 	}
 }

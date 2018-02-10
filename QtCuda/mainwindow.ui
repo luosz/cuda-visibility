@@ -90,7 +90,7 @@
            <item row="0" column="3">
             <widget class="QPushButton" name="pushButton_3">
              <property name="text">
-              <string>Apply alpha/color to TF</string>
+              <string>Apply alpha/color editing</string>
              </property>
             </widget>
            </item>
@@ -451,12 +451,12 @@
   </action>
   <action name="actionTF_componment_weights">
    <property name="text">
-    <string>TF componment weights...</string>
+    <string>Transfer function componment weights...</string>
    </property>
   </action>
   <action name="actionClear_TF_component_to_zeros">
    <property name="text">
-    <string>Clear TF component (set to 0)</string>
+    <string>Clear transfer function component (set to 0)</string>
    </property>
   </action>
  </widget>

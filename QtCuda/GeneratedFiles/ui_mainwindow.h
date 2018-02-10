@@ -405,11 +405,11 @@ public:
         actionSave_transfer_function_as->setText(QApplication::translate("MainWindowClass", "&Save transfer function as...", nullptr));
         actionLoad_view_and_region->setText(QApplication::translate("MainWindowClass", "Load &view and region...", nullptr));
         actionSave_view_and_region_as->setText(QApplication::translate("MainWindowClass", "Save view and region &as...", nullptr));
-        actionTF_componment_weights->setText(QApplication::translate("MainWindowClass", "TF componment weights...", nullptr));
-        actionClear_TF_component_to_zeros->setText(QApplication::translate("MainWindowClass", "Clear TF component (set to 0)", nullptr));
+        actionTF_componment_weights->setText(QApplication::translate("MainWindowClass", "Transfer function componment weights...", nullptr));
+        actionClear_TF_component_to_zeros->setText(QApplication::translate("MainWindowClass", "Clear transfer function component (set to 0)", nullptr));
         toolButton_4->setText(QApplication::translate("MainWindowClass", "...", nullptr));
         pushButton_4->setText(QApplication::translate("MainWindowClass", "Reset TF", nullptr));
-        pushButton_3->setText(QApplication::translate("MainWindowClass", "Apply alpha/color to TF", nullptr));
+        pushButton_3->setText(QApplication::translate("MainWindowClass", "Apply alpha/color editing", nullptr));
         checkBox_2->setText(QApplication::translate("MainWindowClass", "Adjust color", nullptr));
         pushButton_2->setText(QApplication::translate("MainWindowClass", "Update TF", nullptr));
         checkBox->setText(QApplication::translate("MainWindowClass", "Adjust alpha", nullptr));
