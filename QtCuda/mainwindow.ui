@@ -364,27 +364,6 @@
                 <property name="bottomMargin">
                  <number>0</number>
                 </property>
-                <item row="0" column="0">
-                 <widget class="QToolButton" name="toolButton_5">
-                  <property name="text">
-                   <string>Create TF
-from region</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="0">
-                 <widget class="QToolButton" name="toolButton">
-                  <property name="autoFillBackground">
-                   <bool>true</bool>
-                  </property>
-                  <property name="text">
-                   <string>...</string>
-                  </property>
-                  <property name="autoRaise">
-                   <bool>true</bool>
-                  </property>
-                 </widget>
-                </item>
                 <item row="2" column="0">
                  <layout class="QHBoxLayout" name="horizontalLayout_4">
                   <property name="spacing">
@@ -421,6 +400,27 @@ from region</string>
                   </item>
                  </layout>
                 </item>
+                <item row="0" column="0">
+                 <widget class="QToolButton" name="toolButton_5">
+                  <property name="text">
+                   <string>Create TF
+from region</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="0">
+                 <widget class="QToolButton" name="toolButton">
+                  <property name="autoFillBackground">
+                   <bool>true</bool>
+                  </property>
+                  <property name="text">
+                   <string>...</string>
+                  </property>
+                  <property name="autoRaise">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
                </layout>
               </item>
              </layout>
@@ -449,27 +449,6 @@ from region</string>
                 <property name="spacing">
                  <number>0</number>
                 </property>
-                <item row="0" column="0">
-                 <widget class="QToolButton" name="toolButton_6">
-                  <property name="text">
-                   <string>Create TF
-from region</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="0">
-                 <widget class="QToolButton" name="toolButton_2">
-                  <property name="autoFillBackground">
-                   <bool>true</bool>
-                  </property>
-                  <property name="text">
-                   <string>...</string>
-                  </property>
-                  <property name="autoRaise">
-                   <bool>true</bool>
-                  </property>
-                 </widget>
-                </item>
                 <item row="2" column="0">
                  <layout class="QHBoxLayout" name="horizontalLayout_5">
                   <property name="spacing">
@@ -505,6 +484,27 @@ from region</string>
                    </widget>
                   </item>
                  </layout>
+                </item>
+                <item row="1" column="0">
+                 <widget class="QToolButton" name="toolButton_2">
+                  <property name="autoFillBackground">
+                   <bool>true</bool>
+                  </property>
+                  <property name="text">
+                   <string>...</string>
+                  </property>
+                  <property name="autoRaise">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="0">
+                 <widget class="QToolButton" name="toolButton_6">
+                  <property name="text">
+                   <string>Create TF
+from region</string>
+                  </property>
+                 </widget>
                 </item>
                </layout>
               </item>
