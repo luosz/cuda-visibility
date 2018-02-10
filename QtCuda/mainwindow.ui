@@ -16,7 +16,7 @@
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout_2">
     <item row="0" column="0">
-     <widget class="QFrame" name="frame">
+     <widget class="QWidget" name="widget" native="true">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
         <horstretch>0</horstretch>
@@ -29,18 +29,21 @@
         <height>512</height>
        </size>
       </property>
-      <property name="frameShape">
-       <enum>QFrame::Panel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
-      </property>
-      <property name="midLineWidth">
-       <number>0</number>
-      </property>
       <layout class="QGridLayout" name="gridLayout">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
        <item row="0" column="0">
-        <layout class="QGridLayout" name="gridLayout_4">
+        <layout class="QGridLayout" name="gridLayout_3">
          <property name="leftMargin">
           <number>0</number>
          </property>
@@ -53,8 +56,8 @@
          <property name="bottomMargin">
           <number>0</number>
          </property>
-         <item row="0" column="0" colspan="2">
-          <layout class="QGridLayout" name="gridLayout_3">
+         <item row="0" column="0">
+          <layout class="QGridLayout" name="gridLayout_4">
            <property name="leftMargin">
             <number>0</number>
            </property>
@@ -67,17 +70,22 @@
            <property name="bottomMargin">
             <number>0</number>
            </property>
-           <item row="0" column="5">
-            <widget class="QPushButton" name="pushButton_2">
-             <property name="text">
-              <string>Update TF</string>
+           <property name="verticalSpacing">
+            <number>7</number>
+           </property>
+           <item row="0" column="0">
+            <widget class="QCheckBox" name="checkBox">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
              </property>
-            </widget>
-           </item>
-           <item row="0" column="6">
-            <widget class="QPushButton" name="pushButton_4">
              <property name="text">
-              <string>Reset TF</string>
+              <string>Adjust alpha</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
@@ -104,19 +112,10 @@
              </property>
             </widget>
            </item>
-           <item row="0" column="0">
-            <widget class="QCheckBox" name="checkBox">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
+           <item row="0" column="3">
+            <widget class="QPushButton" name="pushButton_3">
              <property name="text">
-              <string>Adjust alpha</string>
-             </property>
-             <property name="checked">
-              <bool>true</bool>
+              <string>Apply alpha/color editing</string>
              </property>
             </widget>
            </item>
@@ -127,16 +126,23 @@
              </property>
             </widget>
            </item>
-           <item row="0" column="3">
-            <widget class="QPushButton" name="pushButton_3">
+           <item row="0" column="5">
+            <widget class="QPushButton" name="pushButton_2">
              <property name="text">
-              <string>Apply alpha/color editing</string>
+              <string>Update TF</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="6">
+            <widget class="QPushButton" name="pushButton_4">
+             <property name="text">
+              <string>Reset TF</string>
              </property>
             </widget>
            </item>
           </layout>
          </item>
-         <item row="1" column="0" colspan="2">
+         <item row="1" column="0">
           <layout class="QGridLayout" name="gridLayout_5">
            <property name="leftMargin">
             <number>0</number>
@@ -150,13 +156,6 @@
            <property name="bottomMargin">
             <number>0</number>
            </property>
-           <item row="0" column="2">
-            <widget class="QCheckBox" name="checkBox_5">
-             <property name="text">
-              <string>VWS optimization</string>
-             </property>
-            </widget>
-           </item>
            <item row="0" column="0">
             <widget class="QCheckBox" name="checkBox_3">
              <property name="text">
@@ -177,10 +176,10 @@
              </property>
             </widget>
            </item>
-           <item row="0" column="4">
-            <widget class="QPushButton" name="pushButton_5">
+           <item row="0" column="2">
+            <widget class="QCheckBox" name="checkBox_5">
              <property name="text">
-              <string>Temporal TF</string>
+              <string>VWS optimization</string>
              </property>
             </widget>
            </item>
@@ -188,6 +187,13 @@
             <widget class="QCheckBox" name="checkBox_6">
              <property name="text">
               <string>Temporal visibility</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="4">
+            <widget class="QPushButton" name="pushButton_5">
+             <property name="text">
+              <string>Temporal TF</string>
              </property>
             </widget>
            </item>
@@ -210,13 +216,38 @@
           <attribute name="title">
            <string>Histograms</string>
           </attribute>
-          <layout class="QVBoxLayout" name="verticalLayout"/>
+          <layout class="QVBoxLayout" name="verticalLayout">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+          </layout>
          </widget>
          <widget class="QWidget" name="tab">
           <attribute name="title">
            <string>History</string>
           </attribute>
           <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
            <item>
             <layout class="QFormLayout" name="formLayout">
              <item row="0" column="0">
@@ -302,8 +333,11 @@
             <number>0</number>
            </property>
            <item>
-            <widget class="QGroupBox" name="groupBox">
+            <widget class="QFrame" name="frame">
              <layout class="QHBoxLayout" name="horizontalLayout">
+              <property name="spacing">
+               <number>0</number>
+              </property>
               <property name="leftMargin">
                <number>0</number>
               </property>
@@ -317,7 +351,7 @@
                <number>0</number>
               </property>
               <item>
-               <layout class="QGridLayout" name="gridLayout_7">
+               <layout class="QGridLayout" name="gridLayout_9">
                 <property name="leftMargin">
                  <number>0</number>
                 </property>
@@ -330,10 +364,11 @@
                 <property name="bottomMargin">
                  <number>0</number>
                 </property>
-                <item row="2" column="0">
-                 <widget class="QLabel" name="label_5">
+                <item row="0" column="0">
+                 <widget class="QToolButton" name="toolButton_5">
                   <property name="text">
-                   <string>Weight</string>
+                   <string>Create TF
+from region</string>
                   </property>
                  </widget>
                 </item>
@@ -350,26 +385,41 @@
                   </property>
                  </widget>
                 </item>
-                <item row="0" column="0">
-                 <widget class="QToolButton" name="toolButton_5">
-                  <property name="text">
-                   <string>Create TF
-from region</string>
+                <item row="2" column="0">
+                 <layout class="QHBoxLayout" name="horizontalLayout_4">
+                  <property name="spacing">
+                   <number>0</number>
                   </property>
-                 </widget>
-                </item>
-                <item row="3" column="0">
-                 <widget class="QDoubleSpinBox" name="doubleSpinBox">
-                  <property name="maximum">
-                   <double>1.000000000000000</double>
-                  </property>
-                  <property name="singleStep">
-                   <double>0.100000000000000</double>
-                  </property>
-                  <property name="value">
-                   <double>1.000000000000000</double>
-                  </property>
-                 </widget>
+                  <item>
+                   <widget class="QLabel" name="label_5">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="text">
+                     <string>Weight</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QDoubleSpinBox" name="doubleSpinBox">
+                    <property name="decimals">
+                     <number>1</number>
+                    </property>
+                    <property name="maximum">
+                     <double>1.000000000000000</double>
+                    </property>
+                    <property name="singleStep">
+                     <double>0.100000000000000</double>
+                    </property>
+                    <property name="value">
+                     <double>1.000000000000000</double>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
                 </item>
                </layout>
               </item>
@@ -377,8 +427,11 @@ from region</string>
             </widget>
            </item>
            <item>
-            <widget class="QGroupBox" name="groupBox_2">
+            <widget class="QFrame" name="frame_2">
              <layout class="QHBoxLayout" name="horizontalLayout_2">
+              <property name="spacing">
+               <number>0</number>
+              </property>
               <property name="leftMargin">
                <number>0</number>
               </property>
@@ -393,6 +446,9 @@ from region</string>
               </property>
               <item>
                <layout class="QGridLayout" name="gridLayout_8">
+                <property name="spacing">
+                 <number>0</number>
+                </property>
                 <item row="0" column="0">
                  <widget class="QToolButton" name="toolButton_6">
                   <property name="text">
@@ -415,24 +471,40 @@ from region</string>
                  </widget>
                 </item>
                 <item row="2" column="0">
-                 <widget class="QLabel" name="label_6">
-                  <property name="text">
-                   <string>Weight</string>
+                 <layout class="QHBoxLayout" name="horizontalLayout_5">
+                  <property name="spacing">
+                   <number>0</number>
                   </property>
-                 </widget>
-                </item>
-                <item row="3" column="0">
-                 <widget class="QDoubleSpinBox" name="doubleSpinBox_2">
-                  <property name="maximum">
-                   <double>1.000000000000000</double>
-                  </property>
-                  <property name="singleStep">
-                   <double>0.100000000000000</double>
-                  </property>
-                  <property name="value">
-                   <double>1.000000000000000</double>
-                  </property>
-                 </widget>
+                  <item>
+                   <widget class="QLabel" name="label_6">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="text">
+                     <string>Weight</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QDoubleSpinBox" name="doubleSpinBox_2">
+                    <property name="decimals">
+                     <number>1</number>
+                    </property>
+                    <property name="maximum">
+                     <double>1.000000000000000</double>
+                    </property>
+                    <property name="singleStep">
+                     <double>0.100000000000000</double>
+                    </property>
+                    <property name="value">
+                     <double>1.000000000000000</double>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
                 </item>
                </layout>
               </item>
@@ -440,8 +512,11 @@ from region</string>
             </widget>
            </item>
            <item>
-            <widget class="QGroupBox" name="groupBox_3">
+            <widget class="QFrame" name="frame_3">
              <layout class="QHBoxLayout" name="horizontalLayout_3">
+              <property name="spacing">
+               <number>0</number>
+              </property>
               <property name="leftMargin">
                <number>0</number>
               </property>
@@ -455,19 +530,15 @@ from region</string>
                <number>0</number>
               </property>
               <item>
-               <layout class="QGridLayout" name="gridLayout_11">
+               <layout class="QGridLayout" name="gridLayout_7">
+                <property name="spacing">
+                 <number>0</number>
+                </property>
                 <item row="0" column="0">
                  <widget class="QToolButton" name="toolButton_7">
                   <property name="text">
                    <string>Create TF
 from region</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="2" column="0">
-                 <widget class="QLabel" name="label_7">
-                  <property name="text">
-                   <string>Weight</string>
                   </property>
                  </widget>
                 </item>
@@ -484,18 +555,41 @@ from region</string>
                   </property>
                  </widget>
                 </item>
-                <item row="3" column="0">
-                 <widget class="QDoubleSpinBox" name="doubleSpinBox_3">
-                  <property name="maximum">
-                   <double>1.000000000000000</double>
+                <item row="2" column="0">
+                 <layout class="QHBoxLayout" name="horizontalLayout_6">
+                  <property name="spacing">
+                   <number>0</number>
                   </property>
-                  <property name="singleStep">
-                   <double>0.100000000000000</double>
-                  </property>
-                  <property name="value">
-                   <double>1.000000000000000</double>
-                  </property>
-                 </widget>
+                  <item>
+                   <widget class="QLabel" name="label_7">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="text">
+                     <string>Weight</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QDoubleSpinBox" name="doubleSpinBox_3">
+                    <property name="decimals">
+                     <number>1</number>
+                    </property>
+                    <property name="maximum">
+                     <double>1.000000000000000</double>
+                    </property>
+                    <property name="singleStep">
+                     <double>0.100000000000000</double>
+                    </property>
+                    <property name="value">
+                     <double>1.000000000000000</double>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
                 </item>
                </layout>
               </item>
