@@ -15,8 +15,7 @@ MainWindow::MainWindow(QWidget *parent)
 	ui.setupUi(this);
 
 	//// enable auto fill background
-	//ui.pushButton->setAutoFillBackground(true);
-	//ui.lineEdit->setAutoFillBackground(true);
+	//ui.toolButton_4->setAutoFillBackground(true);
 
 	update_color(QColor::fromRgbF(D_RGBA[0], D_RGBA[1], D_RGBA[2], D_RGBA[3]));
 	ui.verticalLayout->addWidget(&chartView_tf);
@@ -39,20 +38,17 @@ MainWindow::MainWindow(QWidget *parent)
 	ui.verticalLayout_3->addWidget(&chartView_sum);
 	chartView_sum.chart()->setTitle("Merged transfer function");
 
-	ui.pushButton_11->setVisible(false);
+	ui.tabWidget_2->setCurrentIndex(0);
+	//ui.pushButton_11->setVisible(false);
+
+	for (int i = 0; i < D_MAX_TF_COMPONENTS; i++)
+	{
+		tf_component_weights[i] = 1;
+	}
 
 	delay_show_transfer_function(1000);
 	update_screenshots();
 }
-
-//void MainWindow::on_pushButton_clicked()
-//{
-//	auto c = QColorDialog::getColor(color);
-//	if (c.isValid())
-//	{
-//		update_color(c);
-//	}
-//}
 
 void MainWindow::on_pushButton_2_clicked()
 {
@@ -327,11 +323,6 @@ void MainWindow::on_checkBox_2_stateChanged(int arg1)
 	}
 }
 
-void MainWindow::on_pushButton_11_clicked()
-{
-	clear_transfer_function_components();
-}
-
 void MainWindow::on_toolButton_clicked()
 {
 	set_button_color_dialog(*ui.toolButton);
@@ -354,4 +345,24 @@ void MainWindow::on_toolButton_4_clicked()
 	{
 		update_color(c);
 	}
+}
+
+void MainWindow::on_actionTF_componment_weights_triggered()
+{
+	char str[_MAX_PATH];
+	sprintf(str, "%g %g %g %g", tf_component_weights[0], tf_component_weights[1], tf_component_weights[2], tf_component_weights[3]);
+	bool ok;
+	QString text = QInputDialog::getText(this, tr("TF component weights"),
+		tr("Enter TF component weights (separated by space)"), QLineEdit::Normal, tr(str), &ok);
+	if (ok && !text.isEmpty())
+	{
+		QTextStream s(&text);
+		s >> tf_component_weights[0] >> tf_component_weights[1] >> tf_component_weights[2] >> tf_component_weights[3];
+		std::cout << "tf_component_weights " << tf_component_weights[0] << " " << tf_component_weights[1] << " " << tf_component_weights[2] << " " << tf_component_weights[3] << std::endl;
+	}
+}
+
+void MainWindow::on_actionClear_TF_component_to_zeros_triggered()
+{
+    clear_transfer_function_components();
 }

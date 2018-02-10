@@ -44,6 +44,8 @@ public:
     QAction *actionSave_transfer_function_as;
     QAction *actionLoad_view_and_region;
     QAction *actionSave_view_and_region_as;
+    QAction *actionTF_componment_weights;
+    QAction *actionClear_TF_component_to_zeros;
     QWidget *centralWidget;
     QGridLayout *gridLayout_2;
     QFrame *frame;
@@ -85,10 +87,10 @@ public:
     QPushButton *pushButton_9;
     QToolButton *toolButton_3;
     QPushButton *pushButton_10;
-    QPushButton *pushButton_11;
     QMenuBar *menuBar;
     QMenu *menu_File;
     QMenu *menu_Help;
+    QMenu *menu_Options;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
 
@@ -113,6 +115,10 @@ public:
         actionLoad_view_and_region->setObjectName(QStringLiteral("actionLoad_view_and_region"));
         actionSave_view_and_region_as = new QAction(MainWindowClass);
         actionSave_view_and_region_as->setObjectName(QStringLiteral("actionSave_view_and_region_as"));
+        actionTF_componment_weights = new QAction(MainWindowClass);
+        actionTF_componment_weights->setObjectName(QStringLiteral("actionTF_componment_weights"));
+        actionClear_TF_component_to_zeros = new QAction(MainWindowClass);
+        actionClear_TF_component_to_zeros->setObjectName(QStringLiteral("actionClear_TF_component_to_zeros"));
         centralWidget = new QWidget(MainWindowClass);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         gridLayout_2 = new QGridLayout(centralWidget);
@@ -338,11 +344,6 @@ public:
 
         horizontalLayout->addWidget(pushButton_10);
 
-        pushButton_11 = new QPushButton(tab_2);
-        pushButton_11->setObjectName(QStringLiteral("pushButton_11"));
-
-        horizontalLayout->addWidget(pushButton_11);
-
 
         verticalLayout_3->addLayout(horizontalLayout);
 
@@ -361,6 +362,8 @@ public:
         menu_File->setObjectName(QStringLiteral("menu_File"));
         menu_Help = new QMenu(menuBar);
         menu_Help->setObjectName(QStringLiteral("menu_Help"));
+        menu_Options = new QMenu(menuBar);
+        menu_Options->setObjectName(QStringLiteral("menu_Options"));
         MainWindowClass->setMenuBar(menuBar);
         mainToolBar = new QToolBar(MainWindowClass);
         mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
@@ -370,6 +373,7 @@ public:
         MainWindowClass->setStatusBar(statusBar);
 
         menuBar->addAction(menu_File->menuAction());
+        menuBar->addAction(menu_Options->menuAction());
         menuBar->addAction(menu_Help->menuAction());
         menu_File->addAction(action_Open);
         menu_File->addAction(actionOpen_Files);
@@ -379,6 +383,8 @@ public:
         menu_File->addAction(actionSave_view_and_region_as);
         menu_File->addAction(action_Exit);
         menu_Help->addAction(action_About);
+        menu_Options->addAction(actionTF_componment_weights);
+        menu_Options->addAction(actionClear_TF_component_to_zeros);
 
         retranslateUi(MainWindowClass);
 
@@ -399,9 +405,11 @@ public:
         actionSave_transfer_function_as->setText(QApplication::translate("MainWindowClass", "&Save transfer function as...", nullptr));
         actionLoad_view_and_region->setText(QApplication::translate("MainWindowClass", "Load &view and region...", nullptr));
         actionSave_view_and_region_as->setText(QApplication::translate("MainWindowClass", "Save view and region &as...", nullptr));
+        actionTF_componment_weights->setText(QApplication::translate("MainWindowClass", "TF componment weights...", nullptr));
+        actionClear_TF_component_to_zeros->setText(QApplication::translate("MainWindowClass", "Clear TF component (set to 0)", nullptr));
         toolButton_4->setText(QApplication::translate("MainWindowClass", "...", nullptr));
         pushButton_4->setText(QApplication::translate("MainWindowClass", "Reset TF", nullptr));
-        pushButton_3->setText(QApplication::translate("MainWindowClass", "Apply alpha/color editing", nullptr));
+        pushButton_3->setText(QApplication::translate("MainWindowClass", "Apply alpha/color to TF", nullptr));
         checkBox_2->setText(QApplication::translate("MainWindowClass", "Adjust color", nullptr));
         pushButton_2->setText(QApplication::translate("MainWindowClass", "Update TF", nullptr));
         checkBox->setText(QApplication::translate("MainWindowClass", "Adjust alpha", nullptr));
@@ -425,10 +433,10 @@ public:
         pushButton_9->setText(QApplication::translate("MainWindowClass", "tf2", nullptr));
         toolButton_3->setText(QApplication::translate("MainWindowClass", "...", nullptr));
         pushButton_10->setText(QApplication::translate("MainWindowClass", "merge", nullptr));
-        pushButton_11->setText(QApplication::translate("MainWindowClass", "clear", nullptr));
         tabWidget_2->setTabText(tabWidget_2->indexOf(tab_2), QApplication::translate("MainWindowClass", "Components", nullptr));
         menu_File->setTitle(QApplication::translate("MainWindowClass", "&File", nullptr));
         menu_Help->setTitle(QApplication::translate("MainWindowClass", "&Help", nullptr));
+        menu_Options->setTitle(QApplication::translate("MainWindowClass", "&Options", nullptr));
     } // retranslateUi
 
 };

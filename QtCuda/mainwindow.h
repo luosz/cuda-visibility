@@ -17,6 +17,7 @@
 #include <QTimer>
 #include <QPixmap>
 #include <QLabel>
+#include <QInputDialog>
 #include <helper_math.h>
 #include "ui_mainwindow.h"
 #include "def.h"
@@ -211,7 +212,6 @@ public:
 	void draw_histogram(float histogram[], QChartView &chartView)
 	{
 		const qreal N = D_BIN_COUNT - 1;
-		//auto p = get_global_visibility_histogram();
 		auto chart = chartView.chart();
 		chart->removeAllSeries();
 		chart->legend()->hide();
@@ -253,8 +253,6 @@ public:
 	}
 
 private slots:
-    //void on_pushButton_clicked();
-
     void on_pushButton_2_clicked();
 
     void on_pushButton_3_clicked();
@@ -406,8 +404,6 @@ private slots:
 
     void on_checkBox_2_stateChanged(int arg1);
 
-    void on_pushButton_11_clicked();
-
     void on_toolButton_clicked();
 
     void on_toolButton_2_clicked();
@@ -415,6 +411,10 @@ private slots:
     void on_toolButton_3_clicked();
 
     void on_toolButton_4_clicked();
+
+    void on_actionTF_componment_weights_triggered();
+
+    void on_actionClear_TF_component_to_zeros_triggered();
 
 private:
 	Ui::MainWindowClass ui;
@@ -433,4 +433,5 @@ private:
 
 	QChartView chartView_sum;
 	QChartView chartView_features[D_MAX_TF_COMPONENTS];
+	qreal tf_component_weights[D_MAX_TF_COMPONENTS] = { 0 };
 };
