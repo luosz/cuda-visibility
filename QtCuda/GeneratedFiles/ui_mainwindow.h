@@ -491,7 +491,7 @@ public:
 
         retranslateUi(MainWindowClass);
 
-        tabWidget_2->setCurrentIndex(2);
+        tabWidget_2->setCurrentIndex(0);
 
 
         QMetaObject::connectSlotsByName(MainWindowClass);
@@ -533,20 +533,14 @@ public:
         tabWidget_2->setTabText(tabWidget_2->indexOf(tab), QApplication::translate("MainWindowClass", "History", nullptr));
         label_5->setText(QApplication::translate("MainWindowClass", "Weight", nullptr));
         toolButton->setText(QApplication::translate("MainWindowClass", "...", nullptr));
-        toolButton_5->setText(QApplication::translate("MainWindowClass", "Create\n"
-"Transfer\n"
-"Function\n"
-"(TF)", nullptr));
-        toolButton_6->setText(QApplication::translate("MainWindowClass", "Create\n"
-"Transfer\n"
-"Function\n"
-"(TF)", nullptr));
+        toolButton_5->setText(QApplication::translate("MainWindowClass", "Create TF\n"
+"from region", nullptr));
+        toolButton_6->setText(QApplication::translate("MainWindowClass", "Create TF\n"
+"from region", nullptr));
         toolButton_2->setText(QApplication::translate("MainWindowClass", "...", nullptr));
         label_6->setText(QApplication::translate("MainWindowClass", "Weight", nullptr));
-        toolButton_7->setText(QApplication::translate("MainWindowClass", "Create\n"
-"Transfer\n"
-"Function\n"
-"(TF)", nullptr));
+        toolButton_7->setText(QApplication::translate("MainWindowClass", "Create TF\n"
+"from region", nullptr));
         label_7->setText(QApplication::translate("MainWindowClass", "Weight", nullptr));
         toolButton_3->setText(QApplication::translate("MainWindowClass", "...", nullptr));
         tabWidget_2->setTabText(tabWidget_2->indexOf(tab_2), QApplication::translate("MainWindowClass", "Components", nullptr));
