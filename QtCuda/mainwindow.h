@@ -198,12 +198,6 @@ public:
 		chartView.setRenderHint(QPainter::Antialiasing);
 	}
 
-	void delay_add_transfer_function_component(float tf_component[], QChartView &chartView, int msec = 10)
-	{
-		// Use a lambda expression with a capture list for the Qt slot with arguments
-		QTimer::singleShot(msec, this, [this, tf_component, &chartView]() {add_transfer_function_component(tf_component, chartView); });
-	}
-
 	qreal get_line_width(qreal chart_width)
 	{
 		return chart_width / D_BIN_COUNT + 1. / 6.;
@@ -246,7 +240,13 @@ public:
 		draw_transfer_function_component(tf2, chartView_features[2]);
 	}
 
-	void delay_set_button_color_to_component_peak_color(QAbstractButton &button, const float tf_component[], int msec = 10)
+	void delay_add_transfer_function_component(float tf_component[], QChartView &chartView, int msec = 50)
+	{
+		// Use a lambda expression with a capture list for the Qt slot with arguments
+		QTimer::singleShot(msec, this, [this, tf_component, &chartView]() {add_transfer_function_component(tf_component, chartView); });
+	}
+
+	void delay_set_button_color_to_component_peak_color(QAbstractButton &button, const float tf_component[], int msec = 50)
 	{
 		// Use a lambda expression with a capture list for the Qt slot with arguments
 		QTimer::singleShot(msec, this, [this, tf_component, &button]() {set_button_color_to_component_peak_color(button, tf_component); });
