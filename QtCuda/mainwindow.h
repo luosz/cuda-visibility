@@ -392,13 +392,13 @@ private slots:
 
     void on_pushButton_6_clicked();
 
-    void on_pushButton_7_clicked();
+    //void on_pushButton_7_clicked();
 
-    void on_pushButton_8_clicked();
+    //void on_pushButton_8_clicked();
 
-    void on_pushButton_9_clicked();
+    //void on_pushButton_9_clicked();
 
-    void on_pushButton_10_clicked();
+    //void on_pushButton_10_clicked();
 
     void on_checkBox_stateChanged(int arg1);
 
@@ -415,6 +415,20 @@ private slots:
     void on_actionTF_componment_weights_triggered();
 
     void on_actionClear_TF_component_to_zeros_triggered();
+
+    void on_pushButton_clicked();
+
+    void on_toolButton_5_clicked();
+
+    void on_toolButton_6_clicked();
+
+    void on_toolButton_7_clicked();
+
+    void on_doubleSpinBox_valueChanged(double arg1);
+
+    void on_doubleSpinBox_2_valueChanged(double arg1);
+
+    void on_doubleSpinBox_3_valueChanged(double arg1);
 
 private:
 	Ui::MainWindowClass ui;

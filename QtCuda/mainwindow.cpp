@@ -23,9 +23,9 @@ MainWindow::MainWindow(QWidget *parent)
 	ui.verticalLayout->addWidget(&chartView_global);
 	ui.verticalLayout->addWidget(&chartView_local);
 
-	ui.verticalLayout_3->addWidget(&chartView_features[0]);
-	ui.verticalLayout_3->addWidget(&chartView_features[1]);
-	ui.verticalLayout_3->addWidget(&chartView_features[2]);
+	ui.horizontalLayout->addWidget(&chartView_features[0]);
+	ui.horizontalLayout_2->addWidget(&chartView_features[1]);
+	ui.horizontalLayout_3->addWidget(&chartView_features[2]);
 
 	chartView_tf.chart()->setTitle("Transfer function");
 	chartView_relative.chart()->setTitle("Relative visibility histogram");
@@ -240,73 +240,73 @@ void MainWindow::on_pushButton_6_clicked()
 	update_screenshots();
 }
 
-void MainWindow::on_pushButton_7_clicked()
-{
-	calculate_visibility_without_editing_tf();
-	delay_add_transfer_function_component(get_tf_component0(), chartView_features[0]);
-	delay_set_button_color_to_component_peak_color(*ui.toolButton, get_tf_component0());
-}
+//void MainWindow::on_pushButton_7_clicked()
+//{
+//	calculate_visibility_without_editing_tf();
+//	delay_add_transfer_function_component(get_tf_component0(), chartView_features[0]);
+//	delay_set_button_color_to_component_peak_color(*ui.toolButton, get_tf_component0());
+//}
 
-void MainWindow::on_pushButton_8_clicked()
-{
-	calculate_visibility_without_editing_tf();
-	delay_add_transfer_function_component(get_tf_component1(), chartView_features[1]);
-	delay_set_button_color_to_component_peak_color(*ui.toolButton_2, get_tf_component1());
-}
+//void MainWindow::on_pushButton_8_clicked()
+//{
+//	calculate_visibility_without_editing_tf();
+//	delay_add_transfer_function_component(get_tf_component1(), chartView_features[1]);
+//	delay_set_button_color_to_component_peak_color(*ui.toolButton_2, get_tf_component1());
+//}
 
-void MainWindow::on_pushButton_9_clicked()
-{
-	calculate_visibility_without_editing_tf();
-	delay_add_transfer_function_component(get_tf_component2(), chartView_features[2]);
-	delay_set_button_color_to_component_peak_color(*ui.toolButton_3, get_tf_component2());
-}
+//void MainWindow::on_pushButton_9_clicked()
+//{
+//	calculate_visibility_without_editing_tf();
+//	delay_add_transfer_function_component(get_tf_component2(), chartView_features[2]);
+//	delay_set_button_color_to_component_peak_color(*ui.toolButton_3, get_tf_component2());
+//}
 
-void MainWindow::on_pushButton_10_clicked()
-{
-	const qreal N = D_BIN_COUNT - 1;
-	auto p_tf = get_tf_array();
-	auto tf_sum = get_tf_component3();
-	auto tf0 = get_tf_component0();
-	auto tf1 = get_tf_component1();
-	auto tf2 = get_tf_component2();
-	memset(tf_sum, 0, sizeof(float)*D_BIN_COUNT);
-	float4 sum[D_BIN_COUNT] = { 0 };
-	float4 colors[3] = { 0 };
-	colors[0] = get_button_color(*ui.toolButton);
-	colors[1] = get_button_color(*ui.toolButton_2);
-	colors[2] = get_button_color(*ui.toolButton_3);
-
-	for (int i = 0; i < D_BIN_COUNT; i++)
-	{
-		float t0 = tf0[i] * tf_component_weights[0];
-		float t1 = tf1[i] * tf_component_weights[1];
-		float t2 = tf2[i] * tf_component_weights[2];
-		float t = t0 + t1 + t2;
-		tf_sum[i] = t < 0 ? 0 : (t > 1 ? 1 : t);
-		sum[i] = build_color(colors, t0, t1, t2);
-	}
-	memcpy(p_tf, sum, sizeof(float4)*D_BIN_COUNT);
-	bind_tf_texture();
-
-	auto chart_tf = chartView_sum.chart();
-	chart_tf->removeAllSeries();
-	chart_tf->legend()->hide();
-	auto line_width = get_line_width(chart_tf->size().width());
-	for (int i = 0; i < D_BIN_COUNT; i++)
-	{
-		auto c = float4_to_QColor(p_tf[i]);
-		auto line = new QLineSeries();
-		line->append(i / N, 0);
-		line->append(i / N, (qreal)p_tf[i].w);
-		//line->setColor(c);
-		QPen pen(c);
-		pen.setWidth(line_width);
-		line->setPen(pen);
-		chart_tf->addSeries(line);
-	}
-	chart_tf->createDefaultAxes();
-	chartView_sum.setRenderHint(QPainter::Antialiasing);
-}
+//void MainWindow::on_pushButton_10_clicked()
+//{
+//	const qreal N = D_BIN_COUNT - 1;
+//	auto p_tf = get_tf_array();
+//	auto tf_sum = get_tf_component3();
+//	auto tf0 = get_tf_component0();
+//	auto tf1 = get_tf_component1();
+//	auto tf2 = get_tf_component2();
+//	memset(tf_sum, 0, sizeof(float)*D_BIN_COUNT);
+//	float4 sum[D_BIN_COUNT] = { 0 };
+//	float4 colors[3] = { 0 };
+//	colors[0] = get_button_color(*ui.toolButton);
+//	colors[1] = get_button_color(*ui.toolButton_2);
+//	colors[2] = get_button_color(*ui.toolButton_3);
+//
+//	for (int i = 0; i < D_BIN_COUNT; i++)
+//	{
+//		float t0 = tf0[i] * tf_component_weights[0];
+//		float t1 = tf1[i] * tf_component_weights[1];
+//		float t2 = tf2[i] * tf_component_weights[2];
+//		float t = t0 + t1 + t2;
+//		tf_sum[i] = t < 0 ? 0 : (t > 1 ? 1 : t);
+//		sum[i] = build_color(colors, t0, t1, t2);
+//	}
+//	memcpy(p_tf, sum, sizeof(float4)*D_BIN_COUNT);
+//	bind_tf_texture();
+//
+//	auto chart_tf = chartView_sum.chart();
+//	chart_tf->removeAllSeries();
+//	chart_tf->legend()->hide();
+//	auto line_width = get_line_width(chart_tf->size().width());
+//	for (int i = 0; i < D_BIN_COUNT; i++)
+//	{
+//		auto c = float4_to_QColor(p_tf[i]);
+//		auto line = new QLineSeries();
+//		line->append(i / N, 0);
+//		line->append(i / N, (qreal)p_tf[i].w);
+//		//line->setColor(c);
+//		QPen pen(c);
+//		pen.setWidth(line_width);
+//		line->setPen(pen);
+//		chart_tf->addSeries(line);
+//	}
+//	chart_tf->createDefaultAxes();
+//	chartView_sum.setRenderHint(QPainter::Antialiasing);
+//}
 
 void MainWindow::on_checkBox_stateChanged(int arg1)
 {
@@ -374,4 +374,87 @@ void MainWindow::on_actionTF_componment_weights_triggered()
 void MainWindow::on_actionClear_TF_component_to_zeros_triggered()
 {
     clear_transfer_function_components();
+}
+
+void MainWindow::on_pushButton_clicked()
+{
+	const qreal N = D_BIN_COUNT - 1;
+	auto p_tf = get_tf_array();
+	auto tf_sum = get_tf_component3();
+	auto tf0 = get_tf_component0();
+	auto tf1 = get_tf_component1();
+	auto tf2 = get_tf_component2();
+	memset(tf_sum, 0, sizeof(float)*D_BIN_COUNT);
+	float4 sum[D_BIN_COUNT] = { 0 };
+	float4 colors[3] = { 0 };
+	colors[0] = get_button_color(*ui.toolButton);
+	colors[1] = get_button_color(*ui.toolButton_2);
+	colors[2] = get_button_color(*ui.toolButton_3);
+
+	for (int i = 0; i < D_BIN_COUNT; i++)
+	{
+		float t0 = tf0[i] * tf_component_weights[0];
+		float t1 = tf1[i] * tf_component_weights[1];
+		float t2 = tf2[i] * tf_component_weights[2];
+		float t = t0 + t1 + t2;
+		tf_sum[i] = t < 0 ? 0 : (t > 1 ? 1 : t);
+		sum[i] = build_color(colors, t0, t1, t2);
+	}
+	memcpy(p_tf, sum, sizeof(float4)*D_BIN_COUNT);
+	bind_tf_texture();
+
+	auto chart_tf = chartView_sum.chart();
+	chart_tf->removeAllSeries();
+	chart_tf->legend()->hide();
+	auto line_width = get_line_width(chart_tf->size().width());
+	for (int i = 0; i < D_BIN_COUNT; i++)
+	{
+		auto c = float4_to_QColor(p_tf[i]);
+		auto line = new QLineSeries();
+		line->append(i / N, 0);
+		line->append(i / N, (qreal)p_tf[i].w);
+		//line->setColor(c);
+		QPen pen(c);
+		pen.setWidth(line_width);
+		line->setPen(pen);
+		chart_tf->addSeries(line);
+	}
+	chart_tf->createDefaultAxes();
+	chartView_sum.setRenderHint(QPainter::Antialiasing);
+}
+
+void MainWindow::on_toolButton_5_clicked()
+{
+	calculate_visibility_without_editing_tf();
+	delay_add_transfer_function_component(get_tf_component0(), chartView_features[0]);
+	delay_set_button_color_to_component_peak_color(*ui.toolButton, get_tf_component0());
+}
+
+void MainWindow::on_toolButton_6_clicked()
+{
+	calculate_visibility_without_editing_tf();
+	delay_add_transfer_function_component(get_tf_component1(), chartView_features[1]);
+	delay_set_button_color_to_component_peak_color(*ui.toolButton_2, get_tf_component1());
+}
+
+void MainWindow::on_toolButton_7_clicked()
+{
+	calculate_visibility_without_editing_tf();
+	delay_add_transfer_function_component(get_tf_component2(), chartView_features[2]);
+	delay_set_button_color_to_component_peak_color(*ui.toolButton_3, get_tf_component2());
+}
+
+void MainWindow::on_doubleSpinBox_valueChanged(double arg1)
+{
+	tf_component_weights[0] = arg1;
+}
+
+void MainWindow::on_doubleSpinBox_2_valueChanged(double arg1)
+{
+	tf_component_weights[1] = arg1;
+}
+
+void MainWindow::on_doubleSpinBox_3_valueChanged(double arg1)
+{
+	tf_component_weights[2] = arg1;
 }
