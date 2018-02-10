@@ -445,9 +445,6 @@ Function
            </item>
            <item>
             <widget class="QGroupBox" name="groupBox_3">
-             <property name="flat">
-              <bool>false</bool>
-             </property>
              <layout class="QHBoxLayout" name="horizontalLayout_3">
               <property name="leftMargin">
                <number>0</number>

@@ -410,7 +410,6 @@ public:
 
         groupBox_3 = new QGroupBox(tab_2);
         groupBox_3->setObjectName(QStringLiteral("groupBox_3"));
-        groupBox_3->setFlat(false);
         horizontalLayout_3 = new QHBoxLayout(groupBox_3);
         horizontalLayout_3->setSpacing(6);
         horizontalLayout_3->setContentsMargins(11, 11, 11, 11);
