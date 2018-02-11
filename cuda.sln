@@ -1,15 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2009
+VisualStudioVersion = 15.0.27004.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cuda", "cuda\cuda.vcxproj", "{A91FC659-D633-4320-A4A1-7E7E601C25C5}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "depth", "depth\depth.vcxproj", "{2B99DFCF-8CFF-4B0A-A3B3-9A49DAB0C632}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "QtCuda", "QtCuda\QtCuda.vcxproj", "{B12702AD-ABFB-343A-A199-8E24837244A3}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "util", "util\util.vcxproj", "{0FCFD4E3-630C-46B7-BBBD-05E4BA3961CD}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "kmeans", "kmeans\kmeans.vcxproj", "{F061A1FA-44BC-4527-BA79-9BFDFBE4DE01}"
 EndProject
@@ -31,10 +29,6 @@ Global
 		{B12702AD-ABFB-343A-A199-8E24837244A3}.Debug|x64.Build.0 = Debug|x64
 		{B12702AD-ABFB-343A-A199-8E24837244A3}.Release|x64.ActiveCfg = Release|x64
 		{B12702AD-ABFB-343A-A199-8E24837244A3}.Release|x64.Build.0 = Release|x64
-		{0FCFD4E3-630C-46B7-BBBD-05E4BA3961CD}.Debug|x64.ActiveCfg = Debug|x64
-		{0FCFD4E3-630C-46B7-BBBD-05E4BA3961CD}.Debug|x64.Build.0 = Debug|x64
-		{0FCFD4E3-630C-46B7-BBBD-05E4BA3961CD}.Release|x64.ActiveCfg = Release|x64
-		{0FCFD4E3-630C-46B7-BBBD-05E4BA3961CD}.Release|x64.Build.0 = Release|x64
 		{F061A1FA-44BC-4527-BA79-9BFDFBE4DE01}.Debug|x64.ActiveCfg = Debug|x64
 		{F061A1FA-44BC-4527-BA79-9BFDFBE4DE01}.Debug|x64.Build.0 = Debug|x64
 		{F061A1FA-44BC-4527-BA79-9BFDFBE4DE01}.Release|x64.ActiveCfg = Release|x64
