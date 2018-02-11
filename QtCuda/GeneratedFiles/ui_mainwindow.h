@@ -567,14 +567,14 @@ public:
         label_5->setText(QApplication::translate("MainWindowClass", "Weight", nullptr));
         toolButton_5->setText(QApplication::translate("MainWindowClass", "Create TF\n"
 "from region", nullptr));
-        toolButton->setText(QApplication::translate("MainWindowClass", "...", nullptr));
+        toolButton->setText(QApplication::translate("MainWindowClass", "Pick color...", nullptr));
         label_6->setText(QApplication::translate("MainWindowClass", "Weight", nullptr));
-        toolButton_2->setText(QApplication::translate("MainWindowClass", "...", nullptr));
+        toolButton_2->setText(QApplication::translate("MainWindowClass", "Pick color...", nullptr));
         toolButton_6->setText(QApplication::translate("MainWindowClass", "Create TF\n"
 "from region", nullptr));
         toolButton_7->setText(QApplication::translate("MainWindowClass", "Create TF\n"
 "from region", nullptr));
-        toolButton_3->setText(QApplication::translate("MainWindowClass", "...", nullptr));
+        toolButton_3->setText(QApplication::translate("MainWindowClass", "Pick color...", nullptr));
         label_7->setText(QApplication::translate("MainWindowClass", "Weight", nullptr));
         tabWidget_2->setTabText(tabWidget_2->indexOf(tab_2), QApplication::translate("MainWindowClass", "Components", nullptr));
         menu_File->setTitle(QApplication::translate("MainWindowClass", "&File", nullptr));

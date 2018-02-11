@@ -414,7 +414,7 @@ from region</string>
                    <bool>true</bool>
                   </property>
                   <property name="text">
-                   <string>...</string>
+                   <string>Pick color...</string>
                   </property>
                   <property name="autoRaise">
                    <bool>true</bool>
@@ -491,7 +491,7 @@ from region</string>
                    <bool>true</bool>
                   </property>
                   <property name="text">
-                   <string>...</string>
+                   <string>Pick color...</string>
                   </property>
                   <property name="autoRaise">
                    <bool>true</bool>
@@ -548,7 +548,7 @@ from region</string>
                    <bool>true</bool>
                   </property>
                   <property name="text">
-                   <string>...</string>
+                   <string>Pick color...</string>
                   </property>
                   <property name="autoRaise">
                    <bool>true</bool>
