@@ -367,20 +367,27 @@ private slots:
 		float t = v0 + v1 + v2;
 		float w = t < 0 ? 0 : (t > 1 ? 1 : t);
 		float4 ans;
-		if (v0 >= v1 && v0 >= v2)
+		if (w > 0)
 		{
-			ans = v0 > 0 ? colors[0] : tf;
-		}
-		else
-		{
-			if (v1 >= v0 && v1 >= v2)
+			if (v0 >= v1 && v0 >= v2)
 			{
-				ans = v1 > 0 ? colors[1] : tf;
+				ans = colors[0];
 			}
 			else
 			{
-				ans = v2 > 0 ? colors[2] : tf;
+				if (v1 >= v0 && v1 >= v2)
+				{
+					ans = colors[1];
+				}
+				else
+				{
+					ans = colors[2];
+				}
 			}
+		}
+		else
+		{
+			ans = tf;
 		}
 		ans.w = w;
 		return ans;
