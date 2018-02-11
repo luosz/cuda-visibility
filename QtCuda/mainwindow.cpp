@@ -398,7 +398,7 @@ void MainWindow::on_pushButton_clicked()
 		float t2 = tf2[i] * tf_component_weights[2];
 		float t = t0 + t1 + t2;
 		tf_sum[i] = t < 0 ? 0 : (t > 1 ? 1 : t);
-		sum[i] = build_color(colors, t0, t1, t2);
+		sum[i] = build_color(colors, t0, t1, t2, p_tf[i]);
 	}
 	memcpy(p_tf, sum, sizeof(float4)*D_BIN_COUNT);
 	bind_tf_texture();

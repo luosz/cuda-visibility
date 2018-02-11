@@ -240,13 +240,13 @@ public:
 		draw_transfer_function_component(tf2, chartView_features[2]);
 	}
 
-	void delay_add_transfer_function_component(float tf_component[], QChartView &chartView, int msec = 50)
+	void delay_add_transfer_function_component(float tf_component[], QChartView &chartView, int msec = 100)
 	{
 		// Use a lambda expression with a capture list for the Qt slot with arguments
 		QTimer::singleShot(msec, this, [this, tf_component, &chartView]() {add_transfer_function_component(tf_component, chartView); });
 	}
 
-	void delay_set_button_color_to_component_peak_color(QAbstractButton &button, const float tf_component[], int msec = 50)
+	void delay_set_button_color_to_component_peak_color(QAbstractButton &button, const float tf_component[], int msec = 100)
 	{
 		// Use a lambda expression with a capture list for the Qt slot with arguments
 		QTimer::singleShot(msec, this, [this, tf_component, &button]() {set_button_color_to_component_peak_color(button, tf_component); });
@@ -362,24 +362,24 @@ private slots:
 		ui.label_4->setPixmap(p4);
 	}
 
-	float4 build_color(float4 colors[], float v0, float v1, float v2)
+	float4 build_color(float4 colors[], float v0, float v1, float v2, float4 tf)
 	{
 		float t = v0 + v1 + v2;
 		float w = t < 0 ? 0 : (t > 1 ? 1 : t);
 		float4 ans;
 		if (v0 >= v1 && v0 >= v2)
 		{
-			ans = colors[0];
+			ans = v0 > 0 ? colors[0] : tf;
 		}
 		else
 		{
 			if (v1 >= v0 && v1 >= v2)
 			{
-				ans = colors[1];
+				ans = v1 > 0 ? colors[1] : tf;
 			}
 			else
 			{
-				ans = colors[2];
+				ans = v2 > 0 ? colors[2] : tf;
 			}
 		}
 		ans.w = w;

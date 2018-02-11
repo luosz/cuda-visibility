@@ -1372,7 +1372,7 @@ extern "C" void load_ppm_to_gpu(const char *file)
 
 	if (!d_segment)
 	{
-		printf("Initialize d_segment %d %d\n", width, height);
+		printf("Initialize d_segment %d %d\n", (int)width, (int)height);
 		checkCudaErrors(cudaMallocManaged(&d_segment, sizeof(uint)*width*height));
 
 		segmentTex.filterMode = cudaFilterModePoint;
@@ -1458,7 +1458,7 @@ void initCuda(void *h_volume, cudaExtent volumeSize)
 	//compute_vws();
 
 	sizeOfVolume = volumeSize;
-	printf("volumeSize \t %d %d %d\n", sizeOfVolume.width, sizeOfVolume.height, sizeOfVolume.depth);
+	printf("volumeSize \t %d %d %d\n", (int)sizeOfVolume.width, (int)sizeOfVolume.height, (int)sizeOfVolume.depth);
 	//printf("volumeSize \t %d %d %d\n", volumeSize.width, volumeSize.height, volumeSize.depth);
 
 	//auto len = volumeSize.width * volumeSize.height * volumeSize.depth;
