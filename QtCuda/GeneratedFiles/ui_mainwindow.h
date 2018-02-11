@@ -541,9 +541,9 @@ public:
         actionSave_transfer_function_as->setText(QApplication::translate("MainWindowClass", "&Save transfer function as...", nullptr));
         actionLoad_view_and_region->setText(QApplication::translate("MainWindowClass", "Load &view and region...", nullptr));
         actionSave_view_and_region_as->setText(QApplication::translate("MainWindowClass", "Save view and region &as...", nullptr));
-        actionTF_componment_weights->setText(QApplication::translate("MainWindowClass", "Transfer function componment weights...", nullptr));
-        actionClear_TF_component_to_zeros->setText(QApplication::translate("MainWindowClass", "Clear transfer function component (set to 0)", nullptr));
-        actionSet_number_of_transfer_function_components->setText(QApplication::translate("MainWindowClass", "Set number of transfer function components...", nullptr));
+        actionTF_componment_weights->setText(QApplication::translate("MainWindowClass", "&Weights of Transfer function componments...", nullptr));
+        actionClear_TF_component_to_zeros->setText(QApplication::translate("MainWindowClass", "&Clear transfer function component (set to 0)", nullptr));
+        actionSet_number_of_transfer_function_components->setText(QApplication::translate("MainWindowClass", "&Number of transfer function components...", nullptr));
         checkBox->setText(QApplication::translate("MainWindowClass", "Adjust alpha", nullptr));
         checkBox_2->setText(QApplication::translate("MainWindowClass", "Adjust color", nullptr));
         toolButton_4->setText(QApplication::translate("MainWindowClass", "...", nullptr));

@@ -695,17 +695,17 @@ from region</string>
   </action>
   <action name="actionTF_componment_weights">
    <property name="text">
-    <string>Transfer function componment weights...</string>
+    <string>&amp;Weights of Transfer function componments...</string>
    </property>
   </action>
   <action name="actionClear_TF_component_to_zeros">
    <property name="text">
-    <string>Clear transfer function component (set to 0)</string>
+    <string>&amp;Clear transfer function component (set to 0)</string>
    </property>
   </action>
   <action name="actionSet_number_of_transfer_function_components">
    <property name="text">
-    <string>Set number of transfer function components...</string>
+    <string>&amp;Number of transfer function components...</string>
    </property>
   </action>
  </widget>
