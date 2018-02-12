@@ -173,38 +173,37 @@ public:
 		delay_draw_transfer_function_and_visibility_histograms();
 	}
 
-	void draw_transfer_function_component(float tf_component[], QChartView &chartView)
+	void draw_transfer_function_component(const float tf_component[], const float4 tf[], QChartView &chartView)
 	{
 		const qreal N = D_BIN_COUNT - 1;
-		auto p_tf = get_tf_array();
 		auto chart_tf = chartView.chart();
 		chart_tf->removeAllSeries();
 		chart_tf->legend()->hide();
-		auto line_width = get_line_width(chart_tf->size().width());
+		QLineSeries *series0 = new QLineSeries();
+		QLineSeries *series1 = new QLineSeries();
+		QLinearGradient gradient(QPointF(0, 0), QPointF(1, 0));
 		for (int i = 0; i < D_BIN_COUNT; i++)
 		{
-			auto c = float4_to_QColor(p_tf[i]);
-			auto line = new QLineSeries();
-			line->append(i / N, 0);
-			line->append(i / N, (qreal)tf_component[i]);
-			//line->setColor(c);
-			QPen pen(c);
-			pen.setWidth(line_width);
-			line->setPen(pen);
-			chart_tf->addSeries(line);
+			qreal intensity = i / N;
+			auto c = float4_to_QColor(tf[i]);
+			*series0 << QPointF(intensity, 0);
+			*series1 << QPointF(intensity, (qreal)tf_component[i]);
+			gradient.setColorAt(intensity, c);
 		}
+		QAreaSeries *series = new QAreaSeries(series0, series1);
+		gradient.setCoordinateMode(QGradient::ObjectBoundingMode);
+		series->setBrush(gradient);
+		chart_tf->addSeries(series);
 		chart_tf->createDefaultAxes();
-		//chart_tf->setTitle(title);
 		chartView.setRenderHint(QPainter::Antialiasing);
 	}
 
 	qreal get_line_width(qreal chart_width)
 	{
-		//return chart_width / D_BIN_COUNT + 1. / 6.;
 		return chart_width / D_BIN_COUNT;
 	}
 
-	void draw_histogram(float histogram[], QChartView &chartView)
+	void draw_histogram(const float histogram[], QChartView &chartView)
 	{
 		const qreal N = D_BIN_COUNT - 1;
 		auto chart = chartView.chart();
@@ -224,7 +223,31 @@ public:
 			chart->addSeries(line);
 		}
 		chart->createDefaultAxes();
-		//chart->setTitle(title);
+		chartView.setRenderHint(QPainter::Antialiasing);
+	}
+
+	void draw_transfer_function(const float4 tf[], QChartView &chartView)
+	{
+		const qreal N = D_BIN_COUNT - 1;
+		auto chart = chartView.chart();
+		chart->removeAllSeries();
+		chart->legend()->hide();
+		QLineSeries *series0 = new QLineSeries();
+		QLineSeries *series1 = new QLineSeries();
+		QLinearGradient gradient(QPointF(0, 0), QPointF(1, 0));
+		for (int i = 0; i < D_BIN_COUNT; i++)
+		{
+			qreal intensity = i / N;
+			auto c = float4_to_QColor(tf[i]);
+			*series0 << QPointF(intensity, 0);
+			*series1 << QPointF(intensity, (qreal)tf[i].w);
+			gradient.setColorAt(intensity, c);
+		}
+		QAreaSeries *series = new QAreaSeries(series0, series1);
+		gradient.setCoordinateMode(QGradient::ObjectBoundingMode);
+		series->setBrush(gradient);
+		chart->addSeries(series);
+		chart->createDefaultAxes();
 		chartView.setRenderHint(QPainter::Antialiasing);
 	}
 
@@ -233,12 +256,13 @@ public:
 		auto tf0 = get_tf_component0();
 		auto tf1 = get_tf_component1();
 		auto tf2 = get_tf_component2();
+		auto tf = get_tf_array();
 		memset(tf0, 0, sizeof(float)*D_BIN_COUNT);
 		memset(tf1, 0, sizeof(float)*D_BIN_COUNT);
 		memset(tf2, 0, sizeof(float)*D_BIN_COUNT);
-		draw_transfer_function_component(tf0, chartView_features[0]);
-		draw_transfer_function_component(tf1, chartView_features[1]);
-		draw_transfer_function_component(tf2, chartView_features[2]);
+		draw_transfer_function_component(tf0, tf, chartView_features[0]);
+		draw_transfer_function_component(tf1, tf, chartView_features[1]);
+		draw_transfer_function_component(tf2, tf, chartView_features[2]);
 	}
 
 	void delay_add_transfer_function_component(float tf_component[], QChartView &chartView, int msec = 100)
@@ -247,10 +271,10 @@ public:
 		QTimer::singleShot(msec, this, [this, tf_component, &chartView]() {add_transfer_function_component(tf_component, chartView); });
 	}
 
-	void delay_set_button_color_to_component_peak_color(QAbstractButton &button, const float tf_component[], int msec = 100)
+	void delay_set_button_color_to_component_peak_color(QAbstractButton &button, const float tf_component[], const float4 tf[], int msec = 100)
 	{
 		// Use a lambda expression with a capture list for the Qt slot with arguments
-		QTimer::singleShot(msec, this, [this, tf_component, &button]() {set_button_color_to_component_peak_color(button, tf_component); });
+		QTimer::singleShot(msec, this, [this, tf_component, tf, &button]() {set_button_color_to_component_peak_color(button, tf_component, tf); });
 	}
 
 private slots:
@@ -284,28 +308,7 @@ private slots:
 
 	void draw_transfer_function_and_histograms()
 	{
-		auto p_tf = get_tf_array();
-		const qreal N = D_BIN_COUNT - 1;
-
-		auto chart_tf = chartView_tf.chart();
-		chart_tf->removeAllSeries();
-		chart_tf->legend()->hide();
-		auto line_width = get_line_width(chart_tf->size().width());
-		for (int i = 0; i < D_BIN_COUNT; i++)
-		{
-			auto c = float4_to_QColor(p_tf[i]);
-			auto line = new QLineSeries();
-			line->append(i / N, (qreal)p_tf[i].w);
-			line->append(i / N, 0);
-			//line->setColor(c);
-			QPen pen(c);
-			pen.setWidth(line_width);
-			line->setPen(pen);
-			chart_tf->addSeries(line);
-		}
-		chart_tf->createDefaultAxes();
-		chartView_tf.setRenderHint(QPainter::Antialiasing);
-
+		draw_transfer_function(get_tf_array(), chartView_tf);
 		draw_histogram(get_relative_visibility_histogram(), chartView_relative);
 		draw_histogram(get_global_visibility_histogram(), chartView_global);
 		draw_histogram(get_local_visibility_histogram(), chartView_local);
@@ -319,12 +322,11 @@ private slots:
 			tf_component[i] = histogram[i] > 0 ? histogram[i] : 0;
 		}
 
-		draw_transfer_function_component(tf_component, chartView);
+		draw_transfer_function_component(tf_component, get_tf_array(), chartView);
 	}
 
-	void set_button_color_to_component_peak_color(QAbstractButton &button, const float tf_component[])
+	void set_button_color_to_component_peak_color(QAbstractButton &button, const float tf_component[], const float4 tf[])
 	{
-		auto p_tf = get_tf_array();
 		float max = 0;
 		int index = -1;
 		for (int i = 0; i < D_BIN_COUNT; i++)
@@ -337,7 +339,7 @@ private slots:
 		}
 		if (-1 != index)
 		{
-			set_button_color(button, float4_to_QColor(p_tf[index]));
+			set_button_color(button, float4_to_QColor(tf[index]));
 		}
 		std::cout << "index=" << index << "\t max=" << max << std::endl;
 	}
@@ -429,8 +431,6 @@ private slots:
     void on_action_Clear_transfer_function_components_triggered();
 
     void on_action_Weights_of_Transfer_function_componments_triggered();
-
-    void on_action_Number_of_transfer_function_components_triggered();
 
 private:
 	Ui::MainWindowClass ui;

@@ -106,6 +106,8 @@ public:
     QHBoxLayout *horizontalLayout_6;
     QLabel *label_7;
     QDoubleSpinBox *doubleSpinBox_3;
+    QFrame *frame_4;
+    QHBoxLayout *horizontalLayout_9;
     QMenuBar *menuBar;
     QMenu *menu_File;
     QMenu *menu_Help;
@@ -323,7 +325,7 @@ public:
         tab_2 = new QWidget();
         tab_2->setObjectName(QStringLiteral("tab_2"));
         verticalLayout_3 = new QVBoxLayout(tab_2);
-        verticalLayout_3->setSpacing(6);
+        verticalLayout_3->setSpacing(4);
         verticalLayout_3->setContentsMargins(11, 11, 11, 11);
         verticalLayout_3->setObjectName(QStringLiteral("verticalLayout_3"));
         verticalLayout_3->setContentsMargins(0, 0, 0, 0);
@@ -481,6 +483,18 @@ public:
 
         verticalLayout_3->addWidget(frame_3);
 
+        frame_4 = new QFrame(tab_2);
+        frame_4->setObjectName(QStringLiteral("frame_4"));
+        frame_4->setFrameShape(QFrame::StyledPanel);
+        frame_4->setFrameShadow(QFrame::Raised);
+        horizontalLayout_9 = new QHBoxLayout(frame_4);
+        horizontalLayout_9->setSpacing(6);
+        horizontalLayout_9->setContentsMargins(11, 11, 11, 11);
+        horizontalLayout_9->setObjectName(QStringLiteral("horizontalLayout_9"));
+        horizontalLayout_9->setContentsMargins(0, 0, 0, 0);
+
+        verticalLayout_3->addWidget(frame_4);
+
         tabWidget_2->addTab(tab_2, QString());
 
         gridLayout->addWidget(tabWidget_2, 1, 0, 1, 1);
@@ -543,18 +557,18 @@ public:
         action_Number_of_transfer_function_components->setText(QApplication::translate("MainWindowClass", "&Number of transfer function components...", nullptr));
         action_Weights_of_Transfer_function_componments->setText(QApplication::translate("MainWindowClass", "&Weights of Transfer function componments...", nullptr));
         action_Clear_transfer_function_components->setText(QApplication::translate("MainWindowClass", "&Clear transfer function components", nullptr));
-        checkBox->setText(QApplication::translate("MainWindowClass", "Adjust alpha", nullptr));
-        checkBox_2->setText(QApplication::translate("MainWindowClass", "Adjust color", nullptr));
+        checkBox->setText(QApplication::translate("MainWindowClass", "Adjust &alpha", nullptr));
+        checkBox_2->setText(QApplication::translate("MainWindowClass", "Adjust &color", nullptr));
         toolButton_4->setText(QApplication::translate("MainWindowClass", "...", nullptr));
-        pushButton_3->setText(QApplication::translate("MainWindowClass", "Edit alpha/color", nullptr));
-        pushButton->setText(QApplication::translate("MainWindowClass", "Merge TFs", nullptr));
-        pushButton_2->setText(QApplication::translate("MainWindowClass", "Update TF", nullptr));
-        pushButton_4->setText(QApplication::translate("MainWindowClass", "Reset TF", nullptr));
-        checkBox_3->setText(QApplication::translate("MainWindowClass", "Apply TF editing", nullptr));
-        checkBox_4->setText(QApplication::translate("MainWindowClass", "Reset TF before editing", nullptr));
-        checkBox_5->setText(QApplication::translate("MainWindowClass", "VWS optimization", nullptr));
-        checkBox_6->setText(QApplication::translate("MainWindowClass", "Temporal visibility", nullptr));
-        pushButton_5->setText(QApplication::translate("MainWindowClass", "Temporal TF", nullptr));
+        pushButton_3->setText(QApplication::translate("MainWindowClass", "&Edit alpha/color", nullptr));
+        pushButton->setText(QApplication::translate("MainWindowClass", "&Merge TFs", nullptr));
+        pushButton_2->setText(QApplication::translate("MainWindowClass", "&Update TF", nullptr));
+        pushButton_4->setText(QApplication::translate("MainWindowClass", "&Reset TF", nullptr));
+        checkBox_3->setText(QApplication::translate("MainWindowClass", "A&pply TF editing", nullptr));
+        checkBox_4->setText(QApplication::translate("MainWindowClass", "Reset TF &before editing", nullptr));
+        checkBox_5->setText(QApplication::translate("MainWindowClass", "&VWS optimization", nullptr));
+        checkBox_6->setText(QApplication::translate("MainWindowClass", "Temporal &visibility", nullptr));
+        pushButton_5->setText(QApplication::translate("MainWindowClass", "&Temporal TF", nullptr));
         tabWidget_2->setTabText(tabWidget_2->indexOf(tabWidget_2Page1), QApplication::translate("MainWindowClass", "Histograms", nullptr));
         pushButton_6->setText(QApplication::translate("MainWindowClass", "Show renderings", nullptr));
         checkBox_7->setText(QApplication::translate("MainWindowClass", "Save and display previous renderings", nullptr));

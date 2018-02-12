@@ -88,7 +88,7 @@
               </sizepolicy>
              </property>
              <property name="text">
-              <string>Adjust alpha</string>
+              <string>Adjust &amp;alpha</string>
              </property>
              <property name="checked">
               <bool>true</bool>
@@ -98,7 +98,7 @@
            <item>
             <widget class="QCheckBox" name="checkBox_2">
              <property name="text">
-              <string>Adjust color</string>
+              <string>Adjust &amp;color</string>
              </property>
              <property name="checked">
               <bool>true</bool>
@@ -121,28 +121,28 @@
            <item>
             <widget class="QPushButton" name="pushButton_3">
              <property name="text">
-              <string>Edit alpha/color</string>
+              <string>&amp;Edit alpha/color</string>
              </property>
             </widget>
            </item>
            <item>
             <widget class="QPushButton" name="pushButton">
              <property name="text">
-              <string>Merge TFs</string>
+              <string>&amp;Merge TFs</string>
              </property>
             </widget>
            </item>
            <item>
             <widget class="QPushButton" name="pushButton_2">
              <property name="text">
-              <string>Update TF</string>
+              <string>&amp;Update TF</string>
              </property>
             </widget>
            </item>
            <item>
             <widget class="QPushButton" name="pushButton_4">
              <property name="text">
-              <string>Reset TF</string>
+              <string>&amp;Reset TF</string>
              </property>
             </widget>
            </item>
@@ -168,7 +168,7 @@
            <item>
             <widget class="QCheckBox" name="checkBox_3">
              <property name="text">
-              <string>Apply TF editing</string>
+              <string>A&amp;pply TF editing</string>
              </property>
              <property name="checked">
               <bool>true</bool>
@@ -178,7 +178,7 @@
            <item>
             <widget class="QCheckBox" name="checkBox_4">
              <property name="text">
-              <string>Reset TF before editing</string>
+              <string>Reset TF &amp;before editing</string>
              </property>
              <property name="checked">
               <bool>true</bool>
@@ -188,21 +188,21 @@
            <item>
             <widget class="QCheckBox" name="checkBox_5">
              <property name="text">
-              <string>VWS optimization</string>
+              <string>&amp;VWS optimization</string>
              </property>
             </widget>
            </item>
            <item>
             <widget class="QCheckBox" name="checkBox_6">
              <property name="text">
-              <string>Temporal visibility</string>
+              <string>Temporal &amp;visibility</string>
              </property>
             </widget>
            </item>
            <item>
             <widget class="QPushButton" name="pushButton_5">
              <property name="text">
-              <string>Temporal TF</string>
+              <string>&amp;Temporal TF</string>
              </property>
             </widget>
            </item>
@@ -244,7 +244,7 @@
           <attribute name="title">
            <string>History</string>
           </attribute>
-          <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0">
+          <layout class="QVBoxLayout" name="verticalLayout_2">
            <property name="leftMargin">
             <number>0</number>
            </property>
@@ -329,6 +329,9 @@
            <string>Components</string>
           </attribute>
           <layout class="QVBoxLayout" name="verticalLayout_3">
+           <property name="spacing">
+            <number>4</number>
+           </property>
            <property name="leftMargin">
             <number>0</number>
            </property>
@@ -602,6 +605,30 @@ from region</string>
                 </item>
                </layout>
               </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QFrame" name="frame_4">
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
+             </property>
+             <layout class="QHBoxLayout" name="horizontalLayout_9">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
              </layout>
             </widget>
            </item>
