@@ -356,7 +356,7 @@ public:
         doubleSpinBox = new QDoubleSpinBox(frame);
         doubleSpinBox->setObjectName(QStringLiteral("doubleSpinBox"));
         doubleSpinBox->setDecimals(1);
-        doubleSpinBox->setMaximum(2);
+        doubleSpinBox->setMaximum(10);
         doubleSpinBox->setSingleStep(0.1);
         doubleSpinBox->setValue(1);
 
@@ -406,7 +406,7 @@ public:
         doubleSpinBox_2 = new QDoubleSpinBox(frame_2);
         doubleSpinBox_2->setObjectName(QStringLiteral("doubleSpinBox_2"));
         doubleSpinBox_2->setDecimals(1);
-        doubleSpinBox_2->setMaximum(2);
+        doubleSpinBox_2->setMaximum(10);
         doubleSpinBox_2->setSingleStep(0.1);
         doubleSpinBox_2->setValue(1);
 
@@ -468,7 +468,8 @@ public:
         doubleSpinBox_3 = new QDoubleSpinBox(frame_3);
         doubleSpinBox_3->setObjectName(QStringLiteral("doubleSpinBox_3"));
         doubleSpinBox_3->setDecimals(1);
-        doubleSpinBox_3->setMaximum(2);
+        doubleSpinBox_3->setMinimum(0);
+        doubleSpinBox_3->setMaximum(10);
         doubleSpinBox_3->setSingleStep(0.1);
         doubleSpinBox_3->setValue(1);
 
