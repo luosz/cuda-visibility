@@ -27,6 +27,7 @@ MainWindow::MainWindow(QWidget *parent)
 	ui.horizontalLayout_2->addWidget(&chartView_features[1]);
 	ui.horizontalLayout_3->addWidget(&chartView_features[2]);
 
+	// Set chart titles
 	chartView_tf.chart()->setTitle("Transfer function");
 	chartView_relative.chart()->setTitle("Relative visibility histogram");
 	chartView_global.chart()->setTitle("Global visibility histogram");
@@ -38,27 +39,27 @@ MainWindow::MainWindow(QWidget *parent)
 	ui.verticalLayout_3->addWidget(&chartView_sum);
 	chartView_sum.chart()->setTitle("Merged transfer function");
 
+	// show the first tab by default
 	ui.tabWidget_2->setCurrentIndex(0);
-	//ui.pushButton_11->setVisible(false);
 
 	for (int i = 0; i < D_MAX_TF_COMPONENTS; i++)
 	{
 		tf_component_weights[i] = 1;
 	}
 
-	delay_show_transfer_function(1000);
+	delay_draw_transfer_function_and_visibility_histograms(1000);
 	update_screenshots();
 }
 
 void MainWindow::on_pushButton_2_clicked()
 {
-	show_transfer_function();
+	draw_transfer_function_and_histograms();
 }
 
 void MainWindow::on_pushButton_3_clicked()
 {
 	apply_tf_editing();
-	delay_show_transfer_function();
+	delay_draw_transfer_function_and_visibility_histograms();
 
 	//const int n = 11;
 	//int r = 2;
@@ -81,7 +82,7 @@ void MainWindow::on_pushButton_3_clicked()
 void MainWindow::on_pushButton_4_clicked()
 {
 	reset_transfer_function();
-	delay_show_transfer_function();
+	delay_draw_transfer_function_and_visibility_histograms();
 
 	////float gaussian1[R1*R1*R1] = { 0 };
 	//float a;
@@ -168,7 +169,7 @@ void MainWindow::on_actionOpen_transfer_function_triggered()
 		qDebug() << filename;
 		openTransferFunctionFromVoreenXML(filename.toStdString().c_str());
 		bind_tf_texture();
-		show_transfer_function();
+		draw_transfer_function_and_histograms();
 	}
 }
 
@@ -232,7 +233,7 @@ void MainWindow::on_checkBox_6_clicked()
 void MainWindow::on_pushButton_5_clicked()
 {
 	apply_temporal_tf_editing();
-	delay_show_transfer_function();
+	delay_draw_transfer_function_and_visibility_histograms();
 }
 
 void MainWindow::on_pushButton_6_clicked()

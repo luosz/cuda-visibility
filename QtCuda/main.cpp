@@ -1389,7 +1389,7 @@ void load_a_volume_and_optimize()
 
 		if (qt_window)
 		{
-			qt_window->delay_show_transfer_function();
+			qt_window->delay_draw_transfer_function_and_visibility_histograms();
 		}
 	}
 }
@@ -1749,7 +1749,7 @@ void keyboard(unsigned char key, int x, int y)
 			set_apply(true);
 			if (qt_window)
 			{
-				qt_window->delay_show_transfer_function();
+				qt_window->delay_draw_transfer_function_and_visibility_histograms();
 			}
 			break;
 
@@ -1757,7 +1757,7 @@ void keyboard(unsigned char key, int x, int y)
 			set_discard(true);
 			if (qt_window)
 			{
-				qt_window->delay_show_transfer_function();
+				qt_window->delay_draw_transfer_function_and_visibility_histograms();
 			}
 			break;
 
@@ -1769,7 +1769,7 @@ void keyboard(unsigned char key, int x, int y)
 			set_gaussian(true);
 			if (qt_window)
 			{
-				qt_window->delay_show_transfer_function();
+				qt_window->delay_draw_transfer_function_and_visibility_histograms();
 			}
 			break;
 
@@ -1980,7 +1980,7 @@ void passive_motion(int x, int y)
 		//std::cout << "qt_window is " << (qt_window ? "valid" : "null") << std::endl;
 		if (qt_window)
 		{
-			qt_window->delay_show_transfer_function();
+			qt_window->delay_draw_transfer_function_and_visibility_histograms();
 		}
 	}
 }

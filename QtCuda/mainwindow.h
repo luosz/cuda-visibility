@@ -130,9 +130,9 @@ public:
 		calc_temporal_visibility = temporal_visibility;
 	}
 
-	void delay_show_transfer_function(int msec=10)
+	void delay_draw_transfer_function_and_visibility_histograms(int msec=10)
 	{
-		QTimer::singleShot(msec, this, SLOT(show_transfer_function()));
+		QTimer::singleShot(msec, this, SLOT(draw_transfer_function_and_histograms()));
 	}
 
 	void update_checkbox()
@@ -170,7 +170,7 @@ public:
 		ui.checkBox->setChecked(false);
 		ui.checkBox_2->setChecked(false);
 		apply_tf_editing();
-		delay_show_transfer_function();
+		delay_draw_transfer_function_and_visibility_histograms();
 	}
 
 	void draw_transfer_function_component(float tf_component[], QChartView &chartView)
@@ -282,7 +282,7 @@ private slots:
 
     void on_checkBox_5_clicked();
 
-	void show_transfer_function()
+	void draw_transfer_function_and_histograms()
 	{
 		auto p_tf = get_tf_array();
 		const qreal N = D_BIN_COUNT - 1;
