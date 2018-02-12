@@ -675,6 +675,7 @@ from region</string>
     <property name="title">
      <string>&amp;Options</string>
     </property>
+    <addaction name="action_Smooth_transfer_functions"/>
     <addaction name="action_Clear_transfer_function_components"/>
     <addaction name="action_Weights_of_Transfer_function_componments"/>
     <addaction name="action_Number_of_transfer_function_components"/>
@@ -733,6 +734,9 @@ from region</string>
    </property>
   </action>
   <action name="action_Number_of_transfer_function_components">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>&amp;Number of transfer function components...</string>
    </property>
@@ -745,6 +749,17 @@ from region</string>
   <action name="action_Clear_transfer_function_components">
    <property name="text">
     <string>&amp;Clear transfer function components</string>
+   </property>
+  </action>
+  <action name="action_Smooth_transfer_functions">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Smooth transfer functions</string>
    </property>
   </action>
  </widget>

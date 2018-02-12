@@ -53,7 +53,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 void MainWindow::on_pushButton_2_clicked()
 {
-	draw_transfer_function_and_histograms();
+	update_all_transfer_functions_and_histograms();
 }
 
 void MainWindow::on_pushButton_3_clicked()
@@ -286,7 +286,7 @@ void MainWindow::on_toolButton_4_clicked()
 void MainWindow::on_pushButton_clicked()
 {
 	const qreal N = D_BIN_COUNT - 1;
-	auto p_tf = get_tf_array();
+	auto tf = get_tf_array();
 	auto tf_sum = get_tf_component3();
 	auto tf0 = get_tf_component0();
 	auto tf1 = get_tf_component1();
@@ -305,11 +305,11 @@ void MainWindow::on_pushButton_clicked()
 		float t2 = tf2[i] * tf_component_weights[2];
 		float t = t0 + t1 + t2;
 		tf_sum[i] = t < 0 ? 0 : (t > 1 ? 1 : t);
-		sum[i] = build_color(colors, t0, t1, t2, p_tf[i]);
+		sum[i] = build_color(colors, t0, t1, t2, tf[i]);
 	}
-	memcpy(p_tf, sum, sizeof(float4)*D_BIN_COUNT);
+	memcpy(tf, sum, sizeof(float4)*D_BIN_COUNT);
 	bind_tf_texture();
-	draw_transfer_function(p_tf, chartView_sum);
+	draw_transfer_function(tf, chartView_sum);
 }
 
 void MainWindow::on_toolButton_5_clicked()
@@ -372,4 +372,9 @@ void MainWindow::on_action_Weights_of_Transfer_function_componments_triggered()
 		}
 		std::cout << "tf_component_weights " << tf_component_weights[0] << " " << tf_component_weights[1] << " " << tf_component_weights[2] << " " << tf_component_weights[3] << std::endl;
 	}
+}
+
+void MainWindow::on_action_Smooth_transfer_functions_triggered()
+{
+	update_all_transfer_functions_and_histograms();
 }

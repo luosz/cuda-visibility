@@ -76,13 +76,9 @@ public:
 		sample_palette.setColor(QPalette::Button, c);
 		sample_palette.setColor(QPalette::ButtonText, c2);
 
-		// for lineEdit
-		sample_palette.setColor(QPalette::Base, c);
-		sample_palette.setColor(QPalette::Text, c2);
-
-		//ui.pushButton->setPalette(sample_palette);
-		//ui.lineEdit->setPalette(sample_palette);
-		//ui.lineEdit->setText(c.name());
+		//// for lineEdit
+		//sample_palette.setColor(QPalette::Base, c);
+		//sample_palette.setColor(QPalette::Text, c2);
 
 		ui.toolButton_4->setPalette(sample_palette);
 		ui.toolButton_4->setText(c.name());
@@ -173,7 +169,31 @@ public:
 		delay_draw_transfer_function_and_visibility_histograms();
 	}
 
-	void draw_transfer_function_component(const float tf_component[], const float4 tf[], QChartView &chartView)
+	void draw_transfer_function_component_in_lines(const float tf_component[], const float4 tf[], QChartView &chartView)
+	{
+		const qreal N = D_BIN_COUNT - 1;
+		auto chart = chartView.chart();
+		chart->removeAllSeries();
+		chart->legend()->hide();
+		auto line_width = get_line_width(chart->size().width());
+		for (int i = 0; i < D_BIN_COUNT; i++)
+		{
+			auto c = float4_to_QColor(tf[i]);
+			auto line = new QLineSeries();
+			qreal intensity = i / N;
+			line->append(intensity, 0);
+			line->append(intensity, (qreal)tf_component[i]);
+			//line->setColor(c);
+			QPen pen(c);
+			pen.setWidth(line_width);
+			line->setPen(pen);
+			chart->addSeries(line);
+		}
+		chart->createDefaultAxes();
+		chartView.setRenderHint(QPainter::Antialiasing);
+	}
+
+	void draw_transfer_function_component_in_area(const float tf_component[], const float4 tf[], QChartView &chartView)
 	{
 		const qreal N = D_BIN_COUNT - 1;
 		auto chart_tf = chartView.chart();
@@ -184,8 +204,8 @@ public:
 		QLinearGradient gradient(QPointF(0, 0), QPointF(1, 0));
 		for (int i = 0; i < D_BIN_COUNT; i++)
 		{
-			qreal intensity = i / N;
 			auto c = float4_to_QColor(tf[i]);
+			qreal intensity = i / N;
 			*series0 << QPointF(intensity, 0);
 			*series1 << QPointF(intensity, (qreal)tf_component[i]);
 			gradient.setColorAt(intensity, c);
@@ -196,6 +216,18 @@ public:
 		chart_tf->addSeries(series);
 		chart_tf->createDefaultAxes();
 		chartView.setRenderHint(QPainter::Antialiasing);
+	}
+
+	void draw_transfer_function_component(const float tf_component[], const float4 tf[], QChartView &chartView)
+	{
+		if (ui.action_Smooth_transfer_functions->isChecked())
+		{
+			draw_transfer_function_component_in_area(tf_component, tf, chartView);
+		} 
+		else
+		{
+			draw_transfer_function_component_in_lines(tf_component, tf, chartView);
+		}
 	}
 
 	qreal get_line_width(qreal chart_width)
@@ -214,8 +246,9 @@ public:
 		{
 			auto c = QColor::fromRgbF(0.5, 0.5, 0.5);
 			auto line = new QLineSeries();
-			line->append(i / N, 0);
-			line->append(i / N, (qreal)histogram[i]);
+			qreal intensity = i / N;
+			line->append(intensity, 0);
+			line->append(intensity, (qreal)histogram[i]);
 			//line->setColor(c);
 			QPen pen(c);
 			pen.setWidth(line_width);
@@ -226,7 +259,7 @@ public:
 		chartView.setRenderHint(QPainter::Antialiasing);
 	}
 
-	void draw_transfer_function(const float4 tf[], QChartView &chartView)
+	void draw_transfer_function_in_area(const float4 tf[], QChartView &chartView)
 	{
 		const qreal N = D_BIN_COUNT - 1;
 		auto chart = chartView.chart();
@@ -251,6 +284,42 @@ public:
 		chartView.setRenderHint(QPainter::Antialiasing);
 	}
 
+	void draw_transfer_function_in_lines(const float4 tf[], QChartView &chartView)
+	{
+		const qreal N = D_BIN_COUNT - 1;
+		auto chart = chartView.chart();
+		chart->removeAllSeries();
+		chart->legend()->hide();
+		auto line_width = get_line_width(chart->size().width());
+		for (int i = 0; i < D_BIN_COUNT; i++)
+		{
+			auto c = float4_to_QColor(tf[i]);
+			auto line = new QLineSeries();
+			qreal intensity = i / N;
+			line->append(intensity, 0);
+			line->append(intensity, (qreal)tf[i].w);
+			//line->setColor(c);
+			QPen pen(c);
+			pen.setWidth(line_width);
+			line->setPen(pen);
+			chart->addSeries(line);
+		}
+		chart->createDefaultAxes();
+		chartView.setRenderHint(QPainter::Antialiasing);
+	}
+
+	void draw_transfer_function(const float4 tf[], QChartView &chartView)
+	{
+		if (ui.action_Smooth_transfer_functions->isChecked())
+		{
+			draw_transfer_function_in_area(tf, chartView);
+		}
+		else
+		{
+			draw_transfer_function_in_lines(tf, chartView);
+		}
+	}
+
 	void clear_transfer_function_components()
 	{
 		auto tf0 = get_tf_component0();
@@ -263,6 +332,16 @@ public:
 		draw_transfer_function_component(tf0, tf, chartView_features[0]);
 		draw_transfer_function_component(tf1, tf, chartView_features[1]);
 		draw_transfer_function_component(tf2, tf, chartView_features[2]);
+	}
+
+	void update_all_transfer_functions_and_histograms()
+	{
+		draw_transfer_function_and_histograms();
+		auto tf = get_tf_array();
+		draw_transfer_function_component(get_tf_component0(), tf, chartView_features[0]);
+		draw_transfer_function_component(get_tf_component1(), tf, chartView_features[1]);
+		draw_transfer_function_component(get_tf_component2(), tf, chartView_features[2]);
+		draw_transfer_function(tf, chartView_sum);
 	}
 
 	void delay_add_transfer_function_component(float tf_component[], QChartView &chartView, int msec = 100)
@@ -431,6 +510,8 @@ private slots:
     void on_action_Clear_transfer_function_components_triggered();
 
     void on_action_Weights_of_Transfer_function_componments_triggered();
+
+    void on_action_Smooth_transfer_functions_triggered();
 
 private:
 	Ui::MainWindowClass ui;

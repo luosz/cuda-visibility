@@ -48,6 +48,7 @@ public:
     QAction *action_Number_of_transfer_function_components;
     QAction *action_Weights_of_Transfer_function_componments;
     QAction *action_Clear_transfer_function_components;
+    QAction *action_Smooth_transfer_functions;
     QWidget *centralWidget;
     QGridLayout *gridLayout_2;
     QWidget *widget;
@@ -138,10 +139,15 @@ public:
         actionSave_view_and_region_as->setObjectName(QStringLiteral("actionSave_view_and_region_as"));
         action_Number_of_transfer_function_components = new QAction(MainWindowClass);
         action_Number_of_transfer_function_components->setObjectName(QStringLiteral("action_Number_of_transfer_function_components"));
+        action_Number_of_transfer_function_components->setEnabled(false);
         action_Weights_of_Transfer_function_componments = new QAction(MainWindowClass);
         action_Weights_of_Transfer_function_componments->setObjectName(QStringLiteral("action_Weights_of_Transfer_function_componments"));
         action_Clear_transfer_function_components = new QAction(MainWindowClass);
         action_Clear_transfer_function_components->setObjectName(QStringLiteral("action_Clear_transfer_function_components"));
+        action_Smooth_transfer_functions = new QAction(MainWindowClass);
+        action_Smooth_transfer_functions->setObjectName(QStringLiteral("action_Smooth_transfer_functions"));
+        action_Smooth_transfer_functions->setCheckable(true);
+        action_Smooth_transfer_functions->setChecked(true);
         centralWidget = new QWidget(MainWindowClass);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         gridLayout_2 = new QGridLayout(centralWidget);
@@ -532,6 +538,7 @@ public:
         menu_File->addAction(actionSave_view_and_region_as);
         menu_File->addAction(action_Exit);
         menu_Help->addAction(action_About);
+        menu_Options->addAction(action_Smooth_transfer_functions);
         menu_Options->addAction(action_Clear_transfer_function_components);
         menu_Options->addAction(action_Weights_of_Transfer_function_componments);
         menu_Options->addAction(action_Number_of_transfer_function_components);
@@ -558,6 +565,7 @@ public:
         action_Number_of_transfer_function_components->setText(QApplication::translate("MainWindowClass", "&Number of transfer function components...", nullptr));
         action_Weights_of_Transfer_function_componments->setText(QApplication::translate("MainWindowClass", "&Weights of Transfer function componments...", nullptr));
         action_Clear_transfer_function_components->setText(QApplication::translate("MainWindowClass", "&Clear transfer function components", nullptr));
+        action_Smooth_transfer_functions->setText(QApplication::translate("MainWindowClass", "&Smooth transfer functions", nullptr));
         checkBox->setText(QApplication::translate("MainWindowClass", "Adjust &alpha", nullptr));
         checkBox_2->setText(QApplication::translate("MainWindowClass", "Adjust &color", nullptr));
         toolButton_4->setText(QApplication::translate("MainWindowClass", "...", nullptr));
