@@ -53,7 +53,7 @@ public:
     QWidget *widget;
     QGridLayout *gridLayout;
     QGridLayout *gridLayout_3;
-    QGridLayout *gridLayout_4;
+    QHBoxLayout *horizontalLayout_7;
     QCheckBox *checkBox;
     QCheckBox *checkBox_2;
     QToolButton *toolButton_4;
@@ -61,7 +61,7 @@ public:
     QPushButton *pushButton;
     QPushButton *pushButton_2;
     QPushButton *pushButton_4;
-    QGridLayout *gridLayout_5;
+    QHBoxLayout *horizontalLayout_8;
     QCheckBox *checkBox_3;
     QCheckBox *checkBox_4;
     QCheckBox *checkBox_5;
@@ -155,19 +155,18 @@ public:
         widget->setSizePolicy(sizePolicy);
         widget->setMinimumSize(QSize(512, 512));
         gridLayout = new QGridLayout(widget);
-        gridLayout->setSpacing(6);
+        gridLayout->setSpacing(0);
         gridLayout->setContentsMargins(11, 11, 11, 11);
         gridLayout->setObjectName(QStringLiteral("gridLayout"));
         gridLayout->setContentsMargins(0, 0, 0, 0);
         gridLayout_3 = new QGridLayout();
-        gridLayout_3->setSpacing(6);
+        gridLayout_3->setSpacing(0);
         gridLayout_3->setObjectName(QStringLiteral("gridLayout_3"));
         gridLayout_3->setContentsMargins(0, 0, 0, 0);
-        gridLayout_4 = new QGridLayout();
-        gridLayout_4->setSpacing(6);
-        gridLayout_4->setObjectName(QStringLiteral("gridLayout_4"));
-        gridLayout_4->setVerticalSpacing(7);
-        gridLayout_4->setContentsMargins(0, 0, 0, 0);
+        horizontalLayout_7 = new QHBoxLayout();
+        horizontalLayout_7->setSpacing(0);
+        horizontalLayout_7->setObjectName(QStringLiteral("horizontalLayout_7"));
+        horizontalLayout_7->setContentsMargins(0, 0, 0, 0);
         checkBox = new QCheckBox(widget);
         checkBox->setObjectName(QStringLiteral("checkBox"));
         QSizePolicy sizePolicy1(QSizePolicy::Minimum, QSizePolicy::Fixed);
@@ -177,77 +176,77 @@ public:
         checkBox->setSizePolicy(sizePolicy1);
         checkBox->setChecked(true);
 
-        gridLayout_4->addWidget(checkBox, 0, 0, 1, 1);
+        horizontalLayout_7->addWidget(checkBox);
 
         checkBox_2 = new QCheckBox(widget);
         checkBox_2->setObjectName(QStringLiteral("checkBox_2"));
         checkBox_2->setChecked(true);
 
-        gridLayout_4->addWidget(checkBox_2, 0, 1, 1, 1);
+        horizontalLayout_7->addWidget(checkBox_2);
 
         toolButton_4 = new QToolButton(widget);
         toolButton_4->setObjectName(QStringLiteral("toolButton_4"));
         toolButton_4->setAutoFillBackground(true);
         toolButton_4->setAutoRaise(true);
 
-        gridLayout_4->addWidget(toolButton_4, 0, 2, 1, 1);
+        horizontalLayout_7->addWidget(toolButton_4);
 
         pushButton_3 = new QPushButton(widget);
         pushButton_3->setObjectName(QStringLiteral("pushButton_3"));
 
-        gridLayout_4->addWidget(pushButton_3, 0, 3, 1, 1);
+        horizontalLayout_7->addWidget(pushButton_3);
 
         pushButton = new QPushButton(widget);
         pushButton->setObjectName(QStringLiteral("pushButton"));
 
-        gridLayout_4->addWidget(pushButton, 0, 4, 1, 1);
+        horizontalLayout_7->addWidget(pushButton);
 
         pushButton_2 = new QPushButton(widget);
         pushButton_2->setObjectName(QStringLiteral("pushButton_2"));
 
-        gridLayout_4->addWidget(pushButton_2, 0, 5, 1, 1);
+        horizontalLayout_7->addWidget(pushButton_2);
 
         pushButton_4 = new QPushButton(widget);
         pushButton_4->setObjectName(QStringLiteral("pushButton_4"));
 
-        gridLayout_4->addWidget(pushButton_4, 0, 6, 1, 1);
+        horizontalLayout_7->addWidget(pushButton_4);
 
 
-        gridLayout_3->addLayout(gridLayout_4, 0, 0, 1, 1);
+        gridLayout_3->addLayout(horizontalLayout_7, 0, 0, 1, 1);
 
-        gridLayout_5 = new QGridLayout();
-        gridLayout_5->setSpacing(6);
-        gridLayout_5->setObjectName(QStringLiteral("gridLayout_5"));
-        gridLayout_5->setContentsMargins(0, 0, 0, 0);
+        horizontalLayout_8 = new QHBoxLayout();
+        horizontalLayout_8->setSpacing(0);
+        horizontalLayout_8->setObjectName(QStringLiteral("horizontalLayout_8"));
+        horizontalLayout_8->setContentsMargins(0, 0, 0, 0);
         checkBox_3 = new QCheckBox(widget);
         checkBox_3->setObjectName(QStringLiteral("checkBox_3"));
         checkBox_3->setChecked(true);
 
-        gridLayout_5->addWidget(checkBox_3, 0, 0, 1, 1);
+        horizontalLayout_8->addWidget(checkBox_3);
 
         checkBox_4 = new QCheckBox(widget);
         checkBox_4->setObjectName(QStringLiteral("checkBox_4"));
         checkBox_4->setChecked(true);
 
-        gridLayout_5->addWidget(checkBox_4, 0, 1, 1, 1);
+        horizontalLayout_8->addWidget(checkBox_4);
 
         checkBox_5 = new QCheckBox(widget);
         checkBox_5->setObjectName(QStringLiteral("checkBox_5"));
 
-        gridLayout_5->addWidget(checkBox_5, 0, 2, 1, 1);
+        horizontalLayout_8->addWidget(checkBox_5);
 
         checkBox_6 = new QCheckBox(widget);
         checkBox_6->setObjectName(QStringLiteral("checkBox_6"));
 
-        gridLayout_5->addWidget(checkBox_6, 0, 3, 1, 1);
+        horizontalLayout_8->addWidget(checkBox_6);
 
         pushButton_5 = new QPushButton(widget);
         pushButton_5->setObjectName(QStringLiteral("pushButton_5"));
 
-        gridLayout_5->addWidget(pushButton_5, 0, 4, 1, 1);
+        horizontalLayout_8->addWidget(pushButton_5);
 
 
-        gridLayout_3->addLayout(gridLayout_5, 1, 0, 1, 1);
+        gridLayout_3->addLayout(horizontalLayout_8, 1, 0, 1, 1);
 
 
         gridLayout->addLayout(gridLayout_3, 0, 0, 1, 1);
@@ -355,7 +354,7 @@ public:
         doubleSpinBox = new QDoubleSpinBox(frame);
         doubleSpinBox->setObjectName(QStringLiteral("doubleSpinBox"));
         doubleSpinBox->setDecimals(1);
-        doubleSpinBox->setMaximum(1);
+        doubleSpinBox->setMaximum(2);
         doubleSpinBox->setSingleStep(0.1);
         doubleSpinBox->setValue(1);
 
@@ -405,7 +404,7 @@ public:
         doubleSpinBox_2 = new QDoubleSpinBox(frame_2);
         doubleSpinBox_2->setObjectName(QStringLiteral("doubleSpinBox_2"));
         doubleSpinBox_2->setDecimals(1);
-        doubleSpinBox_2->setMaximum(1);
+        doubleSpinBox_2->setMaximum(2);
         doubleSpinBox_2->setSingleStep(0.1);
         doubleSpinBox_2->setValue(1);
 
@@ -467,7 +466,7 @@ public:
         doubleSpinBox_3 = new QDoubleSpinBox(frame_3);
         doubleSpinBox_3->setObjectName(QStringLiteral("doubleSpinBox_3"));
         doubleSpinBox_3->setDecimals(1);
-        doubleSpinBox_3->setMaximum(1);
+        doubleSpinBox_3->setMaximum(2);
         doubleSpinBox_3->setSingleStep(0.1);
         doubleSpinBox_3->setValue(1);
 
@@ -492,7 +491,7 @@ public:
         MainWindowClass->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindowClass);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 800, 26));
+        menuBar->setGeometry(QRect(0, 0, 800, 17));
         menu_File = new QMenu(menuBar);
         menu_File->setObjectName(QStringLiteral("menu_File"));
         menu_Help = new QMenu(menuBar);
@@ -547,7 +546,7 @@ public:
         checkBox->setText(QApplication::translate("MainWindowClass", "Adjust alpha", nullptr));
         checkBox_2->setText(QApplication::translate("MainWindowClass", "Adjust color", nullptr));
         toolButton_4->setText(QApplication::translate("MainWindowClass", "...", nullptr));
-        pushButton_3->setText(QApplication::translate("MainWindowClass", "Apply alpha/color editing", nullptr));
+        pushButton_3->setText(QApplication::translate("MainWindowClass", "Edit alpha/color", nullptr));
         pushButton->setText(QApplication::translate("MainWindowClass", "Merge TFs", nullptr));
         pushButton_2->setText(QApplication::translate("MainWindowClass", "Update TF", nullptr));
         pushButton_4->setText(QApplication::translate("MainWindowClass", "Reset TF", nullptr));

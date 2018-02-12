@@ -42,6 +42,9 @@
        <property name="bottomMargin">
         <number>0</number>
        </property>
+       <property name="spacing">
+        <number>0</number>
+       </property>
        <item row="0" column="0">
         <layout class="QGridLayout" name="gridLayout_3">
          <property name="leftMargin">
@@ -56,8 +59,14 @@
          <property name="bottomMargin">
           <number>0</number>
          </property>
+         <property name="spacing">
+          <number>0</number>
+         </property>
          <item row="0" column="0">
-          <layout class="QGridLayout" name="gridLayout_4">
+          <layout class="QHBoxLayout" name="horizontalLayout_7">
+           <property name="spacing">
+            <number>0</number>
+           </property>
            <property name="leftMargin">
             <number>0</number>
            </property>
@@ -70,10 +79,7 @@
            <property name="bottomMargin">
             <number>0</number>
            </property>
-           <property name="verticalSpacing">
-            <number>7</number>
-           </property>
-           <item row="0" column="0">
+           <item>
             <widget class="QCheckBox" name="checkBox">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
@@ -89,7 +95,7 @@
              </property>
             </widget>
            </item>
-           <item row="0" column="1">
+           <item>
             <widget class="QCheckBox" name="checkBox_2">
              <property name="text">
               <string>Adjust color</string>
@@ -99,7 +105,7 @@
              </property>
             </widget>
            </item>
-           <item row="0" column="2">
+           <item>
             <widget class="QToolButton" name="toolButton_4">
              <property name="autoFillBackground">
               <bool>true</bool>
@@ -112,28 +118,28 @@
              </property>
             </widget>
            </item>
-           <item row="0" column="3">
+           <item>
             <widget class="QPushButton" name="pushButton_3">
              <property name="text">
-              <string>Apply alpha/color editing</string>
+              <string>Edit alpha/color</string>
              </property>
             </widget>
            </item>
-           <item row="0" column="4">
+           <item>
             <widget class="QPushButton" name="pushButton">
              <property name="text">
               <string>Merge TFs</string>
              </property>
             </widget>
            </item>
-           <item row="0" column="5">
+           <item>
             <widget class="QPushButton" name="pushButton_2">
              <property name="text">
               <string>Update TF</string>
              </property>
             </widget>
            </item>
-           <item row="0" column="6">
+           <item>
             <widget class="QPushButton" name="pushButton_4">
              <property name="text">
               <string>Reset TF</string>
@@ -143,7 +149,10 @@
           </layout>
          </item>
          <item row="1" column="0">
-          <layout class="QGridLayout" name="gridLayout_5">
+          <layout class="QHBoxLayout" name="horizontalLayout_8">
+           <property name="spacing">
+            <number>0</number>
+           </property>
            <property name="leftMargin">
             <number>0</number>
            </property>
@@ -156,7 +165,7 @@
            <property name="bottomMargin">
             <number>0</number>
            </property>
-           <item row="0" column="0">
+           <item>
             <widget class="QCheckBox" name="checkBox_3">
              <property name="text">
               <string>Apply TF editing</string>
@@ -166,7 +175,7 @@
              </property>
             </widget>
            </item>
-           <item row="0" column="1">
+           <item>
             <widget class="QCheckBox" name="checkBox_4">
              <property name="text">
               <string>Reset TF before editing</string>
@@ -176,21 +185,21 @@
              </property>
             </widget>
            </item>
-           <item row="0" column="2">
+           <item>
             <widget class="QCheckBox" name="checkBox_5">
              <property name="text">
               <string>VWS optimization</string>
              </property>
             </widget>
            </item>
-           <item row="0" column="3">
+           <item>
             <widget class="QCheckBox" name="checkBox_6">
              <property name="text">
               <string>Temporal visibility</string>
              </property>
             </widget>
            </item>
-           <item row="0" column="4">
+           <item>
             <widget class="QPushButton" name="pushButton_5">
              <property name="text">
               <string>Temporal TF</string>
@@ -388,7 +397,7 @@
                      <number>1</number>
                     </property>
                     <property name="maximum">
-                     <double>1.000000000000000</double>
+                     <double>2.000000000000000</double>
                     </property>
                     <property name="singleStep">
                      <double>0.100000000000000</double>
@@ -473,7 +482,7 @@ from region</string>
                      <number>1</number>
                     </property>
                     <property name="maximum">
-                     <double>1.000000000000000</double>
+                     <double>2.000000000000000</double>
                     </property>
                     <property name="singleStep">
                      <double>0.100000000000000</double>
@@ -579,7 +588,7 @@ from region</string>
                      <number>1</number>
                     </property>
                     <property name="maximum">
-                     <double>1.000000000000000</double>
+                     <double>2.000000000000000</double>
                     </property>
                     <property name="singleStep">
                      <double>0.100000000000000</double>
@@ -611,7 +620,7 @@ from region</string>
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>26</height>
+     <height>17</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
