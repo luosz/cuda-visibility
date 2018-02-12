@@ -45,9 +45,9 @@ public:
     QAction *actionSave_transfer_function_as;
     QAction *actionLoad_view_and_region;
     QAction *actionSave_view_and_region_as;
-    QAction *actionTF_componment_weights;
-    QAction *actionClear_TF_component_to_zeros;
-    QAction *actionSet_number_of_transfer_function_components;
+    QAction *action_Number_of_transfer_function_components;
+    QAction *action_Weights_of_Transfer_function_componments;
+    QAction *action_Clear_transfer_function_components;
     QWidget *centralWidget;
     QGridLayout *gridLayout_2;
     QWidget *widget;
@@ -134,12 +134,12 @@ public:
         actionLoad_view_and_region->setObjectName(QStringLiteral("actionLoad_view_and_region"));
         actionSave_view_and_region_as = new QAction(MainWindowClass);
         actionSave_view_and_region_as->setObjectName(QStringLiteral("actionSave_view_and_region_as"));
-        actionTF_componment_weights = new QAction(MainWindowClass);
-        actionTF_componment_weights->setObjectName(QStringLiteral("actionTF_componment_weights"));
-        actionClear_TF_component_to_zeros = new QAction(MainWindowClass);
-        actionClear_TF_component_to_zeros->setObjectName(QStringLiteral("actionClear_TF_component_to_zeros"));
-        actionSet_number_of_transfer_function_components = new QAction(MainWindowClass);
-        actionSet_number_of_transfer_function_components->setObjectName(QStringLiteral("actionSet_number_of_transfer_function_components"));
+        action_Number_of_transfer_function_components = new QAction(MainWindowClass);
+        action_Number_of_transfer_function_components->setObjectName(QStringLiteral("action_Number_of_transfer_function_components"));
+        action_Weights_of_Transfer_function_componments = new QAction(MainWindowClass);
+        action_Weights_of_Transfer_function_componments->setObjectName(QStringLiteral("action_Weights_of_Transfer_function_componments"));
+        action_Clear_transfer_function_components = new QAction(MainWindowClass);
+        action_Clear_transfer_function_components->setObjectName(QStringLiteral("action_Clear_transfer_function_components"));
         centralWidget = new QWidget(MainWindowClass);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         gridLayout_2 = new QGridLayout(centralWidget);
@@ -517,9 +517,9 @@ public:
         menu_File->addAction(actionSave_view_and_region_as);
         menu_File->addAction(action_Exit);
         menu_Help->addAction(action_About);
-        menu_Options->addAction(actionClear_TF_component_to_zeros);
-        menu_Options->addAction(actionSet_number_of_transfer_function_components);
-        menu_Options->addAction(actionTF_componment_weights);
+        menu_Options->addAction(action_Clear_transfer_function_components);
+        menu_Options->addAction(action_Weights_of_Transfer_function_componments);
+        menu_Options->addAction(action_Number_of_transfer_function_components);
 
         retranslateUi(MainWindowClass);
 
@@ -540,9 +540,9 @@ public:
         actionSave_transfer_function_as->setText(QApplication::translate("MainWindowClass", "&Save transfer function as...", nullptr));
         actionLoad_view_and_region->setText(QApplication::translate("MainWindowClass", "Load &view and region...", nullptr));
         actionSave_view_and_region_as->setText(QApplication::translate("MainWindowClass", "Save view and region &as...", nullptr));
-        actionTF_componment_weights->setText(QApplication::translate("MainWindowClass", "&Weights of Transfer function componments...", nullptr));
-        actionClear_TF_component_to_zeros->setText(QApplication::translate("MainWindowClass", "&Clear transfer function component (set to 0)", nullptr));
-        actionSet_number_of_transfer_function_components->setText(QApplication::translate("MainWindowClass", "&Number of transfer function components...", nullptr));
+        action_Number_of_transfer_function_components->setText(QApplication::translate("MainWindowClass", "&Number of transfer function components...", nullptr));
+        action_Weights_of_Transfer_function_componments->setText(QApplication::translate("MainWindowClass", "&Weights of Transfer function componments...", nullptr));
+        action_Clear_transfer_function_components->setText(QApplication::translate("MainWindowClass", "&Clear transfer function components", nullptr));
         checkBox->setText(QApplication::translate("MainWindowClass", "Adjust alpha", nullptr));
         checkBox_2->setText(QApplication::translate("MainWindowClass", "Adjust color", nullptr));
         toolButton_4->setText(QApplication::translate("MainWindowClass", "...", nullptr));

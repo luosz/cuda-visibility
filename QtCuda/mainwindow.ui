@@ -645,9 +645,9 @@ from region</string>
     <property name="title">
      <string>&amp;Options</string>
     </property>
-    <addaction name="actionClear_TF_component_to_zeros"/>
-    <addaction name="actionSet_number_of_transfer_function_components"/>
-    <addaction name="actionTF_componment_weights"/>
+    <addaction name="action_Clear_transfer_function_components"/>
+    <addaction name="action_Weights_of_Transfer_function_componments"/>
+    <addaction name="action_Number_of_transfer_function_components"/>
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_Options"/>
@@ -702,19 +702,19 @@ from region</string>
     <string>Save view and region &amp;as...</string>
    </property>
   </action>
-  <action name="actionTF_componment_weights">
+  <action name="action_Number_of_transfer_function_components">
+   <property name="text">
+    <string>&amp;Number of transfer function components...</string>
+   </property>
+  </action>
+  <action name="action_Weights_of_Transfer_function_componments">
    <property name="text">
     <string>&amp;Weights of Transfer function componments...</string>
    </property>
   </action>
-  <action name="actionClear_TF_component_to_zeros">
+  <action name="action_Clear_transfer_function_components">
    <property name="text">
-    <string>&amp;Clear transfer function component (set to 0)</string>
-   </property>
-  </action>
-  <action name="actionSet_number_of_transfer_function_components">
-   <property name="text">
-    <string>&amp;Number of transfer function components...</string>
+    <string>&amp;Clear transfer function components</string>
    </property>
   </action>
  </widget>

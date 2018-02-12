@@ -200,7 +200,7 @@ public:
 
 	qreal get_line_width(qreal chart_width)
 	{
-		return chart_width / D_BIN_COUNT + 1. / 6.;
+		return chart_width / D_BIN_COUNT;
 	}
 
 	void draw_histogram(float histogram[], QChartView &chartView)
@@ -399,14 +399,6 @@ private slots:
 
     void on_pushButton_6_clicked();
 
-    //void on_pushButton_7_clicked();
-
-    //void on_pushButton_8_clicked();
-
-    //void on_pushButton_9_clicked();
-
-    //void on_pushButton_10_clicked();
-
     void on_checkBox_stateChanged(int arg1);
 
     void on_checkBox_2_stateChanged(int arg1);
@@ -418,10 +410,6 @@ private slots:
     void on_toolButton_3_clicked();
 
     void on_toolButton_4_clicked();
-
-    void on_actionTF_componment_weights_triggered();
-
-    void on_actionClear_TF_component_to_zeros_triggered();
 
     void on_pushButton_clicked();
 
@@ -436,6 +424,12 @@ private slots:
     void on_doubleSpinBox_2_valueChanged(double arg1);
 
     void on_doubleSpinBox_3_valueChanged(double arg1);
+
+    void on_action_Clear_transfer_function_components_triggered();
+
+    void on_action_Weights_of_Transfer_function_componments_triggered();
+
+    void on_action_Number_of_transfer_function_components_triggered();
 
 private:
 	Ui::MainWindowClass ui;
