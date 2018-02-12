@@ -200,6 +200,7 @@ public:
 
 	qreal get_line_width(qreal chart_width)
 	{
+		//return chart_width / D_BIN_COUNT + 1. / 6.;
 		return chart_width / D_BIN_COUNT;
 	}
 
