@@ -49,6 +49,8 @@ extern "C" void bind_tf_texture();
 extern "C" void save_tf_array_to_voreen_XML(const char *filename);
 extern "C" int get_screenshot_id();
 extern "C" int get_next_screenshot_id(int id);
+extern "C" float* get_tf_component(int i);
+extern "C" float* get_tf_component_sum();
 
 class MainWindow : public QMainWindow
 {
@@ -124,11 +126,6 @@ public:
 		apply_time_varying_tf_reset = time_varying_tf_reset;
 		apply_time_varying_vws_optimization = time_varying_vws_optimization;
 		calc_temporal_visibility = temporal_visibility;
-	}
-
-	void delay_draw_transfer_function_and_visibility_histograms(int msec=10)
-	{
-		QTimer::singleShot(msec, this, SLOT(draw_transfer_function_and_histograms()));
 	}
 
 	void update_checkbox()
@@ -322,75 +319,66 @@ public:
 
 	void clear_transfer_function_components()
 	{
-		auto tf0 = get_tf_component0();
-		auto tf1 = get_tf_component1();
-		auto tf2 = get_tf_component2();
+		for (int i = 0; i < tf_component_number; i++)
+		{
+			memset(get_tf_component(i), 0, sizeof(float)*D_BIN_COUNT);
+		}
+		draw_all_transfer_function_components();
+	}
+
+	void draw_all_transfer_function_components()
+	{
 		auto tf = get_tf_array();
-		memset(tf0, 0, sizeof(float)*D_BIN_COUNT);
-		memset(tf1, 0, sizeof(float)*D_BIN_COUNT);
-		memset(tf2, 0, sizeof(float)*D_BIN_COUNT);
-		draw_transfer_function_component(tf0, tf, chartView_features[0]);
-		draw_transfer_function_component(tf1, tf, chartView_features[1]);
-		draw_transfer_function_component(tf2, tf, chartView_features[2]);
+		for (int i = 0; i < tf_component_number; i++)
+		{
+			draw_transfer_function_component(get_tf_component(i), tf, chartView_features[i]);
+		}
 	}
 
 	void update_all_transfer_functions_and_histograms()
 	{
-		draw_transfer_function_and_histograms();
-		auto tf = get_tf_array();
-		draw_transfer_function_component(get_tf_component0(), tf, chartView_features[0]);
-		draw_transfer_function_component(get_tf_component1(), tf, chartView_features[1]);
-		draw_transfer_function_component(get_tf_component2(), tf, chartView_features[2]);
-		draw_transfer_function(tf, chartView_sum);
+		draw_transfer_functions();
+		draw_all_histograms();
+		draw_all_transfer_function_components();
 	}
 
-	void delay_add_transfer_function_component(float tf_component[], QChartView &chartView, int msec = 100)
+	void delay_draw_transfer_function_and_visibility_histograms(int msec = 10)
+	{
+		QTimer::singleShot(msec, this, SLOT(draw_transfer_functions_and_histograms()));
+	}
+
+	void delay_add_transfer_function_component(float tf_component[], QChartView &chartView, int msec = 50)
 	{
 		// Use a lambda expression with a capture list for the Qt slot with arguments
 		QTimer::singleShot(msec, this, [this, tf_component, &chartView]() {add_transfer_function_component(tf_component, chartView); });
 	}
 
-	void delay_set_button_color_to_component_peak_color(QAbstractButton &button, const float tf_component[], const float4 tf[], int msec = 100)
+	void delay_set_button_color_to_component_peak_color(QAbstractButton &button, const float tf_component[], const float4 tf[], int msec = 90)
 	{
 		// Use a lambda expression with a capture list for the Qt slot with arguments
 		QTimer::singleShot(msec, this, [this, tf_component, tf, &button]() {set_button_color_to_component_peak_color(button, tf_component, tf); });
 	}
 
 private slots:
-    void on_pushButton_2_clicked();
 
-    void on_pushButton_3_clicked();
-
-    void on_pushButton_4_clicked();
-
-    void on_checkBox_3_clicked();
-
-    void on_checkBox_4_clicked();
-
-    void on_action_About_triggered();
-
-    void on_action_Exit_triggered();
-
-    void on_action_Open_triggered();
-
-    void on_actionOpen_Files_triggered();
-
-    void on_actionOpen_transfer_function_triggered();
-
-    void on_actionSave_transfer_function_as_triggered();
-
-    void on_actionLoad_view_and_region_triggered();
-
-    void on_actionSave_view_and_region_as_triggered();
-
-    void on_checkBox_5_clicked();
-
-	void draw_transfer_function_and_histograms()
+	void draw_all_histograms()
 	{
-		draw_transfer_function(get_tf_array(), chartView_tf);
 		draw_histogram(get_relative_visibility_histogram(), chartView_relative);
 		draw_histogram(get_global_visibility_histogram(), chartView_global);
 		draw_histogram(get_local_visibility_histogram(), chartView_local);
+	}
+
+	void draw_transfer_functions()
+	{
+		auto tf = get_tf_array();
+		draw_transfer_function(tf, chartView_tf);
+		draw_transfer_function(tf, chartView_sum);
+	}
+
+	void draw_transfer_functions_and_histograms()
+	{
+		draw_transfer_functions();
+		draw_all_histograms();
 	}
 
 	void add_transfer_function_component(float tf_component[], QChartView &chartView)
@@ -444,36 +432,63 @@ private slots:
 		ui.label_4->setPixmap(p4);
 	}
 
-	float4 build_color(float4 colors[], float v0, float v1, float v2, float4 tf)
+	float4 build_color(float4 colors[], float v[], float4 tf)
 	{
-		float t = v0 + v1 + v2;
+		float t = 0;
+		int max_index = 0;
+		float max_value = v[0];
+		for (int i = 0; i < tf_component_number; i++)
+		{
+			t += v[i];
+			if (v[i] > max_value)
+			{
+				max_value = v[i];
+				max_index = i;
+			}
+		}
 		float w = t < 0 ? 0 : (t > 1 ? 1 : t);
-		float4 ans;
-		if (w > 0)
-		{
-			if (v0 >= v1 && v0 >= v2)
-			{
-				ans = colors[0];
-			}
-			else
-			{
-				if (v1 >= v0 && v1 >= v2)
-				{
-					ans = colors[1];
-				}
-				else
-				{
-					ans = colors[2];
-				}
-			}
-		}
-		else
-		{
-			ans = tf;
-		}
+		float4 ans = w > 0 ? colors[max_index] : tf;
 		ans.w = w;
 		return ans;
 	}
+
+	void hide_extra_tf_component_frames()
+	{
+		QWidget *w[D_MAX_TF_COMPONENTS];
+		w[0] = ui.frame;
+		w[1] = ui.frame_2;
+		w[2] = ui.frame_3;
+		w[3] = ui.frame_4;
+		w[4] = ui.frame_5;
+		for (int i = 0; i < D_MAX_TF_COMPONENTS; i++)
+		{
+			w[i]->setVisible(i < tf_component_number);
+		}
+	}
+
+	void on_pushButton_3_clicked();
+
+    void on_checkBox_3_clicked();
+
+    void on_checkBox_4_clicked();
+
+    void on_action_About_triggered();
+
+    void on_action_Exit_triggered();
+
+    void on_action_Open_triggered();
+
+    void on_actionOpen_Files_triggered();
+
+    void on_actionOpen_transfer_function_triggered();
+
+    void on_actionSave_transfer_function_as_triggered();
+
+    void on_actionLoad_view_and_region_triggered();
+
+    void on_actionSave_view_and_region_as_triggered();
+
+    void on_checkBox_5_clicked();
 
     void on_checkBox_6_clicked();
 
@@ -511,7 +526,25 @@ private slots:
 
     void on_action_Weights_of_Transfer_function_componments_triggered();
 
+    void on_spinBox_valueChanged(int arg1);
+
+    void on_pushButton_2_clicked();
+
+    void on_toolButton_8_clicked();
+
+    void on_toolButton_9_clicked();
+
     void on_action_Smooth_transfer_functions_triggered();
+
+    void on_action_Refresh_transfer_functions_and_histograms_triggered();
+
+    void on_doubleSpinBox_4_valueChanged(double arg1);
+
+    void on_doubleSpinBox_5_valueChanged(double arg1);
+
+    void on_toolButton_10_clicked();
+
+    void on_toolButton_11_clicked();
 
 private:
 	Ui::MainWindowClass ui;
@@ -531,4 +564,5 @@ private:
 	QChartView chartView_sum;
 	QChartView chartView_features[D_MAX_TF_COMPONENTS];
 	qreal tf_component_weights[D_MAX_TF_COMPONENTS] = { 0 };
+	int tf_component_number = D_MAX_TF_COMPONENTS;
 };

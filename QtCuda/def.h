@@ -17,7 +17,7 @@ const bool D_TIME_VARYING_TF_RESET = true;
 const bool D_TIME_VARYING_VWS_OPTIMIZATION = false;
 const bool D_TERMPORAL_VISIBILITY = false;
 const int D_PATH_MAX = _MAX_PATH;
-const int D_MAX_TF_COMPONENTS = 4;
+const int D_MAX_TF_COMPONENTS = 5;
 
 const int R5 = 5;
 const int R9 = 9;

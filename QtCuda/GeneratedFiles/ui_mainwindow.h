@@ -25,6 +25,7 @@
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
+#include <QtWidgets/QSpinBox>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QTabWidget>
 #include <QtWidgets/QToolBar>
@@ -45,10 +46,10 @@ public:
     QAction *actionSave_transfer_function_as;
     QAction *actionLoad_view_and_region;
     QAction *actionSave_view_and_region_as;
-    QAction *action_Number_of_transfer_function_components;
     QAction *action_Weights_of_Transfer_function_componments;
     QAction *action_Clear_transfer_function_components;
     QAction *action_Smooth_transfer_functions;
+    QAction *action_Refresh_transfer_functions_and_histograms;
     QWidget *centralWidget;
     QGridLayout *gridLayout_2;
     QWidget *widget;
@@ -60,8 +61,9 @@ public:
     QToolButton *toolButton_4;
     QPushButton *pushButton_3;
     QPushButton *pushButton;
+    QSpinBox *spinBox;
+    QLabel *label_8;
     QPushButton *pushButton_2;
-    QPushButton *pushButton_4;
     QHBoxLayout *horizontalLayout_8;
     QCheckBox *checkBox_3;
     QCheckBox *checkBox_4;
@@ -86,15 +88,15 @@ public:
     QFrame *frame;
     QHBoxLayout *horizontalLayout;
     QGridLayout *gridLayout_9;
-    QHBoxLayout *horizontalLayout_4;
-    QLabel *label_5;
+    QGridLayout *gridLayout_4;
     QDoubleSpinBox *doubleSpinBox;
+    QLabel *label_5;
     QToolButton *toolButton_5;
     QToolButton *toolButton;
     QFrame *frame_2;
     QHBoxLayout *horizontalLayout_2;
     QGridLayout *gridLayout_8;
-    QHBoxLayout *horizontalLayout_5;
+    QGridLayout *gridLayout_5;
     QLabel *label_6;
     QDoubleSpinBox *doubleSpinBox_2;
     QToolButton *toolButton_2;
@@ -104,11 +106,27 @@ public:
     QGridLayout *gridLayout_7;
     QToolButton *toolButton_7;
     QToolButton *toolButton_3;
-    QHBoxLayout *horizontalLayout_6;
+    QGridLayout *gridLayout_10;
     QLabel *label_7;
     QDoubleSpinBox *doubleSpinBox_3;
     QFrame *frame_4;
-    QHBoxLayout *horizontalLayout_9;
+    QHBoxLayout *horizontalLayout_4;
+    QGridLayout *gridLayout_11;
+    QToolButton *toolButton_10;
+    QToolButton *toolButton_8;
+    QGridLayout *gridLayout_13;
+    QLabel *label_9;
+    QDoubleSpinBox *doubleSpinBox_4;
+    QFrame *frame_5;
+    QHBoxLayout *horizontalLayout_5;
+    QGridLayout *gridLayout_12;
+    QToolButton *toolButton_11;
+    QToolButton *toolButton_9;
+    QGridLayout *gridLayout_14;
+    QLabel *label_10;
+    QDoubleSpinBox *doubleSpinBox_5;
+    QFrame *frame_6;
+    QHBoxLayout *horizontalLayout_6;
     QMenuBar *menuBar;
     QMenu *menu_File;
     QMenu *menu_Help;
@@ -120,7 +138,7 @@ public:
     {
         if (MainWindowClass->objectName().isEmpty())
             MainWindowClass->setObjectName(QStringLiteral("MainWindowClass"));
-        MainWindowClass->resize(800, 1000);
+        MainWindowClass->resize(800, 1080);
         action_Open = new QAction(MainWindowClass);
         action_Open->setObjectName(QStringLiteral("action_Open"));
         action_Exit = new QAction(MainWindowClass);
@@ -137,9 +155,6 @@ public:
         actionLoad_view_and_region->setObjectName(QStringLiteral("actionLoad_view_and_region"));
         actionSave_view_and_region_as = new QAction(MainWindowClass);
         actionSave_view_and_region_as->setObjectName(QStringLiteral("actionSave_view_and_region_as"));
-        action_Number_of_transfer_function_components = new QAction(MainWindowClass);
-        action_Number_of_transfer_function_components->setObjectName(QStringLiteral("action_Number_of_transfer_function_components"));
-        action_Number_of_transfer_function_components->setEnabled(false);
         action_Weights_of_Transfer_function_componments = new QAction(MainWindowClass);
         action_Weights_of_Transfer_function_componments->setObjectName(QStringLiteral("action_Weights_of_Transfer_function_componments"));
         action_Clear_transfer_function_components = new QAction(MainWindowClass);
@@ -148,6 +163,8 @@ public:
         action_Smooth_transfer_functions->setObjectName(QStringLiteral("action_Smooth_transfer_functions"));
         action_Smooth_transfer_functions->setCheckable(true);
         action_Smooth_transfer_functions->setChecked(true);
+        action_Refresh_transfer_functions_and_histograms = new QAction(MainWindowClass);
+        action_Refresh_transfer_functions_and_histograms->setObjectName(QStringLiteral("action_Refresh_transfer_functions_and_histograms"));
         centralWidget = new QWidget(MainWindowClass);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         gridLayout_2 = new QGridLayout(centralWidget);
@@ -209,15 +226,23 @@ public:
 
         horizontalLayout_7->addWidget(pushButton);
 
+        spinBox = new QSpinBox(widget);
+        spinBox->setObjectName(QStringLiteral("spinBox"));
+        spinBox->setMinimum(2);
+        spinBox->setMaximum(5);
+        spinBox->setValue(5);
+
+        horizontalLayout_7->addWidget(spinBox);
+
+        label_8 = new QLabel(widget);
+        label_8->setObjectName(QStringLiteral("label_8"));
+
+        horizontalLayout_7->addWidget(label_8);
+
         pushButton_2 = new QPushButton(widget);
         pushButton_2->setObjectName(QStringLiteral("pushButton_2"));
 
         horizontalLayout_7->addWidget(pushButton_2);
-
-        pushButton_4 = new QPushButton(widget);
-        pushButton_4->setObjectName(QStringLiteral("pushButton_4"));
-
-        horizontalLayout_7->addWidget(pushButton_4);
 
 
         gridLayout_3->addLayout(horizontalLayout_7, 0, 0, 1, 1);
@@ -331,7 +356,7 @@ public:
         tab_2 = new QWidget();
         tab_2->setObjectName(QStringLiteral("tab_2"));
         verticalLayout_3 = new QVBoxLayout(tab_2);
-        verticalLayout_3->setSpacing(4);
+        verticalLayout_3->setSpacing(0);
         verticalLayout_3->setContentsMargins(11, 11, 11, 11);
         verticalLayout_3->setObjectName(QStringLiteral("verticalLayout_3"));
         verticalLayout_3->setContentsMargins(0, 0, 0, 0);
@@ -343,12 +368,21 @@ public:
         horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
         horizontalLayout->setContentsMargins(0, 0, 0, 0);
         gridLayout_9 = new QGridLayout();
-        gridLayout_9->setSpacing(6);
+        gridLayout_9->setSpacing(0);
         gridLayout_9->setObjectName(QStringLiteral("gridLayout_9"));
         gridLayout_9->setContentsMargins(0, 0, 0, 0);
-        horizontalLayout_4 = new QHBoxLayout();
-        horizontalLayout_4->setSpacing(0);
-        horizontalLayout_4->setObjectName(QStringLiteral("horizontalLayout_4"));
+        gridLayout_4 = new QGridLayout();
+        gridLayout_4->setSpacing(0);
+        gridLayout_4->setObjectName(QStringLiteral("gridLayout_4"));
+        doubleSpinBox = new QDoubleSpinBox(frame);
+        doubleSpinBox->setObjectName(QStringLiteral("doubleSpinBox"));
+        doubleSpinBox->setDecimals(1);
+        doubleSpinBox->setMaximum(10);
+        doubleSpinBox->setSingleStep(0.1);
+        doubleSpinBox->setValue(1);
+
+        gridLayout_4->addWidget(doubleSpinBox, 0, 1, 1, 1);
+
         label_5 = new QLabel(frame);
         label_5->setObjectName(QStringLiteral("label_5"));
         QSizePolicy sizePolicy3(QSizePolicy::Minimum, QSizePolicy::Minimum);
@@ -357,19 +391,10 @@ public:
         sizePolicy3.setHeightForWidth(label_5->sizePolicy().hasHeightForWidth());
         label_5->setSizePolicy(sizePolicy3);
 
-        horizontalLayout_4->addWidget(label_5);
-
-        doubleSpinBox = new QDoubleSpinBox(frame);
-        doubleSpinBox->setObjectName(QStringLiteral("doubleSpinBox"));
-        doubleSpinBox->setDecimals(1);
-        doubleSpinBox->setMaximum(10);
-        doubleSpinBox->setSingleStep(0.1);
-        doubleSpinBox->setValue(1);
-
-        horizontalLayout_4->addWidget(doubleSpinBox);
+        gridLayout_4->addWidget(label_5, 0, 0, 1, 1);
 
 
-        gridLayout_9->addLayout(horizontalLayout_4, 2, 0, 1, 1);
+        gridLayout_9->addLayout(gridLayout_4, 2, 0, 1, 1);
 
         toolButton_5 = new QToolButton(frame);
         toolButton_5->setObjectName(QStringLiteral("toolButton_5"));
@@ -399,15 +424,15 @@ public:
         gridLayout_8 = new QGridLayout();
         gridLayout_8->setSpacing(0);
         gridLayout_8->setObjectName(QStringLiteral("gridLayout_8"));
-        horizontalLayout_5 = new QHBoxLayout();
-        horizontalLayout_5->setSpacing(0);
-        horizontalLayout_5->setObjectName(QStringLiteral("horizontalLayout_5"));
+        gridLayout_5 = new QGridLayout();
+        gridLayout_5->setSpacing(0);
+        gridLayout_5->setObjectName(QStringLiteral("gridLayout_5"));
         label_6 = new QLabel(frame_2);
         label_6->setObjectName(QStringLiteral("label_6"));
         sizePolicy3.setHeightForWidth(label_6->sizePolicy().hasHeightForWidth());
         label_6->setSizePolicy(sizePolicy3);
 
-        horizontalLayout_5->addWidget(label_6);
+        gridLayout_5->addWidget(label_6, 0, 0, 1, 1);
 
         doubleSpinBox_2 = new QDoubleSpinBox(frame_2);
         doubleSpinBox_2->setObjectName(QStringLiteral("doubleSpinBox_2"));
@@ -416,10 +441,10 @@ public:
         doubleSpinBox_2->setSingleStep(0.1);
         doubleSpinBox_2->setValue(1);
 
-        horizontalLayout_5->addWidget(doubleSpinBox_2);
+        gridLayout_5->addWidget(doubleSpinBox_2, 0, 1, 1, 1);
 
 
-        gridLayout_8->addLayout(horizontalLayout_5, 2, 0, 1, 1);
+        gridLayout_8->addLayout(gridLayout_5, 2, 0, 1, 1);
 
         toolButton_2 = new QToolButton(frame_2);
         toolButton_2->setObjectName(QStringLiteral("toolButton_2"));
@@ -461,15 +486,15 @@ public:
 
         gridLayout_7->addWidget(toolButton_3, 1, 0, 1, 1);
 
-        horizontalLayout_6 = new QHBoxLayout();
-        horizontalLayout_6->setSpacing(0);
-        horizontalLayout_6->setObjectName(QStringLiteral("horizontalLayout_6"));
+        gridLayout_10 = new QGridLayout();
+        gridLayout_10->setSpacing(0);
+        gridLayout_10->setObjectName(QStringLiteral("gridLayout_10"));
         label_7 = new QLabel(frame_3);
         label_7->setObjectName(QStringLiteral("label_7"));
         sizePolicy3.setHeightForWidth(label_7->sizePolicy().hasHeightForWidth());
         label_7->setSizePolicy(sizePolicy3);
 
-        horizontalLayout_6->addWidget(label_7);
+        gridLayout_10->addWidget(label_7, 0, 0, 1, 1);
 
         doubleSpinBox_3 = new QDoubleSpinBox(frame_3);
         doubleSpinBox_3->setObjectName(QStringLiteral("doubleSpinBox_3"));
@@ -479,10 +504,10 @@ public:
         doubleSpinBox_3->setSingleStep(0.1);
         doubleSpinBox_3->setValue(1);
 
-        horizontalLayout_6->addWidget(doubleSpinBox_3);
+        gridLayout_10->addWidget(doubleSpinBox_3, 0, 1, 1, 1);
 
 
-        gridLayout_7->addLayout(horizontalLayout_6, 2, 0, 1, 1);
+        gridLayout_7->addLayout(gridLayout_10, 2, 0, 1, 1);
 
 
         horizontalLayout_3->addLayout(gridLayout_7);
@@ -492,15 +517,115 @@ public:
 
         frame_4 = new QFrame(tab_2);
         frame_4->setObjectName(QStringLiteral("frame_4"));
-        frame_4->setFrameShape(QFrame::StyledPanel);
-        frame_4->setFrameShadow(QFrame::Raised);
-        horizontalLayout_9 = new QHBoxLayout(frame_4);
-        horizontalLayout_9->setSpacing(6);
-        horizontalLayout_9->setContentsMargins(11, 11, 11, 11);
-        horizontalLayout_9->setObjectName(QStringLiteral("horizontalLayout_9"));
-        horizontalLayout_9->setContentsMargins(0, 0, 0, 0);
+        frame_4->setFrameShape(QFrame::NoFrame);
+        frame_4->setFrameShadow(QFrame::Plain);
+        horizontalLayout_4 = new QHBoxLayout(frame_4);
+        horizontalLayout_4->setSpacing(0);
+        horizontalLayout_4->setContentsMargins(11, 11, 11, 11);
+        horizontalLayout_4->setObjectName(QStringLiteral("horizontalLayout_4"));
+        horizontalLayout_4->setContentsMargins(0, 0, 0, 0);
+        gridLayout_11 = new QGridLayout();
+        gridLayout_11->setSpacing(0);
+        gridLayout_11->setObjectName(QStringLiteral("gridLayout_11"));
+        toolButton_10 = new QToolButton(frame_4);
+        toolButton_10->setObjectName(QStringLiteral("toolButton_10"));
+
+        gridLayout_11->addWidget(toolButton_10, 0, 0, 1, 1);
+
+        toolButton_8 = new QToolButton(frame_4);
+        toolButton_8->setObjectName(QStringLiteral("toolButton_8"));
+        toolButton_8->setAutoFillBackground(true);
+        toolButton_8->setAutoRaise(true);
+
+        gridLayout_11->addWidget(toolButton_8, 1, 0, 1, 1);
+
+        gridLayout_13 = new QGridLayout();
+        gridLayout_13->setSpacing(0);
+        gridLayout_13->setObjectName(QStringLiteral("gridLayout_13"));
+        label_9 = new QLabel(frame_4);
+        label_9->setObjectName(QStringLiteral("label_9"));
+
+        gridLayout_13->addWidget(label_9, 0, 0, 1, 1);
+
+        doubleSpinBox_4 = new QDoubleSpinBox(frame_4);
+        doubleSpinBox_4->setObjectName(QStringLiteral("doubleSpinBox_4"));
+        doubleSpinBox_4->setDecimals(1);
+        doubleSpinBox_4->setMaximum(10);
+        doubleSpinBox_4->setSingleStep(0.1);
+        doubleSpinBox_4->setValue(1);
+
+        gridLayout_13->addWidget(doubleSpinBox_4, 0, 1, 1, 1);
+
+
+        gridLayout_11->addLayout(gridLayout_13, 2, 0, 1, 1);
+
+
+        horizontalLayout_4->addLayout(gridLayout_11);
+
 
         verticalLayout_3->addWidget(frame_4);
+
+        frame_5 = new QFrame(tab_2);
+        frame_5->setObjectName(QStringLiteral("frame_5"));
+        frame_5->setFrameShape(QFrame::NoFrame);
+        frame_5->setFrameShadow(QFrame::Plain);
+        horizontalLayout_5 = new QHBoxLayout(frame_5);
+        horizontalLayout_5->setSpacing(0);
+        horizontalLayout_5->setContentsMargins(11, 11, 11, 11);
+        horizontalLayout_5->setObjectName(QStringLiteral("horizontalLayout_5"));
+        horizontalLayout_5->setContentsMargins(0, 0, 0, 0);
+        gridLayout_12 = new QGridLayout();
+        gridLayout_12->setSpacing(0);
+        gridLayout_12->setObjectName(QStringLiteral("gridLayout_12"));
+        toolButton_11 = new QToolButton(frame_5);
+        toolButton_11->setObjectName(QStringLiteral("toolButton_11"));
+
+        gridLayout_12->addWidget(toolButton_11, 0, 0, 1, 1);
+
+        toolButton_9 = new QToolButton(frame_5);
+        toolButton_9->setObjectName(QStringLiteral("toolButton_9"));
+        toolButton_9->setAutoFillBackground(true);
+        toolButton_9->setAutoRaise(true);
+
+        gridLayout_12->addWidget(toolButton_9, 1, 0, 1, 1);
+
+        gridLayout_14 = new QGridLayout();
+        gridLayout_14->setSpacing(0);
+        gridLayout_14->setObjectName(QStringLiteral("gridLayout_14"));
+        label_10 = new QLabel(frame_5);
+        label_10->setObjectName(QStringLiteral("label_10"));
+
+        gridLayout_14->addWidget(label_10, 0, 0, 1, 1);
+
+        doubleSpinBox_5 = new QDoubleSpinBox(frame_5);
+        doubleSpinBox_5->setObjectName(QStringLiteral("doubleSpinBox_5"));
+        doubleSpinBox_5->setDecimals(1);
+        doubleSpinBox_5->setMaximum(10);
+        doubleSpinBox_5->setSingleStep(0.1);
+        doubleSpinBox_5->setValue(1);
+
+        gridLayout_14->addWidget(doubleSpinBox_5, 0, 1, 1, 1);
+
+
+        gridLayout_12->addLayout(gridLayout_14, 2, 0, 1, 1);
+
+
+        horizontalLayout_5->addLayout(gridLayout_12);
+
+
+        verticalLayout_3->addWidget(frame_5);
+
+        frame_6 = new QFrame(tab_2);
+        frame_6->setObjectName(QStringLiteral("frame_6"));
+        frame_6->setFrameShape(QFrame::NoFrame);
+        frame_6->setFrameShadow(QFrame::Plain);
+        horizontalLayout_6 = new QHBoxLayout(frame_6);
+        horizontalLayout_6->setSpacing(0);
+        horizontalLayout_6->setContentsMargins(11, 11, 11, 11);
+        horizontalLayout_6->setObjectName(QStringLiteral("horizontalLayout_6"));
+        horizontalLayout_6->setContentsMargins(0, 0, 0, 0);
+
+        verticalLayout_3->addWidget(frame_6);
 
         tabWidget_2->addTab(tab_2, QString());
 
@@ -538,14 +663,14 @@ public:
         menu_File->addAction(actionSave_view_and_region_as);
         menu_File->addAction(action_Exit);
         menu_Help->addAction(action_About);
+        menu_Options->addAction(action_Refresh_transfer_functions_and_histograms);
         menu_Options->addAction(action_Smooth_transfer_functions);
         menu_Options->addAction(action_Clear_transfer_function_components);
         menu_Options->addAction(action_Weights_of_Transfer_function_componments);
-        menu_Options->addAction(action_Number_of_transfer_function_components);
 
         retranslateUi(MainWindowClass);
 
-        tabWidget_2->setCurrentIndex(0);
+        tabWidget_2->setCurrentIndex(2);
 
 
         QMetaObject::connectSlotsByName(MainWindowClass);
@@ -562,18 +687,18 @@ public:
         actionSave_transfer_function_as->setText(QApplication::translate("MainWindowClass", "&Save transfer function as...", nullptr));
         actionLoad_view_and_region->setText(QApplication::translate("MainWindowClass", "Load &view and region...", nullptr));
         actionSave_view_and_region_as->setText(QApplication::translate("MainWindowClass", "Save view and region &as...", nullptr));
-        action_Number_of_transfer_function_components->setText(QApplication::translate("MainWindowClass", "&Number of transfer function components...", nullptr));
         action_Weights_of_Transfer_function_componments->setText(QApplication::translate("MainWindowClass", "&Weights of Transfer function componments...", nullptr));
         action_Clear_transfer_function_components->setText(QApplication::translate("MainWindowClass", "&Clear transfer function components", nullptr));
         action_Smooth_transfer_functions->setText(QApplication::translate("MainWindowClass", "&Smooth transfer functions", nullptr));
+        action_Refresh_transfer_functions_and_histograms->setText(QApplication::translate("MainWindowClass", "&Refresh transfer functions and histograms", nullptr));
         checkBox->setText(QApplication::translate("MainWindowClass", "Adjust &alpha", nullptr));
         checkBox_2->setText(QApplication::translate("MainWindowClass", "Adjust &color", nullptr));
         toolButton_4->setText(QApplication::translate("MainWindowClass", "...", nullptr));
         pushButton_3->setText(QApplication::translate("MainWindowClass", "&Edit alpha/color", nullptr));
-        pushButton->setText(QApplication::translate("MainWindowClass", "&Merge TFs", nullptr));
-        pushButton_2->setText(QApplication::translate("MainWindowClass", "&Update TF", nullptr));
-        pushButton_4->setText(QApplication::translate("MainWindowClass", "&Reset TF", nullptr));
-        checkBox_3->setText(QApplication::translate("MainWindowClass", "A&pply TF editing", nullptr));
+        pushButton->setText(QApplication::translate("MainWindowClass", "&Merge", nullptr));
+        label_8->setText(QApplication::translate("MainWindowClass", "components", nullptr));
+        pushButton_2->setText(QApplication::translate("MainWindowClass", "&Reset TF", nullptr));
+        checkBox_3->setText(QApplication::translate("MainWindowClass", "T&F editing", nullptr));
         checkBox_4->setText(QApplication::translate("MainWindowClass", "Reset TF &before editing", nullptr));
         checkBox_5->setText(QApplication::translate("MainWindowClass", "&VWS optimization", nullptr));
         checkBox_6->setText(QApplication::translate("MainWindowClass", "Temporal &visibility", nullptr));
@@ -587,17 +712,20 @@ public:
         label_4->setText(QString());
         tabWidget_2->setTabText(tabWidget_2->indexOf(tab), QApplication::translate("MainWindowClass", "History", nullptr));
         label_5->setText(QApplication::translate("MainWindowClass", "Weight", nullptr));
-        toolButton_5->setText(QApplication::translate("MainWindowClass", "Create TF\n"
-"from region", nullptr));
+        toolButton_5->setText(QApplication::translate("MainWindowClass", "Create TF", nullptr));
         toolButton->setText(QApplication::translate("MainWindowClass", "Pick color...", nullptr));
         label_6->setText(QApplication::translate("MainWindowClass", "Weight", nullptr));
         toolButton_2->setText(QApplication::translate("MainWindowClass", "Pick color...", nullptr));
-        toolButton_6->setText(QApplication::translate("MainWindowClass", "Create TF\n"
-"from region", nullptr));
-        toolButton_7->setText(QApplication::translate("MainWindowClass", "Create TF\n"
-"from region", nullptr));
+        toolButton_6->setText(QApplication::translate("MainWindowClass", "Create TF", nullptr));
+        toolButton_7->setText(QApplication::translate("MainWindowClass", "Create TF", nullptr));
         toolButton_3->setText(QApplication::translate("MainWindowClass", "Pick color...", nullptr));
         label_7->setText(QApplication::translate("MainWindowClass", "Weight", nullptr));
+        toolButton_10->setText(QApplication::translate("MainWindowClass", "Create TF", nullptr));
+        toolButton_8->setText(QApplication::translate("MainWindowClass", "Pick color...", nullptr));
+        label_9->setText(QApplication::translate("MainWindowClass", "Weight", nullptr));
+        toolButton_11->setText(QApplication::translate("MainWindowClass", "Create TF", nullptr));
+        toolButton_9->setText(QApplication::translate("MainWindowClass", "Pick color...", nullptr));
+        label_10->setText(QApplication::translate("MainWindowClass", "Weight", nullptr));
         tabWidget_2->setTabText(tabWidget_2->indexOf(tab_2), QApplication::translate("MainWindowClass", "Components", nullptr));
         menu_File->setTitle(QApplication::translate("MainWindowClass", "&File", nullptr));
         menu_Help->setTitle(QApplication::translate("MainWindowClass", "&Help", nullptr));

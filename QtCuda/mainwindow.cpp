@@ -14,9 +14,6 @@ MainWindow::MainWindow(QWidget *parent)
 	this->move(this->pos() - QPoint(400, 260));
 	ui.setupUi(this);
 
-	//// enable auto fill background
-	//ui.toolButton_4->setAutoFillBackground(true);
-
 	update_color(QColor::fromRgbF(D_RGBA[0], D_RGBA[1], D_RGBA[2], D_RGBA[3]));
 	ui.verticalLayout->addWidget(&chartView_tf);
 	ui.verticalLayout->addWidget(&chartView_relative);
@@ -26,34 +23,34 @@ MainWindow::MainWindow(QWidget *parent)
 	ui.horizontalLayout->addWidget(&chartView_features[0]);
 	ui.horizontalLayout_2->addWidget(&chartView_features[1]);
 	ui.horizontalLayout_3->addWidget(&chartView_features[2]);
+	ui.horizontalLayout_4->addWidget(&chartView_features[3]);
+	ui.horizontalLayout_5->addWidget(&chartView_features[4]);
+	ui.horizontalLayout_6->addWidget(&chartView_sum);
 
 	// Set chart titles
 	chartView_tf.chart()->setTitle("Transfer function");
 	chartView_relative.chart()->setTitle("Relative visibility histogram");
 	chartView_global.chart()->setTitle("Global visibility histogram");
 	chartView_local.chart()->setTitle("Local visibility histogram");
-	chartView_features[0].chart()->setTitle("Transfer function component 0");
-	chartView_features[1].chart()->setTitle("Transfer function component 1");
-	chartView_features[2].chart()->setTitle("Transfer function component 2");
-
-	ui.horizontalLayout_9->addWidget(&chartView_sum);
+	for (int i = 0; i < D_MAX_TF_COMPONENTS; i++)
+	{
+		char str[_MAX_PATH];
+		sprintf(str, "Transfer function component %d", i);
+		chartView_features[i].chart()->setTitle(str);
+	}
 	chartView_sum.chart()->setTitle("Merged transfer function");
-
-	// show the first tab by default
-	ui.tabWidget_2->setCurrentIndex(0);
 
 	for (int i = 0; i < D_MAX_TF_COMPONENTS; i++)
 	{
 		tf_component_weights[i] = 1;
 	}
 
-	delay_draw_transfer_function_and_visibility_histograms(1000);
 	update_screenshots();
-}
 
-void MainWindow::on_pushButton_2_clicked()
-{
-	update_all_transfer_functions_and_histograms();
+	QTimer::singleShot(1000, this, [this]() {
+		update_all_transfer_functions_and_histograms();
+		ui.spinBox->setValue(D_MAX_TF_COMPONENTS - 2);
+	});
 }
 
 void MainWindow::on_pushButton_3_clicked()
@@ -77,28 +74,6 @@ void MainWindow::on_pushButton_3_clicked()
 	//	std::cout << d[i] << std::ends;
 	//}
 	//std::cout << std::endl;
-}
-
-void MainWindow::on_pushButton_4_clicked()
-{
-	reset_transfer_function();
-	delay_draw_transfer_function_and_visibility_histograms();
-
-	////float gaussian1[R1*R1*R1] = { 0 };
-	//float a;
-	//std::ifstream myfile;
-	//myfile.open("~gaussian_5_5_5.txt");
-	//myfile >> a;
-
-	//int n = R1*R1*R1;
-	//for (int i=0;i<n;i++)
-	//{
-	//	myfile >> a;
-	//	gaussian1[i] = a;
-	//	std::cout << gaussian1[i] << std::ends;
-	//}
-	//std::cout << std::endl;
-	//myfile.close();
 }
 
 void MainWindow::on_checkBox_3_clicked()
@@ -169,7 +144,7 @@ void MainWindow::on_actionOpen_transfer_function_triggered()
 		qDebug() << filename;
 		openTransferFunctionFromVoreenXML(filename.toStdString().c_str());
 		bind_tf_texture();
-		draw_transfer_function_and_histograms();
+		draw_transfer_functions_and_histograms();
 	}
 }
 
@@ -285,52 +260,62 @@ void MainWindow::on_toolButton_4_clicked()
 
 void MainWindow::on_pushButton_clicked()
 {
+	float *components[D_MAX_TF_COMPONENTS];
 	const qreal N = D_BIN_COUNT - 1;
 	auto tf = get_tf_array();
-	auto tf_sum = get_tf_component3();
-	auto tf0 = get_tf_component0();
-	auto tf1 = get_tf_component1();
-	auto tf2 = get_tf_component2();
+	auto tf_sum = get_tf_component_sum();
+	for (int i = 0; i < D_MAX_TF_COMPONENTS; i++)
+	{
+		components[i] = get_tf_component(i);
+	}
 	memset(tf_sum, 0, sizeof(float)*D_BIN_COUNT);
 	float4 sum[D_BIN_COUNT] = { 0 };
-	float4 colors[3] = { 0 };
+	float4 colors[D_MAX_TF_COMPONENTS] = { 0 };
 	colors[0] = get_button_color(*ui.toolButton);
 	colors[1] = get_button_color(*ui.toolButton_2);
 	colors[2] = get_button_color(*ui.toolButton_3);
+	colors[3] = get_button_color(*ui.toolButton_8);
+	colors[4] = get_button_color(*ui.toolButton_9);
 
 	for (int i = 0; i < D_BIN_COUNT; i++)
 	{
-		float t0 = tf0[i] * tf_component_weights[0];
-		float t1 = tf1[i] * tf_component_weights[1];
-		float t2 = tf2[i] * tf_component_weights[2];
-		float t = t0 + t1 + t2;
+		float tmp[D_MAX_TF_COMPONENTS];
+		float t = 0;
+		for (int j = 0; j < D_MAX_TF_COMPONENTS; j++)
+		{
+			tmp[j]= components[j][i] * tf_component_weights[j];
+			t += tmp[j];
+		}
 		tf_sum[i] = t < 0 ? 0 : (t > 1 ? 1 : t);
-		sum[i] = build_color(colors, t0, t1, t2, tf[i]);
+		sum[i] = build_color(colors, tmp, tf[i]);
 	}
 	memcpy(tf, sum, sizeof(float4)*D_BIN_COUNT);
 	bind_tf_texture();
-	draw_transfer_function(tf, chartView_sum);
+	draw_transfer_functions();
 }
 
 void MainWindow::on_toolButton_5_clicked()
 {
 	calculate_visibility_without_editing_tf();
-	delay_add_transfer_function_component(get_tf_component0(), chartView_features[0]);
-	delay_set_button_color_to_component_peak_color(*ui.toolButton, get_tf_component0(), get_tf_array());
+	const int i = 0;
+	delay_add_transfer_function_component(get_tf_component(i), chartView_features[i]);
+	delay_set_button_color_to_component_peak_color(*ui.toolButton, get_tf_component(i), get_tf_array());
 }
 
 void MainWindow::on_toolButton_6_clicked()
 {
 	calculate_visibility_without_editing_tf();
-	delay_add_transfer_function_component(get_tf_component1(), chartView_features[1]);
-	delay_set_button_color_to_component_peak_color(*ui.toolButton_2, get_tf_component1(), get_tf_array());
+	const int i = 1;
+	delay_add_transfer_function_component(get_tf_component(i), chartView_features[i]);
+	delay_set_button_color_to_component_peak_color(*ui.toolButton_2, get_tf_component(i), get_tf_array());
 }
 
 void MainWindow::on_toolButton_7_clicked()
 {
 	calculate_visibility_without_editing_tf();
-	delay_add_transfer_function_component(get_tf_component2(), chartView_features[2]);
-	delay_set_button_color_to_component_peak_color(*ui.toolButton_3, get_tf_component2(), get_tf_array());
+	const int i = 2;
+	delay_add_transfer_function_component(get_tf_component(i), chartView_features[i]);
+	delay_set_button_color_to_component_peak_color(*ui.toolButton_3, get_tf_component(i), get_tf_array());
 }
 
 void MainWindow::on_doubleSpinBox_valueChanged(double arg1)
@@ -374,7 +359,77 @@ void MainWindow::on_action_Weights_of_Transfer_function_componments_triggered()
 	}
 }
 
+void MainWindow::on_spinBox_valueChanged(int arg1)
+{
+	tf_component_number = arg1 < 2 ? 2 : (arg1 > D_MAX_TF_COMPONENTS ? D_MAX_TF_COMPONENTS : arg1);
+	hide_extra_tf_component_frames();
+}
+
+void MainWindow::on_pushButton_2_clicked()
+{
+	reset_transfer_function();
+	delay_draw_transfer_function_and_visibility_histograms();
+
+	////float gaussian1[R1*R1*R1] = { 0 };
+	//float a;
+	//std::ifstream myfile;
+	//myfile.open("~gaussian_5_5_5.txt");
+	//myfile >> a;
+
+	//int n = R1*R1*R1;
+	//for (int i=0;i<n;i++)
+	//{
+	//	myfile >> a;
+	//	gaussian1[i] = a;
+	//	std::cout << gaussian1[i] << std::ends;
+	//}
+	//std::cout << std::endl;
+	//myfile.close();
+}
+
+void MainWindow::on_toolButton_8_clicked()
+{
+	set_button_color_dialog(*ui.toolButton_8);
+}
+
+void MainWindow::on_toolButton_9_clicked()
+{
+	set_button_color_dialog(*ui.toolButton_9);
+}
+
 void MainWindow::on_action_Smooth_transfer_functions_triggered()
 {
 	update_all_transfer_functions_and_histograms();
+}
+
+void MainWindow::on_action_Refresh_transfer_functions_and_histograms_triggered()
+{
+	update_all_transfer_functions_and_histograms();
+}
+
+void MainWindow::on_doubleSpinBox_4_valueChanged(double arg1)
+{
+	tf_component_weights[3] = arg1;
+}
+
+void MainWindow::on_doubleSpinBox_5_valueChanged(double arg1)
+{
+	tf_component_weights[4] = arg1;
+}
+
+void MainWindow::on_toolButton_10_clicked()
+{
+	calculate_visibility_without_editing_tf();
+	const int i = 3;
+	delay_add_transfer_function_component(get_tf_component(i), chartView_features[i]);
+	delay_set_button_color_to_component_peak_color(*ui.toolButton_8, get_tf_component(i), get_tf_array());
+}
+
+void MainWindow::on_toolButton_11_clicked()
+{
+	calculate_visibility_without_editing_tf();
+	const int i = 4;
+	delay_add_transfer_function_component(get_tf_component(i), chartView_features[i]);
+	delay_set_button_color_to_component_peak_color(*ui.toolButton_9, get_tf_component(i), get_tf_array());
+
 }
