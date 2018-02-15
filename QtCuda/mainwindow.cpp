@@ -11,7 +11,7 @@ MainWindow::MainWindow(QWidget *parent)
 			qApp->desktop()->availableGeometry()
 		)
 	);
-	this->move(this->pos() - QPoint(400, 300));
+	this->move(this->pos() - QPoint(400, 260));
 	ui.setupUi(this);
 
 	//// enable auto fill background
