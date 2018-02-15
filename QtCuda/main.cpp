@@ -1882,6 +1882,7 @@ inline int2 convert_mouse_position(int x, int y)
 
 	int h = glutGet(GLUT_WINDOW_HEIGHT);
 	int n = get_region_size();
+	std::cout << "convert_mouse_position " << x << " " << h - y << std::endl;
 	int2 ans;
 	ans.x = x - n / 3;
 	ans.y = h - y - n * 2 / 3;
@@ -1894,15 +1895,11 @@ void mouse(int button, int state, int x, int y)
 	//{
 	//	return;
 	//}
-	//int h = glutGet(GLUT_WINDOW_HEIGHT);
-	//int n = get_region_size();
+	auto pos = unproject_mouse_position(x, y);
 	if (button == GLUT_LEFT_BUTTON)
 	{
-		//loc.x = x - n / 2;
-		//loc.y = height - y - n;
-		// put the tip of mouse cursor at the center of the selected region
-		//loc.y = h - y - n * 4 / 3;
 		loc = convert_mouse_position(x, y);
+		//loc = unproject_mouse_position(x, y);
 		locf.x = loc.x;
 		locf.y = loc.y;
 		loc2.x = loc.x;
@@ -1941,7 +1938,7 @@ void mouse(int button, int state, int x, int y)
 
 	if (1 == state)
 	{
-		printf("mouse %d %d button %d state %d \t loc.x=%d loc.y=%d \n", x, y, button, state, loc.x, loc.y);
+		printf("mouse %d %d button %d state %d \t loc.x=%d loc.y=%d \t pos.x=%d pos.y=%d \n", x, y, button, state, loc.x, loc.y, pos.x, pos.y);
 	}
 }
 
