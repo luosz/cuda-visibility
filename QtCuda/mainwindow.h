@@ -524,8 +524,6 @@ private slots:
 
     void on_action_Clear_transfer_function_components_triggered();
 
-    void on_action_Weights_of_Transfer_function_componments_triggered();
-
     void on_spinBox_valueChanged(int arg1);
 
     void on_pushButton_2_clicked();

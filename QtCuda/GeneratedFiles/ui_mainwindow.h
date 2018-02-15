@@ -46,7 +46,6 @@ public:
     QAction *actionSave_transfer_function_as;
     QAction *actionLoad_view_and_region;
     QAction *actionSave_view_and_region_as;
-    QAction *action_Weights_of_Transfer_function_componments;
     QAction *action_Clear_transfer_function_components;
     QAction *action_Smooth_transfer_functions;
     QAction *action_Refresh_transfer_functions_and_histograms;
@@ -155,8 +154,6 @@ public:
         actionLoad_view_and_region->setObjectName(QStringLiteral("actionLoad_view_and_region"));
         actionSave_view_and_region_as = new QAction(MainWindowClass);
         actionSave_view_and_region_as->setObjectName(QStringLiteral("actionSave_view_and_region_as"));
-        action_Weights_of_Transfer_function_componments = new QAction(MainWindowClass);
-        action_Weights_of_Transfer_function_componments->setObjectName(QStringLiteral("action_Weights_of_Transfer_function_componments"));
         action_Clear_transfer_function_components = new QAction(MainWindowClass);
         action_Clear_transfer_function_components->setObjectName(QStringLiteral("action_Clear_transfer_function_components"));
         action_Smooth_transfer_functions = new QAction(MainWindowClass);
@@ -666,7 +663,6 @@ public:
         menu_Options->addAction(action_Refresh_transfer_functions_and_histograms);
         menu_Options->addAction(action_Smooth_transfer_functions);
         menu_Options->addAction(action_Clear_transfer_function_components);
-        menu_Options->addAction(action_Weights_of_Transfer_function_componments);
 
         retranslateUi(MainWindowClass);
 
@@ -687,7 +683,6 @@ public:
         actionSave_transfer_function_as->setText(QApplication::translate("MainWindowClass", "&Save transfer function as...", nullptr));
         actionLoad_view_and_region->setText(QApplication::translate("MainWindowClass", "Load &view and region...", nullptr));
         actionSave_view_and_region_as->setText(QApplication::translate("MainWindowClass", "Save view and region &as...", nullptr));
-        action_Weights_of_Transfer_function_componments->setText(QApplication::translate("MainWindowClass", "&Weights of Transfer function componments...", nullptr));
         action_Clear_transfer_function_components->setText(QApplication::translate("MainWindowClass", "&Clear transfer function components", nullptr));
         action_Smooth_transfer_functions->setText(QApplication::translate("MainWindowClass", "&Smooth transfer functions", nullptr));
         action_Refresh_transfer_functions_and_histograms->setText(QApplication::translate("MainWindowClass", "&Refresh transfer functions and histograms", nullptr));
@@ -712,18 +707,23 @@ public:
         label_4->setText(QString());
         tabWidget_2->setTabText(tabWidget_2->indexOf(tab), QApplication::translate("MainWindowClass", "History", nullptr));
         label_5->setText(QApplication::translate("MainWindowClass", "Weight", nullptr));
-        toolButton_5->setText(QApplication::translate("MainWindowClass", "Create TF", nullptr));
+        toolButton_5->setText(QApplication::translate("MainWindowClass", "Create TF\n"
+"from region", nullptr));
         toolButton->setText(QApplication::translate("MainWindowClass", "Pick color...", nullptr));
         label_6->setText(QApplication::translate("MainWindowClass", "Weight", nullptr));
         toolButton_2->setText(QApplication::translate("MainWindowClass", "Pick color...", nullptr));
-        toolButton_6->setText(QApplication::translate("MainWindowClass", "Create TF", nullptr));
-        toolButton_7->setText(QApplication::translate("MainWindowClass", "Create TF", nullptr));
+        toolButton_6->setText(QApplication::translate("MainWindowClass", "Create TF\n"
+"from region", nullptr));
+        toolButton_7->setText(QApplication::translate("MainWindowClass", "Create TF\n"
+"from region", nullptr));
         toolButton_3->setText(QApplication::translate("MainWindowClass", "Pick color...", nullptr));
         label_7->setText(QApplication::translate("MainWindowClass", "Weight", nullptr));
-        toolButton_10->setText(QApplication::translate("MainWindowClass", "Create TF", nullptr));
+        toolButton_10->setText(QApplication::translate("MainWindowClass", "Create TF\n"
+"from region", nullptr));
         toolButton_8->setText(QApplication::translate("MainWindowClass", "Pick color...", nullptr));
         label_9->setText(QApplication::translate("MainWindowClass", "Weight", nullptr));
-        toolButton_11->setText(QApplication::translate("MainWindowClass", "Create TF", nullptr));
+        toolButton_11->setText(QApplication::translate("MainWindowClass", "Create TF\n"
+"from region", nullptr));
         toolButton_9->setText(QApplication::translate("MainWindowClass", "Pick color...", nullptr));
         label_10->setText(QApplication::translate("MainWindowClass", "Weight", nullptr));
         tabWidget_2->setTabText(tabWidget_2->indexOf(tab_2), QApplication::translate("MainWindowClass", "Components", nullptr));

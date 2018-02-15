@@ -38,7 +38,7 @@ MainWindow::MainWindow(QWidget *parent)
 		sprintf(str, "Transfer function component %d", i);
 		chartView_features[i].chart()->setTitle(str);
 	}
-	chartView_sum.chart()->setTitle("Merged transfer function");
+	chartView_sum.chart()->setTitle("Transfer function");
 
 	for (int i = 0; i < D_MAX_TF_COMPONENTS; i++)
 	{
@@ -338,27 +338,6 @@ void MainWindow::on_action_Clear_transfer_function_components_triggered()
 	clear_transfer_function_components();
 }
 
-void MainWindow::on_action_Weights_of_Transfer_function_componments_triggered()
-{
-	char str[_MAX_PATH];
-	sprintf(str, "%g %g %g %g", tf_component_weights[0], tf_component_weights[1], tf_component_weights[2], tf_component_weights[3]);
-	char label[_MAX_PATH];
-	sprintf(label, "Enter transfer function component weights (%d numbers in range [0,1] separated by space)", D_MAX_TF_COMPONENTS);
-	bool ok;
-	QString text = QInputDialog::getText(this, tr("Transfer function component weights"),
-		tr(label), QLineEdit::Normal, tr(str), &ok);
-	if (ok && !text.isEmpty())
-	{
-		QTextStream s(&text);
-		s >> tf_component_weights[0] >> tf_component_weights[1] >> tf_component_weights[2] >> tf_component_weights[3];
-		for (int i = 0; i < D_MAX_TF_COMPONENTS; i++)
-		{
-			tf_component_weights[i] = tf_component_weights[i] < 0 ? 0 : (tf_component_weights[i] > 1 ? 1 : tf_component_weights[i]);
-		}
-		std::cout << "tf_component_weights " << tf_component_weights[0] << " " << tf_component_weights[1] << " " << tf_component_weights[2] << " " << tf_component_weights[3] << std::endl;
-	}
-}
-
 void MainWindow::on_spinBox_valueChanged(int arg1)
 {
 	tf_component_number = arg1 < 2 ? 2 : (arg1 > D_MAX_TF_COMPONENTS ? D_MAX_TF_COMPONENTS : arg1);
@@ -433,3 +412,30 @@ void MainWindow::on_toolButton_11_clicked()
 	delay_set_button_color_to_component_peak_color(*ui.toolButton_9, get_tf_component(i), get_tf_array());
 
 }
+
+//void MainWindow::on_action_Print_wegihts_of_transfer_function_componments_triggered()
+//{
+//	for (int i = 0; i < D_MAX_TF_COMPONENTS; i++)
+//	{
+//		std::cout << tf_component_weights[i] << std::ends;
+//	}
+//	std::cout << std::endl;
+//
+//	//char str[_MAX_PATH];
+//	//sprintf(str, "%g %g %g %g", tf_component_weights[0], tf_component_weights[1], tf_component_weights[2], tf_component_weights[3]);
+//	//char label[_MAX_PATH];
+//	//sprintf(label, "Enter transfer function component weights (%d numbers in range [0,1] separated by space)", D_MAX_TF_COMPONENTS);
+//	//bool ok;
+//	//QString text = QInputDialog::getText(this, tr("Transfer function component weights"),
+//	//	tr(label), QLineEdit::Normal, tr(str), &ok);
+//	//if (ok && !text.isEmpty())
+//	//{
+//	//	QTextStream s(&text);
+//	//	s >> tf_component_weights[0] >> tf_component_weights[1] >> tf_component_weights[2] >> tf_component_weights[3];
+//	//	for (int i = 0; i < D_MAX_TF_COMPONENTS; i++)
+//	//	{
+//	//		tf_component_weights[i] = tf_component_weights[i] < 0 ? 0 : (tf_component_weights[i] > 1 ? 1 : tf_component_weights[i]);
+//	//	}
+//	//	std::cout << "tf_component_weights " << tf_component_weights[0] << " " << tf_component_weights[1] << " " << tf_component_weights[2] << " " << tf_component_weights[3] << std::endl;
+//	//}
+//}
