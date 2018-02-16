@@ -264,22 +264,26 @@ void MainWindow::on_toolButton_4_clicked()
 
 void MainWindow::on_pushButton_clicked()
 {
-	float *components[D_MAX_TF_COMPONENTS];
+	// merge transfer function components
 	const qreal N = D_BIN_COUNT - 1;
 	auto tf = get_tf_array();
 	auto tf_sum = get_tf_component_sum();
+	memset(tf_sum, 0, sizeof(float)*D_BIN_COUNT);
+	float *components[D_MAX_TF_COMPONENTS];
+	float4 sum[D_BIN_COUNT] = { 0 };
+	float4 colors[D_MAX_TF_COMPONENTS] = { 0 };
+	QAbstractButton *buttons[D_MAX_TF_COMPONENTS] = {
+		ui.toolButton,
+		ui.toolButton_2,
+		ui.toolButton_3,
+		ui.toolButton_8,
+		ui.toolButton_9
+	};
 	for (int i = 0; i < D_MAX_TF_COMPONENTS; i++)
 	{
 		components[i] = get_tf_component(i);
+		colors[i] = get_button_color(*buttons[i]);
 	}
-	memset(tf_sum, 0, sizeof(float)*D_BIN_COUNT);
-	float4 sum[D_BIN_COUNT] = { 0 };
-	float4 colors[D_MAX_TF_COMPONENTS] = { 0 };
-	colors[0] = get_button_color(*ui.toolButton);
-	colors[1] = get_button_color(*ui.toolButton_2);
-	colors[2] = get_button_color(*ui.toolButton_3);
-	colors[3] = get_button_color(*ui.toolButton_8);
-	colors[4] = get_button_color(*ui.toolButton_9);
 
 	for (int i = 0; i < D_BIN_COUNT; i++)
 	{
