@@ -190,26 +190,6 @@ extern "C" float4* get_tf_array()
 	return tf_array;
 }
 
-extern "C" float* get_tf_component0()
-{
-	return opacity_transfer_functions[0];
-}
-
-extern "C" float* get_tf_component1()
-{
-	return opacity_transfer_functions[1];
-}
-
-extern "C" float* get_tf_component2()
-{
-	return opacity_transfer_functions[2];
-}
-
-extern "C" float* get_tf_component3()
-{
-	return opacity_transfer_functions[3];
-}
-
 extern "C" float* get_tf_component_sum()
 {
 	return opacity_transfer_functions[D_MAX_TF_COMPONENTS];
@@ -217,7 +197,7 @@ extern "C" float* get_tf_component_sum()
 
 extern "C" float* get_tf_component(int i)
 {
-	int index=i<0?0:(i>D_MAX_TF_COMPONENTS?D_MAX_TF_COMPONENTS:i);
+	int index = i < 0 ? 0 : (i > D_MAX_TF_COMPONENTS ? D_MAX_TF_COMPONENTS : i);
 	return opacity_transfer_functions[index];
 }
 

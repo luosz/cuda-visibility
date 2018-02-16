@@ -20,12 +20,13 @@ MainWindow::MainWindow(QWidget *parent)
 	ui.verticalLayout->addWidget(&chartView_global);
 	ui.verticalLayout->addWidget(&chartView_local);
 
-	ui.horizontalLayout->addWidget(&chartView_features[0]);
-	ui.horizontalLayout_2->addWidget(&chartView_features[1]);
-	ui.horizontalLayout_3->addWidget(&chartView_features[2]);
-	ui.horizontalLayout_4->addWidget(&chartView_features[3]);
-	ui.horizontalLayout_5->addWidget(&chartView_features[4]);
-	ui.horizontalLayout_6->addWidget(&chartView_sum);
+	QBoxLayout *layouts[D_MAX_TF_COMPONENTS] = {
+		ui.horizontalLayout,
+		ui.horizontalLayout_2,
+		ui.horizontalLayout_3,
+		ui.horizontalLayout_4,
+		ui.horizontalLayout_5
+	};
 
 	// Set chart titles
 	chartView_tf.chart()->setTitle("Transfer function");
@@ -37,8 +38,10 @@ MainWindow::MainWindow(QWidget *parent)
 		char str[_MAX_PATH];
 		sprintf(str, "Transfer function component %d", i);
 		chartView_features[i].chart()->setTitle(str);
+		layouts[i]->addWidget(&chartView_features[i]);
 	}
 	chartView_sum.chart()->setTitle("Transfer function");
+	ui.horizontalLayout_6->addWidget(&chartView_sum);
 
 	for (int i = 0; i < D_MAX_TF_COMPONENTS; i++)
 	{
@@ -47,6 +50,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 	update_screenshots();
 
+	// draw transfer functions and histograms after rendering is done
 	QTimer::singleShot(1000, this, [this]() {
 		update_all_transfer_functions_and_histograms();
 		ui.spinBox->setValue(D_MAX_TF_COMPONENTS - 2);

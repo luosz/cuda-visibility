@@ -1882,7 +1882,7 @@ inline int2 convert_mouse_position(int x, int y)
 
 	int h = glutGet(GLUT_WINDOW_HEIGHT);
 	int n = get_region_size();
-	std::cout << "convert_mouse_position " << x << " " << h - y << std::endl;
+	//std::cout << "convert_mouse_position " << x << " " << h - y << std::endl;
 	int2 ans;
 	ans.x = x - n / 3;
 	ans.y = h - y - n * 2 / 3;

@@ -202,12 +202,19 @@ public:
 
         checkBox_2 = new QCheckBox(widget);
         checkBox_2->setObjectName(QStringLiteral("checkBox_2"));
+        sizePolicy1.setHeightForWidth(checkBox_2->sizePolicy().hasHeightForWidth());
+        checkBox_2->setSizePolicy(sizePolicy1);
         checkBox_2->setChecked(true);
 
         horizontalLayout_7->addWidget(checkBox_2);
 
         toolButton_4 = new QToolButton(widget);
         toolButton_4->setObjectName(QStringLiteral("toolButton_4"));
+        QSizePolicy sizePolicy2(QSizePolicy::Fixed, QSizePolicy::Fixed);
+        sizePolicy2.setHorizontalStretch(0);
+        sizePolicy2.setVerticalStretch(0);
+        sizePolicy2.setHeightForWidth(toolButton_4->sizePolicy().hasHeightForWidth());
+        toolButton_4->setSizePolicy(sizePolicy2);
         toolButton_4->setAutoFillBackground(true);
         toolButton_4->setAutoRaise(true);
 
@@ -215,16 +222,22 @@ public:
 
         pushButton_3 = new QPushButton(widget);
         pushButton_3->setObjectName(QStringLiteral("pushButton_3"));
+        sizePolicy1.setHeightForWidth(pushButton_3->sizePolicy().hasHeightForWidth());
+        pushButton_3->setSizePolicy(sizePolicy1);
 
         horizontalLayout_7->addWidget(pushButton_3);
 
         pushButton = new QPushButton(widget);
         pushButton->setObjectName(QStringLiteral("pushButton"));
+        sizePolicy1.setHeightForWidth(pushButton->sizePolicy().hasHeightForWidth());
+        pushButton->setSizePolicy(sizePolicy1);
 
         horizontalLayout_7->addWidget(pushButton);
 
         spinBox = new QSpinBox(widget);
         spinBox->setObjectName(QStringLiteral("spinBox"));
+        sizePolicy1.setHeightForWidth(spinBox->sizePolicy().hasHeightForWidth());
+        spinBox->setSizePolicy(sizePolicy1);
         spinBox->setMinimum(2);
         spinBox->setMaximum(5);
         spinBox->setValue(5);
@@ -233,11 +246,15 @@ public:
 
         label_8 = new QLabel(widget);
         label_8->setObjectName(QStringLiteral("label_8"));
+        sizePolicy.setHeightForWidth(label_8->sizePolicy().hasHeightForWidth());
+        label_8->setSizePolicy(sizePolicy);
 
         horizontalLayout_7->addWidget(label_8);
 
         pushButton_2 = new QPushButton(widget);
         pushButton_2->setObjectName(QStringLiteral("pushButton_2"));
+        sizePolicy1.setHeightForWidth(pushButton_2->sizePolicy().hasHeightForWidth());
+        pushButton_2->setSizePolicy(sizePolicy1);
 
         horizontalLayout_7->addWidget(pushButton_2);
 
@@ -250,28 +267,38 @@ public:
         horizontalLayout_8->setContentsMargins(0, 0, 0, 0);
         checkBox_3 = new QCheckBox(widget);
         checkBox_3->setObjectName(QStringLiteral("checkBox_3"));
+        sizePolicy1.setHeightForWidth(checkBox_3->sizePolicy().hasHeightForWidth());
+        checkBox_3->setSizePolicy(sizePolicy1);
         checkBox_3->setChecked(true);
 
         horizontalLayout_8->addWidget(checkBox_3);
 
         checkBox_4 = new QCheckBox(widget);
         checkBox_4->setObjectName(QStringLiteral("checkBox_4"));
+        sizePolicy1.setHeightForWidth(checkBox_4->sizePolicy().hasHeightForWidth());
+        checkBox_4->setSizePolicy(sizePolicy1);
         checkBox_4->setChecked(true);
 
         horizontalLayout_8->addWidget(checkBox_4);
 
         checkBox_5 = new QCheckBox(widget);
         checkBox_5->setObjectName(QStringLiteral("checkBox_5"));
+        sizePolicy1.setHeightForWidth(checkBox_5->sizePolicy().hasHeightForWidth());
+        checkBox_5->setSizePolicy(sizePolicy1);
 
         horizontalLayout_8->addWidget(checkBox_5);
 
         checkBox_6 = new QCheckBox(widget);
         checkBox_6->setObjectName(QStringLiteral("checkBox_6"));
+        sizePolicy1.setHeightForWidth(checkBox_6->sizePolicy().hasHeightForWidth());
+        checkBox_6->setSizePolicy(sizePolicy1);
 
         horizontalLayout_8->addWidget(checkBox_6);
 
         pushButton_5 = new QPushButton(widget);
         pushButton_5->setObjectName(QStringLiteral("pushButton_5"));
+        sizePolicy1.setHeightForWidth(pushButton_5->sizePolicy().hasHeightForWidth());
+        pushButton_5->setSizePolicy(sizePolicy1);
 
         horizontalLayout_8->addWidget(pushButton_5);
 
@@ -283,11 +310,11 @@ public:
 
         tabWidget_2 = new QTabWidget(widget);
         tabWidget_2->setObjectName(QStringLiteral("tabWidget_2"));
-        QSizePolicy sizePolicy2(QSizePolicy::Expanding, QSizePolicy::Expanding);
-        sizePolicy2.setHorizontalStretch(0);
-        sizePolicy2.setVerticalStretch(0);
-        sizePolicy2.setHeightForWidth(tabWidget_2->sizePolicy().hasHeightForWidth());
-        tabWidget_2->setSizePolicy(sizePolicy2);
+        QSizePolicy sizePolicy3(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        sizePolicy3.setHorizontalStretch(0);
+        sizePolicy3.setVerticalStretch(0);
+        sizePolicy3.setHeightForWidth(tabWidget_2->sizePolicy().hasHeightForWidth());
+        tabWidget_2->setSizePolicy(sizePolicy3);
         tabWidget_2Page1 = new QWidget();
         tabWidget_2Page1->setObjectName(QStringLiteral("tabWidget_2Page1"));
         verticalLayout = new QVBoxLayout(tabWidget_2Page1);
@@ -382,11 +409,8 @@ public:
 
         label_5 = new QLabel(frame);
         label_5->setObjectName(QStringLiteral("label_5"));
-        QSizePolicy sizePolicy3(QSizePolicy::Minimum, QSizePolicy::Minimum);
-        sizePolicy3.setHorizontalStretch(0);
-        sizePolicy3.setVerticalStretch(0);
-        sizePolicy3.setHeightForWidth(label_5->sizePolicy().hasHeightForWidth());
-        label_5->setSizePolicy(sizePolicy3);
+        sizePolicy.setHeightForWidth(label_5->sizePolicy().hasHeightForWidth());
+        label_5->setSizePolicy(sizePolicy);
 
         gridLayout_4->addWidget(label_5, 0, 0, 1, 1);
 
@@ -426,8 +450,8 @@ public:
         gridLayout_5->setObjectName(QStringLiteral("gridLayout_5"));
         label_6 = new QLabel(frame_2);
         label_6->setObjectName(QStringLiteral("label_6"));
-        sizePolicy3.setHeightForWidth(label_6->sizePolicy().hasHeightForWidth());
-        label_6->setSizePolicy(sizePolicy3);
+        sizePolicy.setHeightForWidth(label_6->sizePolicy().hasHeightForWidth());
+        label_6->setSizePolicy(sizePolicy);
 
         gridLayout_5->addWidget(label_6, 0, 0, 1, 1);
 
@@ -488,8 +512,8 @@ public:
         gridLayout_10->setObjectName(QStringLiteral("gridLayout_10"));
         label_7 = new QLabel(frame_3);
         label_7->setObjectName(QStringLiteral("label_7"));
-        sizePolicy3.setHeightForWidth(label_7->sizePolicy().hasHeightForWidth());
-        label_7->setSizePolicy(sizePolicy3);
+        sizePolicy.setHeightForWidth(label_7->sizePolicy().hasHeightForWidth());
+        label_7->setSizePolicy(sizePolicy);
 
         gridLayout_10->addWidget(label_7, 0, 0, 1, 1);
 
@@ -693,7 +717,7 @@ public:
         pushButton->setText(QApplication::translate("MainWindowClass", "&Merge", nullptr));
         label_8->setText(QApplication::translate("MainWindowClass", "components", nullptr));
         pushButton_2->setText(QApplication::translate("MainWindowClass", "&Reset TF", nullptr));
-        checkBox_3->setText(QApplication::translate("MainWindowClass", "T&F editing", nullptr));
+        checkBox_3->setText(QApplication::translate("MainWindowClass", "TF e&diting", nullptr));
         checkBox_4->setText(QApplication::translate("MainWindowClass", "Reset TF &before editing", nullptr));
         checkBox_5->setText(QApplication::translate("MainWindowClass", "&VWS optimization", nullptr));
         checkBox_6->setText(QApplication::translate("MainWindowClass", "Temporal &visibility", nullptr));
@@ -707,22 +731,22 @@ public:
         label_4->setText(QString());
         tabWidget_2->setTabText(tabWidget_2->indexOf(tab), QApplication::translate("MainWindowClass", "History", nullptr));
         label_5->setText(QApplication::translate("MainWindowClass", "Weight", nullptr));
-        toolButton_5->setText(QApplication::translate("MainWindowClass", "Create TF\n"
+        toolButton_5->setText(QApplication::translate("MainWindowClass", "Get TF\n"
 "from region", nullptr));
         toolButton->setText(QApplication::translate("MainWindowClass", "Pick color...", nullptr));
         label_6->setText(QApplication::translate("MainWindowClass", "Weight", nullptr));
         toolButton_2->setText(QApplication::translate("MainWindowClass", "Pick color...", nullptr));
-        toolButton_6->setText(QApplication::translate("MainWindowClass", "Create TF\n"
+        toolButton_6->setText(QApplication::translate("MainWindowClass", "Get TF\n"
 "from region", nullptr));
-        toolButton_7->setText(QApplication::translate("MainWindowClass", "Create TF\n"
+        toolButton_7->setText(QApplication::translate("MainWindowClass", "Get TF\n"
 "from region", nullptr));
         toolButton_3->setText(QApplication::translate("MainWindowClass", "Pick color...", nullptr));
         label_7->setText(QApplication::translate("MainWindowClass", "Weight", nullptr));
-        toolButton_10->setText(QApplication::translate("MainWindowClass", "Create TF\n"
+        toolButton_10->setText(QApplication::translate("MainWindowClass", "Get TF\n"
 "from region", nullptr));
         toolButton_8->setText(QApplication::translate("MainWindowClass", "Pick color...", nullptr));
         label_9->setText(QApplication::translate("MainWindowClass", "Weight", nullptr));
-        toolButton_11->setText(QApplication::translate("MainWindowClass", "Create TF\n"
+        toolButton_11->setText(QApplication::translate("MainWindowClass", "Get TF\n"
 "from region", nullptr));
         toolButton_9->setText(QApplication::translate("MainWindowClass", "Pick color...", nullptr));
         label_10->setText(QApplication::translate("MainWindowClass", "Weight", nullptr));

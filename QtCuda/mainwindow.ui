@@ -97,6 +97,12 @@
            </item>
            <item>
             <widget class="QCheckBox" name="checkBox_2">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="text">
               <string>Adjust &amp;color</string>
              </property>
@@ -107,6 +113,12 @@
            </item>
            <item>
             <widget class="QToolButton" name="toolButton_4">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="autoFillBackground">
               <bool>true</bool>
              </property>
@@ -120,6 +132,12 @@
            </item>
            <item>
             <widget class="QPushButton" name="pushButton_3">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="text">
               <string>&amp;Edit alpha/color</string>
              </property>
@@ -127,6 +145,12 @@
            </item>
            <item>
             <widget class="QPushButton" name="pushButton">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="text">
               <string>&amp;Merge</string>
              </property>
@@ -134,6 +158,12 @@
            </item>
            <item>
             <widget class="QSpinBox" name="spinBox">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="minimum">
               <number>2</number>
              </property>
@@ -154,6 +184,12 @@
            </item>
            <item>
             <widget class="QPushButton" name="pushButton_2">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="text">
               <string>&amp;Reset TF</string>
              </property>
@@ -180,8 +216,14 @@
            </property>
            <item>
             <widget class="QCheckBox" name="checkBox_3">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="text">
-              <string>T&amp;F editing</string>
+              <string>TF e&amp;diting</string>
              </property>
              <property name="checked">
               <bool>true</bool>
@@ -190,6 +232,12 @@
            </item>
            <item>
             <widget class="QCheckBox" name="checkBox_4">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="text">
               <string>Reset TF &amp;before editing</string>
              </property>
@@ -200,6 +248,12 @@
            </item>
            <item>
             <widget class="QCheckBox" name="checkBox_5">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="text">
               <string>&amp;VWS optimization</string>
              </property>
@@ -207,6 +261,12 @@
            </item>
            <item>
             <widget class="QCheckBox" name="checkBox_6">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="text">
               <string>Temporal &amp;visibility</string>
              </property>
@@ -214,6 +274,12 @@
            </item>
            <item>
             <widget class="QPushButton" name="pushButton_5">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="text">
               <string>&amp;Temporal TF</string>
              </property>
@@ -416,7 +482,7 @@
                   <item row="0" column="0">
                    <widget class="QLabel" name="label_5">
                     <property name="sizePolicy">
-                     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                       <horstretch>0</horstretch>
                       <verstretch>0</verstretch>
                      </sizepolicy>
@@ -431,7 +497,7 @@
                 <item row="0" column="0">
                  <widget class="QToolButton" name="toolButton_5">
                   <property name="text">
-                   <string>Create TF
+                   <string>Get TF
 from region</string>
                   </property>
                  </widget>
@@ -485,7 +551,7 @@ from region</string>
                   <item row="0" column="0">
                    <widget class="QLabel" name="label_6">
                     <property name="sizePolicy">
-                     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                       <horstretch>0</horstretch>
                       <verstretch>0</verstretch>
                      </sizepolicy>
@@ -529,7 +595,7 @@ from region</string>
                 <item row="0" column="0">
                  <widget class="QToolButton" name="toolButton_6">
                   <property name="text">
-                   <string>Create TF
+                   <string>Get TF
 from region</string>
                   </property>
                  </widget>
@@ -565,7 +631,7 @@ from region</string>
                 <item row="0" column="0">
                  <widget class="QToolButton" name="toolButton_7">
                   <property name="text">
-                   <string>Create TF
+                   <string>Get TF
 from region</string>
                   </property>
                  </widget>
@@ -591,7 +657,7 @@ from region</string>
                   <item row="0" column="0">
                    <widget class="QLabel" name="label_7">
                     <property name="sizePolicy">
-                     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                       <horstretch>0</horstretch>
                       <verstretch>0</verstretch>
                      </sizepolicy>
@@ -659,7 +725,7 @@ from region</string>
                 <item row="0" column="0">
                  <widget class="QToolButton" name="toolButton_10">
                   <property name="text">
-                   <string>Create TF
+                   <string>Get TF
 from region</string>
                   </property>
                  </widget>
@@ -744,7 +810,7 @@ from region</string>
                 <item row="0" column="0">
                  <widget class="QToolButton" name="toolButton_11">
                   <property name="text">
-                   <string>Create TF
+                   <string>Get TF
 from region</string>
                   </property>
                  </widget>
