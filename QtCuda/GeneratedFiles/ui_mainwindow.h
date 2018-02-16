@@ -246,8 +246,6 @@ public:
 
         label_8 = new QLabel(widget);
         label_8->setObjectName(QStringLiteral("label_8"));
-        sizePolicy.setHeightForWidth(label_8->sizePolicy().hasHeightForWidth());
-        label_8->setSizePolicy(sizePolicy);
 
         horizontalLayout_7->addWidget(label_8);
 
@@ -409,8 +407,6 @@ public:
 
         label_5 = new QLabel(frame);
         label_5->setObjectName(QStringLiteral("label_5"));
-        sizePolicy.setHeightForWidth(label_5->sizePolicy().hasHeightForWidth());
-        label_5->setSizePolicy(sizePolicy);
 
         gridLayout_4->addWidget(label_5, 0, 0, 1, 1);
 
@@ -450,8 +446,6 @@ public:
         gridLayout_5->setObjectName(QStringLiteral("gridLayout_5"));
         label_6 = new QLabel(frame_2);
         label_6->setObjectName(QStringLiteral("label_6"));
-        sizePolicy.setHeightForWidth(label_6->sizePolicy().hasHeightForWidth());
-        label_6->setSizePolicy(sizePolicy);
 
         gridLayout_5->addWidget(label_6, 0, 0, 1, 1);
 
@@ -512,8 +506,6 @@ public:
         gridLayout_10->setObjectName(QStringLiteral("gridLayout_10"));
         label_7 = new QLabel(frame_3);
         label_7->setObjectName(QStringLiteral("label_7"));
-        sizePolicy.setHeightForWidth(label_7->sizePolicy().hasHeightForWidth());
-        label_7->setSizePolicy(sizePolicy);
 
         gridLayout_10->addWidget(label_7, 0, 0, 1, 1);
 
