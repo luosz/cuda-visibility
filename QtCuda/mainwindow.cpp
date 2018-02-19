@@ -36,7 +36,7 @@ MainWindow::MainWindow(QWidget *parent)
 	for (int i = 0; i < D_MAX_TF_COMPONENTS; i++)
 	{
 		char str[_MAX_PATH];
-		sprintf(str, "Transfer function component %d", i);
+		sprintf(str, "Component %d", i);
 		chartView_features[i].chart()->setTitle(str);
 		layouts[i]->addWidget(&chartView_features[i]);
 	}
