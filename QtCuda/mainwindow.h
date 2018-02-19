@@ -47,6 +47,8 @@ extern "C" int get_screenshot_id();
 extern "C" int get_next_screenshot_id(int id);
 extern "C" float* get_tf_component(int i);
 extern "C" float* get_tf_component_sum();
+extern "C" int get_region_size();
+extern "C" void set_region_size(int value);
 
 class MainWindow : public QMainWindow
 {
@@ -539,6 +541,8 @@ private slots:
     void on_toolButton_10_clicked();
 
     void on_toolButton_11_clicked();
+
+    void on_action_Modify_region_size_triggered();
 
 private:
 	Ui::MainWindowClass ui;

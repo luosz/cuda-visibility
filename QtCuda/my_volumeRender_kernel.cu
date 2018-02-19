@@ -185,6 +185,11 @@ extern "C" int get_region_size()
 	return radius;
 }
 
+extern "C" void set_region_size(int value)
+{
+	radius = value;
+}
+
 extern "C" float4* get_tf_array()
 {
 	return tf_array;

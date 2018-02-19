@@ -887,7 +887,7 @@ from region</string>
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>17</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
@@ -915,6 +915,7 @@ from region</string>
     <addaction name="action_Refresh_transfer_functions_and_histograms"/>
     <addaction name="action_Smooth_transfer_functions"/>
     <addaction name="action_Clear_transfer_function_components"/>
+    <addaction name="action_Modify_region_size"/>
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_Options"/>
@@ -988,6 +989,11 @@ from region</string>
   <action name="action_Refresh_transfer_functions_and_histograms">
    <property name="text">
     <string>&amp;Refresh transfer functions and histograms</string>
+   </property>
+  </action>
+  <action name="action_Modify_region_size">
+   <property name="text">
+    <string>&amp;Modify region size...</string>
    </property>
   </action>
  </widget>

@@ -447,3 +447,27 @@ void MainWindow::on_toolButton_11_clicked()
 //	//	std::cout << "tf_component_weights " << tf_component_weights[0] << " " << tf_component_weights[1] << " " << tf_component_weights[2] << " " << tf_component_weights[3] << std::endl;
 //	//}
 //}
+
+void MainWindow::on_action_Modify_region_size_triggered()
+{
+	int region_size = get_region_size();
+	char str[_MAX_PATH];
+	sprintf(str, "%d", region_size);
+	const int MAX_SIZE = min(D_WIDTH, D_HEIGHT) / 2;
+	char label[_MAX_PATH];
+	sprintf(label, "Enter a new region size in the range (0,%d]", MAX_SIZE);
+	bool ok;
+	QString text = QInputDialog::getText(this, tr("Modify region size"),
+		tr(label), QLineEdit::Normal, tr(str), &ok);
+	if (ok && !text.isEmpty())
+	{
+		QTextStream s(&text);
+		int size;
+		s >> size;
+		if (size != region_size && size > 0 && size <= MAX_SIZE)
+		{
+			set_region_size(size);
+			std::cout << "region size " << get_region_size() << std::endl;
+		}
+	}
+}
