@@ -88,11 +88,12 @@ public:
     QFrame *frame;
     QHBoxLayout *horizontalLayout;
     QGridLayout *gridLayout_9;
+    QToolButton *toolButton_5;
     QGridLayout *gridLayout_4;
     QDoubleSpinBox *doubleSpinBox;
     QLabel *label_5;
-    QToolButton *toolButton_5;
     QToolButton *toolButton;
+    QToolButton *toolButton_12;
     QFrame *frame_2;
     QHBoxLayout *horizontalLayout_2;
     QGridLayout *gridLayout_8;
@@ -101,14 +102,16 @@ public:
     QDoubleSpinBox *doubleSpinBox_2;
     QToolButton *toolButton_2;
     QToolButton *toolButton_6;
+    QToolButton *toolButton_13;
     QFrame *frame_3;
     QHBoxLayout *horizontalLayout_3;
     QGridLayout *gridLayout_7;
-    QToolButton *toolButton_7;
     QToolButton *toolButton_3;
+    QToolButton *toolButton_7;
     QGridLayout *gridLayout_10;
     QLabel *label_7;
     QDoubleSpinBox *doubleSpinBox_3;
+    QToolButton *toolButton_14;
     QFrame *frame_4;
     QHBoxLayout *horizontalLayout_4;
     QGridLayout *gridLayout_11;
@@ -117,14 +120,16 @@ public:
     QGridLayout *gridLayout_13;
     QLabel *label_9;
     QDoubleSpinBox *doubleSpinBox_4;
+    QToolButton *toolButton_15;
     QFrame *frame_5;
     QHBoxLayout *horizontalLayout_5;
     QGridLayout *gridLayout_12;
-    QToolButton *toolButton_11;
     QToolButton *toolButton_9;
+    QToolButton *toolButton_11;
     QGridLayout *gridLayout_14;
     QLabel *label_10;
     QDoubleSpinBox *doubleSpinBox_5;
+    QToolButton *toolButton_16;
     QFrame *frame_6;
     QHBoxLayout *horizontalLayout_6;
     QMenuBar *menuBar;
@@ -396,6 +401,11 @@ public:
         gridLayout_9->setSpacing(0);
         gridLayout_9->setObjectName(QStringLiteral("gridLayout_9"));
         gridLayout_9->setContentsMargins(0, 0, 0, 0);
+        toolButton_5 = new QToolButton(frame);
+        toolButton_5->setObjectName(QStringLiteral("toolButton_5"));
+
+        gridLayout_9->addWidget(toolButton_5, 0, 0, 1, 1);
+
         gridLayout_4 = new QGridLayout();
         gridLayout_4->setSpacing(0);
         gridLayout_4->setObjectName(QStringLiteral("gridLayout_4"));
@@ -416,17 +426,18 @@ public:
 
         gridLayout_9->addLayout(gridLayout_4, 2, 0, 1, 1);
 
-        toolButton_5 = new QToolButton(frame);
-        toolButton_5->setObjectName(QStringLiteral("toolButton_5"));
-
-        gridLayout_9->addWidget(toolButton_5, 0, 0, 1, 1);
-
         toolButton = new QToolButton(frame);
         toolButton->setObjectName(QStringLiteral("toolButton"));
         toolButton->setAutoFillBackground(true);
         toolButton->setAutoRaise(true);
 
         gridLayout_9->addWidget(toolButton, 1, 0, 1, 1);
+
+        toolButton_12 = new QToolButton(frame);
+        toolButton_12->setObjectName(QStringLiteral("toolButton_12"));
+        toolButton_12->setAutoRaise(true);
+
+        gridLayout_9->addWidget(toolButton_12, 3, 0, 1, 1);
 
 
         horizontalLayout->addLayout(gridLayout_9);
@@ -476,6 +487,12 @@ public:
 
         gridLayout_8->addWidget(toolButton_6, 0, 0, 1, 1);
 
+        toolButton_13 = new QToolButton(frame_2);
+        toolButton_13->setObjectName(QStringLiteral("toolButton_13"));
+        toolButton_13->setAutoRaise(true);
+
+        gridLayout_8->addWidget(toolButton_13, 3, 0, 1, 1);
+
 
         horizontalLayout_2->addLayout(gridLayout_8);
 
@@ -492,17 +509,17 @@ public:
         gridLayout_7 = new QGridLayout();
         gridLayout_7->setSpacing(0);
         gridLayout_7->setObjectName(QStringLiteral("gridLayout_7"));
-        toolButton_7 = new QToolButton(frame_3);
-        toolButton_7->setObjectName(QStringLiteral("toolButton_7"));
-
-        gridLayout_7->addWidget(toolButton_7, 0, 0, 1, 1);
-
         toolButton_3 = new QToolButton(frame_3);
         toolButton_3->setObjectName(QStringLiteral("toolButton_3"));
         toolButton_3->setAutoFillBackground(true);
         toolButton_3->setAutoRaise(true);
 
-        gridLayout_7->addWidget(toolButton_3, 1, 0, 1, 1);
+        gridLayout_7->addWidget(toolButton_3, 2, 0, 1, 1);
+
+        toolButton_7 = new QToolButton(frame_3);
+        toolButton_7->setObjectName(QStringLiteral("toolButton_7"));
+
+        gridLayout_7->addWidget(toolButton_7, 1, 0, 1, 1);
 
         gridLayout_10 = new QGridLayout();
         gridLayout_10->setSpacing(0);
@@ -523,7 +540,13 @@ public:
         gridLayout_10->addWidget(doubleSpinBox_3, 0, 1, 1, 1);
 
 
-        gridLayout_7->addLayout(gridLayout_10, 2, 0, 1, 1);
+        gridLayout_7->addLayout(gridLayout_10, 3, 0, 1, 1);
+
+        toolButton_14 = new QToolButton(frame_3);
+        toolButton_14->setObjectName(QStringLiteral("toolButton_14"));
+        toolButton_14->setAutoRaise(true);
+
+        gridLayout_7->addWidget(toolButton_14, 4, 0, 1, 1);
 
 
         horizontalLayout_3->addLayout(gridLayout_7);
@@ -575,6 +598,12 @@ public:
 
         gridLayout_11->addLayout(gridLayout_13, 2, 0, 1, 1);
 
+        toolButton_15 = new QToolButton(frame_4);
+        toolButton_15->setObjectName(QStringLiteral("toolButton_15"));
+        toolButton_15->setAutoRaise(true);
+
+        gridLayout_11->addWidget(toolButton_15, 3, 0, 1, 1);
+
 
         horizontalLayout_4->addLayout(gridLayout_11);
 
@@ -593,17 +622,17 @@ public:
         gridLayout_12 = new QGridLayout();
         gridLayout_12->setSpacing(0);
         gridLayout_12->setObjectName(QStringLiteral("gridLayout_12"));
-        toolButton_11 = new QToolButton(frame_5);
-        toolButton_11->setObjectName(QStringLiteral("toolButton_11"));
-
-        gridLayout_12->addWidget(toolButton_11, 0, 0, 1, 1);
-
         toolButton_9 = new QToolButton(frame_5);
         toolButton_9->setObjectName(QStringLiteral("toolButton_9"));
         toolButton_9->setAutoFillBackground(true);
         toolButton_9->setAutoRaise(true);
 
         gridLayout_12->addWidget(toolButton_9, 1, 0, 1, 1);
+
+        toolButton_11 = new QToolButton(frame_5);
+        toolButton_11->setObjectName(QStringLiteral("toolButton_11"));
+
+        gridLayout_12->addWidget(toolButton_11, 0, 0, 1, 1);
 
         gridLayout_14 = new QGridLayout();
         gridLayout_14->setSpacing(0);
@@ -624,6 +653,12 @@ public:
 
 
         gridLayout_12->addLayout(gridLayout_14, 2, 0, 1, 1);
+
+        toolButton_16 = new QToolButton(frame_5);
+        toolButton_16->setObjectName(QStringLiteral("toolButton_16"));
+        toolButton_16->setAutoRaise(true);
+
+        gridLayout_12->addWidget(toolButton_16, 3, 0, 1, 1);
 
 
         horizontalLayout_5->addLayout(gridLayout_12);
@@ -727,26 +762,31 @@ public:
         label_3->setText(QString());
         label_4->setText(QString());
         tabWidget_2->setTabText(tabWidget_2->indexOf(tab), QApplication::translate("MainWindowClass", "History", nullptr));
-        label_5->setText(QApplication::translate("MainWindowClass", "Weight", nullptr));
         toolButton_5->setText(QApplication::translate("MainWindowClass", "Get TF\n"
 "from region", nullptr));
+        label_5->setText(QApplication::translate("MainWindowClass", "Weight", nullptr));
         toolButton->setText(QApplication::translate("MainWindowClass", "Pick color...", nullptr));
+        toolButton_12->setText(QApplication::translate("MainWindowClass", "...", nullptr));
         label_6->setText(QApplication::translate("MainWindowClass", "Weight", nullptr));
         toolButton_2->setText(QApplication::translate("MainWindowClass", "Pick color...", nullptr));
         toolButton_6->setText(QApplication::translate("MainWindowClass", "Get TF\n"
 "from region", nullptr));
+        toolButton_13->setText(QApplication::translate("MainWindowClass", "...", nullptr));
+        toolButton_3->setText(QApplication::translate("MainWindowClass", "Pick color...", nullptr));
         toolButton_7->setText(QApplication::translate("MainWindowClass", "Get TF\n"
 "from region", nullptr));
-        toolButton_3->setText(QApplication::translate("MainWindowClass", "Pick color...", nullptr));
         label_7->setText(QApplication::translate("MainWindowClass", "Weight", nullptr));
+        toolButton_14->setText(QApplication::translate("MainWindowClass", "...", nullptr));
         toolButton_10->setText(QApplication::translate("MainWindowClass", "Get TF\n"
 "from region", nullptr));
         toolButton_8->setText(QApplication::translate("MainWindowClass", "Pick color...", nullptr));
         label_9->setText(QApplication::translate("MainWindowClass", "Weight", nullptr));
+        toolButton_15->setText(QApplication::translate("MainWindowClass", "...", nullptr));
+        toolButton_9->setText(QApplication::translate("MainWindowClass", "Pick color...", nullptr));
         toolButton_11->setText(QApplication::translate("MainWindowClass", "Get TF\n"
 "from region", nullptr));
-        toolButton_9->setText(QApplication::translate("MainWindowClass", "Pick color...", nullptr));
         label_10->setText(QApplication::translate("MainWindowClass", "Weight", nullptr));
+        toolButton_16->setText(QApplication::translate("MainWindowClass", "...", nullptr));
         tabWidget_2->setTabText(tabWidget_2->indexOf(tab_2), QApplication::translate("MainWindowClass", "Components", nullptr));
         menu_File->setTitle(QApplication::translate("MainWindowClass", "&File", nullptr));
         menu_Help->setTitle(QApplication::translate("MainWindowClass", "&Help", nullptr));

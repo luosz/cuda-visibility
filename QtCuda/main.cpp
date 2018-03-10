@@ -77,6 +77,7 @@
 
 // include cereal for serialization
 #include "cereal/archives/xml.hpp"
+//#include "cereal/archives/json.hpp"
 
 #include "ColorSpace/ColorSpace.h"
 
@@ -132,7 +133,7 @@ const char *sSDKsample = "CUDA 3D Volume Render";
 //const char *tfs[] = { "nucleon_naive_proportional_2.tfi","vortex_naive_proportional_2.tfi","CT-Knee_spectrum_6.tfi","E_1324_Rainbow6_even_2.tfi" };
 const char *tfs[] = { "nucleon_naive_proportional.tfi","vortex_naive_proportional.tfi","CT-Knee_spectrum_6.tfi","Rainbow3_even.tfi" };
 const char *volumes[] = { "nucleon.raw","vorts1.raw","CT-Knee.raw","E_1324.raw" };
-const int data_index = 2;
+const int data_index = 1;
 const char *tfFile = tfs[data_index];
 const char *volumeFilename = volumes[data_index];
 char volumeFilename_buffer[_MAX_PATH];
@@ -1562,7 +1563,8 @@ extern "C" void save_view(const char *file)
 	printf("save view to %s\n", file);
 	std::ofstream os(file);
 	cereal::XMLOutputArchive archive(os);
-	archive(viewRotation.x, viewRotation.y, viewRotation.z, viewTranslation.x, viewTranslation.y, viewTranslation.z, loc.x, loc.y);
+	//cereal::JSONOutputArchive archive(os);
+	archive(CEREAL_NVP(viewRotation.x), CEREAL_NVP(viewRotation.y), CEREAL_NVP(viewRotation.z), CEREAL_NVP(viewTranslation.x), CEREAL_NVP(viewTranslation.y), CEREAL_NVP(viewTranslation.z), CEREAL_NVP(loc.x), CEREAL_NVP(loc.y));
 }
 
 extern "C" void load_view(const char *file)

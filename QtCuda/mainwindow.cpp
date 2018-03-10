@@ -418,7 +418,6 @@ void MainWindow::on_toolButton_11_clicked()
 	const int i = 4;
 	delay_add_transfer_function_component(get_tf_component(i), chartView_features[i]);
 	delay_set_button_color_to_component_peak_color(*ui.toolButton_9, get_tf_component(i), get_tf_array());
-
 }
 
 //void MainWindow::on_action_Print_wegihts_of_transfer_function_componments_triggered()
@@ -470,4 +469,29 @@ void MainWindow::on_action_Modify_region_size_triggered()
 			std::cout << "region size " << get_region_size() << std::endl;
 		}
 	}
+}
+
+void MainWindow::on_toolButton_12_clicked()
+{
+	enter_chart_title(0);
+}
+
+void MainWindow::on_toolButton_13_clicked()
+{
+	enter_chart_title(1);
+}
+
+void MainWindow::on_toolButton_14_clicked()
+{
+	enter_chart_title(2);
+}
+
+void MainWindow::on_toolButton_15_clicked()
+{
+	enter_chart_title(3);
+}
+
+void MainWindow::on_toolButton_16_clicked()
+{
+	enter_chart_title(4);
 }

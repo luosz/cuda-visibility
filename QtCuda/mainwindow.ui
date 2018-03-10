@@ -458,6 +458,14 @@
                 <property name="spacing">
                  <number>0</number>
                 </property>
+                <item row="0" column="0">
+                 <widget class="QToolButton" name="toolButton_5">
+                  <property name="text">
+                   <string>Get TF
+from region</string>
+                  </property>
+                 </widget>
+                </item>
                 <item row="2" column="0">
                  <layout class="QGridLayout" name="gridLayout_4">
                   <property name="spacing">
@@ -488,14 +496,6 @@
                   </item>
                  </layout>
                 </item>
-                <item row="0" column="0">
-                 <widget class="QToolButton" name="toolButton_5">
-                  <property name="text">
-                   <string>Get TF
-from region</string>
-                  </property>
-                 </widget>
-                </item>
                 <item row="1" column="0">
                  <widget class="QToolButton" name="toolButton">
                   <property name="autoFillBackground">
@@ -503,6 +503,16 @@ from region</string>
                   </property>
                   <property name="text">
                    <string>Pick color...</string>
+                  </property>
+                  <property name="autoRaise">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="0">
+                 <widget class="QToolButton" name="toolButton_12">
+                  <property name="text">
+                   <string>...</string>
                   </property>
                   <property name="autoRaise">
                    <bool>true</bool>
@@ -588,6 +598,16 @@ from region</string>
                   </property>
                  </widget>
                 </item>
+                <item row="3" column="0">
+                 <widget class="QToolButton" name="toolButton_13">
+                  <property name="text">
+                   <string>...</string>
+                  </property>
+                  <property name="autoRaise">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
                </layout>
               </item>
              </layout>
@@ -616,15 +636,7 @@ from region</string>
                 <property name="spacing">
                  <number>0</number>
                 </property>
-                <item row="0" column="0">
-                 <widget class="QToolButton" name="toolButton_7">
-                  <property name="text">
-                   <string>Get TF
-from region</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="0">
+                <item row="2" column="0">
                  <widget class="QToolButton" name="toolButton_3">
                   <property name="autoFillBackground">
                    <bool>true</bool>
@@ -637,7 +649,15 @@ from region</string>
                   </property>
                  </widget>
                 </item>
-                <item row="2" column="0">
+                <item row="1" column="0">
+                 <widget class="QToolButton" name="toolButton_7">
+                  <property name="text">
+                   <string>Get TF
+from region</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="0">
                  <layout class="QGridLayout" name="gridLayout_10">
                   <property name="spacing">
                    <number>0</number>
@@ -669,6 +689,16 @@ from region</string>
                    </widget>
                   </item>
                  </layout>
+                </item>
+                <item row="4" column="0">
+                 <widget class="QToolButton" name="toolButton_14">
+                  <property name="text">
+                   <string>...</string>
+                  </property>
+                  <property name="autoRaise">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
                 </item>
                </layout>
               </item>
@@ -755,6 +785,16 @@ from region</string>
                   </item>
                  </layout>
                 </item>
+                <item row="3" column="0">
+                 <widget class="QToolButton" name="toolButton_15">
+                  <property name="text">
+                   <string>...</string>
+                  </property>
+                  <property name="autoRaise">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
                </layout>
               </item>
              </layout>
@@ -789,14 +829,6 @@ from region</string>
                 <property name="spacing">
                  <number>0</number>
                 </property>
-                <item row="0" column="0">
-                 <widget class="QToolButton" name="toolButton_11">
-                  <property name="text">
-                   <string>Get TF
-from region</string>
-                  </property>
-                 </widget>
-                </item>
                 <item row="1" column="0">
                  <widget class="QToolButton" name="toolButton_9">
                   <property name="autoFillBackground">
@@ -807,6 +839,14 @@ from region</string>
                   </property>
                   <property name="autoRaise">
                    <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="0">
+                 <widget class="QToolButton" name="toolButton_11">
+                  <property name="text">
+                   <string>Get TF
+from region</string>
                   </property>
                  </widget>
                 </item>
@@ -839,6 +879,16 @@ from region</string>
                    </widget>
                   </item>
                  </layout>
+                </item>
+                <item row="3" column="0">
+                 <widget class="QToolButton" name="toolButton_16">
+                  <property name="text">
+                   <string>...</string>
+                  </property>
+                  <property name="autoRaise">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
                 </item>
                </layout>
               </item>

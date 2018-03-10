@@ -357,6 +357,27 @@ public:
 		QTimer::singleShot(msec, this, [this, tf_component, tf, &button]() {set_button_color_to_component_peak_color(button, tf_component, tf); });
 	}
 
+	QString enter_chart_title(int i = 0)
+	{
+		if (i >= 0 && i < D_MAX_TF_COMPONENTS)
+		{
+			bool ok;
+			QString text = QInputDialog::getText(this, tr("Enter Chart Title"),
+				tr("Chart title:"), QLineEdit::Normal,
+				chartView_features[i].chart()->title(), &ok);
+			if (ok && !text.isEmpty())
+			{
+				//qDebug() << text;
+				chartView_features[i].chart()->setTitle(text);
+			}
+			return chartView_features[i].chart()->title();
+		}
+		else
+		{
+			return "";
+		}
+	}
+
 private slots:
 
 	void draw_all_histograms()
@@ -543,6 +564,16 @@ private slots:
     void on_toolButton_11_clicked();
 
     void on_action_Modify_region_size_triggered();
+
+    void on_toolButton_12_clicked();
+
+    void on_toolButton_13_clicked();
+
+    void on_toolButton_14_clicked();
+
+    void on_toolButton_15_clicked();
+
+    void on_toolButton_16_clicked();
 
 private:
 	Ui::MainWindowClass ui;
