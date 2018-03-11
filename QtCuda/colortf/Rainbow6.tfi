@@ -1,5 +1,5 @@
 <?xml version='1.0'?>
-<!--This is a Voreen transfer function created using Wolfram Mathematica.-->
+<!--Voreen transfer function created using Wolfram Mathematica 11.2-->
 <VoreenData version='1'>
  <TransFuncIntensity type='TransFuncIntensity'>
   <alphaMode value='1' />
