@@ -77,7 +77,6 @@
 
 // include cereal for serialization
 #include "cereal/archives/xml.hpp"
-//#include "cereal/archives/json.hpp"
 
 #include "ColorSpace/ColorSpace.h"
 
@@ -1563,7 +1562,6 @@ extern "C" void save_view(const char *file)
 	printf("save view to %s\n", file);
 	std::ofstream os(file);
 	cereal::XMLOutputArchive archive(os);
-	//cereal::JSONOutputArchive archive(os);
 	archive(CEREAL_NVP(viewRotation.x), CEREAL_NVP(viewRotation.y), CEREAL_NVP(viewRotation.z), CEREAL_NVP(viewTranslation.x), CEREAL_NVP(viewTranslation.y), CEREAL_NVP(viewTranslation.z), CEREAL_NVP(loc.x), CEREAL_NVP(loc.y));
 }
 

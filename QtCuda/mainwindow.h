@@ -378,6 +378,17 @@ public:
 		}
 	}
 
+	void save_chart_to_image(QChartView &chartview)
+	{
+		//qDebug() << "chart size " << chartview.size() << chartview.chart()->size();
+		auto size = chartview.size();
+		QPixmap p(size);
+		QPainter painter(&p);
+		painter.fillRect(0, 0, size.width(), size.height(), Qt::white);
+		chartview.render(&painter);
+		p.save("~" + chartview.chart()->title() + ".png", "PNG");
+	}
+
 private slots:
 
 	void draw_all_histograms()
@@ -574,6 +585,8 @@ private slots:
     void on_toolButton_15_clicked();
 
     void on_toolButton_16_clicked();
+
+    void on_actionSave_charts_to_image_files_triggered();
 
 private:
 	Ui::MainWindowClass ui;

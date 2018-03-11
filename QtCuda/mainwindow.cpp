@@ -495,3 +495,16 @@ void MainWindow::on_toolButton_16_clicked()
 {
 	enter_chart_title(4);
 }
+
+void MainWindow::on_actionSave_charts_to_image_files_triggered()
+{
+	save_chart_to_image(chartView_tf);
+	save_chart_to_image(chartView_relative);
+	save_chart_to_image(chartView_global);
+	save_chart_to_image(chartView_local);
+	save_chart_to_image(chartView_sum);
+	for (int i = 0; i < tf_component_number; i++)
+	{
+		save_chart_to_image(chartView_features[i]);
+	}
+}

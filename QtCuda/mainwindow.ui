@@ -966,6 +966,7 @@ from region</string>
     <addaction name="action_Smooth_transfer_functions"/>
     <addaction name="action_Clear_transfer_function_components"/>
     <addaction name="action_Modify_region_size"/>
+    <addaction name="actionSave_charts_to_image_files"/>
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_Options"/>
@@ -1044,6 +1045,11 @@ from region</string>
   <action name="action_Modify_region_size">
    <property name="text">
     <string>&amp;Modify region size...</string>
+   </property>
+  </action>
+  <action name="actionSave_charts_to_image_files">
+   <property name="text">
+    <string>Save charts to image files</string>
    </property>
   </action>
  </widget>

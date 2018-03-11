@@ -50,6 +50,7 @@ public:
     QAction *action_Smooth_transfer_functions;
     QAction *action_Refresh_transfer_functions_and_histograms;
     QAction *action_Modify_region_size;
+    QAction *actionSave_charts_to_image_files;
     QWidget *centralWidget;
     QGridLayout *gridLayout_2;
     QWidget *widget;
@@ -170,6 +171,8 @@ public:
         action_Refresh_transfer_functions_and_histograms->setObjectName(QStringLiteral("action_Refresh_transfer_functions_and_histograms"));
         action_Modify_region_size = new QAction(MainWindowClass);
         action_Modify_region_size->setObjectName(QStringLiteral("action_Modify_region_size"));
+        actionSave_charts_to_image_files = new QAction(MainWindowClass);
+        actionSave_charts_to_image_files->setObjectName(QStringLiteral("actionSave_charts_to_image_files"));
         centralWidget = new QWidget(MainWindowClass);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         gridLayout_2 = new QGridLayout(centralWidget);
@@ -718,6 +721,7 @@ public:
         menu_Options->addAction(action_Smooth_transfer_functions);
         menu_Options->addAction(action_Clear_transfer_function_components);
         menu_Options->addAction(action_Modify_region_size);
+        menu_Options->addAction(actionSave_charts_to_image_files);
 
         retranslateUi(MainWindowClass);
 
@@ -742,6 +746,7 @@ public:
         action_Smooth_transfer_functions->setText(QApplication::translate("MainWindowClass", "&Smooth transfer functions", nullptr));
         action_Refresh_transfer_functions_and_histograms->setText(QApplication::translate("MainWindowClass", "&Refresh transfer functions and histograms", nullptr));
         action_Modify_region_size->setText(QApplication::translate("MainWindowClass", "&Modify region size...", nullptr));
+        actionSave_charts_to_image_files->setText(QApplication::translate("MainWindowClass", "Save charts to image files", nullptr));
         checkBox->setText(QApplication::translate("MainWindowClass", "Adjust &alpha", nullptr));
         checkBox_2->setText(QApplication::translate("MainWindowClass", "Adjust &color", nullptr));
         toolButton_4->setText(QApplication::translate("MainWindowClass", "...", nullptr));

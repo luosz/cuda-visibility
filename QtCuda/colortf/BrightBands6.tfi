@@ -1,0 +1,78 @@
+<?xml version='1.0'?>
+<!--This is a Voreen transfer function created using Wolfram Mathematica.-->
+<VoreenData version='1'>
+ <TransFuncIntensity type='TransFuncIntensity'>
+  <alphaMode value='1' />
+  <gammaValue value='1' />
+  <domain x='0'
+      y='1' />
+  <threshold x='0'
+      y='1' />
+  <Keys>
+   <key type='TransFuncMappingKey'>
+    <intensity value='0.' />
+    <split value='false' />
+    <colorL r='0'
+        g='0'
+        b='0'
+        a='0' />
+   </key>
+   <key type='TransFuncMappingKey'>
+    <intensity value='0.142857' />
+    <split value='false' />
+    <colorL r='230'
+        g='25'
+        b='50'
+        a='42' />
+   </key>
+   <key type='TransFuncMappingKey'>
+    <intensity value='0.285714' />
+    <split value='false' />
+    <colorL r='130'
+        g='108'
+        b='254'
+        a='42' />
+   </key>
+   <key type='TransFuncMappingKey'>
+    <intensity value='0.428571' />
+    <split value='false' />
+    <colorL r='91'
+        g='206'
+        b='255'
+        a='42' />
+   </key>
+   <key type='TransFuncMappingKey'>
+    <intensity value='0.571429' />
+    <split value='false' />
+    <colorL r='136'
+        g='251'
+        b='98'
+        a='42' />
+   </key>
+   <key type='TransFuncMappingKey'>
+    <intensity value='0.714286' />
+    <split value='false' />
+    <colorL r='253'
+        g='247'
+        b='133'
+        a='42' />
+   </key>
+   <key type='TransFuncMappingKey'>
+    <intensity value='0.857143' />
+    <split value='false' />
+    <colorL r='255'
+        g='191'
+        b='127'
+        a='42' />
+   </key>
+   <key type='TransFuncMappingKey'>
+    <intensity value='1.' />
+    <split value='false' />
+    <colorL r='255'
+        g='255'
+        b='255'
+        a='0' />
+   </key>
+  </Keys>
+ </TransFuncIntensity>
+</VoreenData>

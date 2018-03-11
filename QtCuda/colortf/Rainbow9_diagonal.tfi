@@ -1,0 +1,230 @@
+<?xml version='1.0'?>
+<!--This is a Voreen transfer function created using Wolfram Mathematica-->
+<VoreenData version='1'>
+ <TransFuncIntensity type='TransFuncIntensity'>
+  <alphaMode value='1' />
+  <gammaValue value='1' />
+  <domain x='0'
+      y='1' />
+  <threshold x='0'
+      y='1' />
+  <Keys>
+   <key type='TransFuncMappingKey'>
+    <intensity value='0.0123457' />
+    <split value='false' />
+    <colorL r='79'
+        g='29'
+        b='169'
+        a='0' />
+   </key>
+   <key type='TransFuncMappingKey'>
+    <intensity value='0.0617284' />
+    <split value='false' />
+    <colorL r='79'
+        g='29'
+        b='169'
+        a='15' />
+   </key>
+   <key type='TransFuncMappingKey'>
+    <intensity value='0.111111' />
+    <split value='false' />
+    <colorL r='79'
+        g='29'
+        b='169'
+        a='0' />
+   </key>
+   <key type='TransFuncMappingKey'>
+    <intensity value='0.123457' />
+    <split value='false' />
+    <colorL r='62'
+        g='83'
+        b='205'
+        a='0' />
+   </key>
+   <key type='TransFuncMappingKey'>
+    <intensity value='0.17284' />
+    <split value='false' />
+    <colorL r='62'
+        g='83'
+        b='205'
+        a='44' />
+   </key>
+   <key type='TransFuncMappingKey'>
+    <intensity value='0.222222' />
+    <split value='false' />
+    <colorL r='62'
+        g='83'
+        b='205'
+        a='0' />
+   </key>
+   <key type='TransFuncMappingKey'>
+    <intensity value='0.234568' />
+    <split value='false' />
+    <colorL r='73'
+        g='137'
+        b='195'
+        a='0' />
+   </key>
+   <key type='TransFuncMappingKey'>
+    <intensity value='0.283951' />
+    <split value='false' />
+    <colorL r='73'
+        g='137'
+        b='195'
+        a='72' />
+   </key>
+   <key type='TransFuncMappingKey'>
+    <intensity value='0.333333' />
+    <split value='false' />
+    <colorL r='73'
+        g='137'
+        b='195'
+        a='0' />
+   </key>
+   <key type='TransFuncMappingKey'>
+    <intensity value='0.345679' />
+    <split value='false' />
+    <colorL r='97'
+        g='170'
+        b='156'
+        a='0' />
+   </key>
+   <key type='TransFuncMappingKey'>
+    <intensity value='0.395062' />
+    <split value='false' />
+    <colorL r='97'
+        g='170'
+        b='156'
+        a='100' />
+   </key>
+   <key type='TransFuncMappingKey'>
+    <intensity value='0.444444' />
+    <split value='false' />
+    <colorL r='97'
+        g='170'
+        b='156'
+        a='0' />
+   </key>
+   <key type='TransFuncMappingKey'>
+    <intensity value='0.45679' />
+    <split value='false' />
+    <colorL r='133'
+        g='186'
+        b='110'
+        a='0' />
+   </key>
+   <key type='TransFuncMappingKey'>
+    <intensity value='0.506173' />
+    <split value='false' />
+    <colorL r='133'
+        g='186'
+        b='110'
+        a='129' />
+   </key>
+   <key type='TransFuncMappingKey'>
+    <intensity value='0.555556' />
+    <split value='false' />
+    <colorL r='133'
+        g='186'
+        b='110'
+        a='0' />
+   </key>
+   <key type='TransFuncMappingKey'>
+    <intensity value='0.567901' />
+    <split value='false' />
+    <colorL r='176'
+        g='189'
+        b='78'
+        a='0' />
+   </key>
+   <key type='TransFuncMappingKey'>
+    <intensity value='0.617284' />
+    <split value='false' />
+    <colorL r='176'
+        g='189'
+        b='78'
+        a='157' />
+   </key>
+   <key type='TransFuncMappingKey'>
+    <intensity value='0.666667' />
+    <split value='false' />
+    <colorL r='176'
+        g='189'
+        b='78'
+        a='0' />
+   </key>
+   <key type='TransFuncMappingKey'>
+    <intensity value='0.679012' />
+    <split value='false' />
+    <colorL r='214'
+        g='175'
+        b='62'
+        a='0' />
+   </key>
+   <key type='TransFuncMappingKey'>
+    <intensity value='0.728395' />
+    <split value='false' />
+    <colorL r='214'
+        g='175'
+        b='62'
+        a='185' />
+   </key>
+   <key type='TransFuncMappingKey'>
+    <intensity value='0.777778' />
+    <split value='false' />
+    <colorL r='214'
+        g='175'
+        b='62'
+        a='0' />
+   </key>
+   <key type='TransFuncMappingKey'>
+    <intensity value='0.790123' />
+    <split value='false' />
+    <colorL r='229'
+        g='134'
+        b='52'
+        a='0' />
+   </key>
+   <key type='TransFuncMappingKey'>
+    <intensity value='0.839506' />
+    <split value='false' />
+    <colorL r='229'
+        g='134'
+        b='52'
+        a='214' />
+   </key>
+   <key type='TransFuncMappingKey'>
+    <intensity value='0.888889' />
+    <split value='false' />
+    <colorL r='229'
+        g='134'
+        b='52'
+        a='0' />
+   </key>
+   <key type='TransFuncMappingKey'>
+    <intensity value='0.901235' />
+    <split value='false' />
+    <colorL r='222'
+        g='66'
+        b='39'
+        a='0' />
+   </key>
+   <key type='TransFuncMappingKey'>
+    <intensity value='0.950617' />
+    <split value='false' />
+    <colorL r='222'
+        g='66'
+        b='39'
+        a='242' />
+   </key>
+   <key type='TransFuncMappingKey'>
+    <intensity value='1.' />
+    <split value='false' />
+    <colorL r='222'
+        g='66'
+        b='39'
+        a='0' />
+   </key>
+  </Keys>
+ </TransFuncIntensity>
+</VoreenData>
