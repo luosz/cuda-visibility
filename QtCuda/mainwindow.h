@@ -486,12 +486,7 @@ private slots:
 
 	void hide_extra_tf_component_frames()
 	{
-		QWidget *w[D_MAX_TF_COMPONENTS];
-		w[0] = ui.frame;
-		w[1] = ui.frame_2;
-		w[2] = ui.frame_3;
-		w[3] = ui.frame_4;
-		w[4] = ui.frame_5;
+		QWidget *w[D_MAX_TF_COMPONENTS] = { ui.frame,ui.frame_2,ui.frame_3,ui.frame_4,ui.frame_5 };
 		for (int i = 0; i < D_MAX_TF_COMPONENTS; i++)
 		{
 			w[i]->setVisible(i < tf_component_number);
@@ -588,7 +583,7 @@ private slots:
 
     void on_toolButton_16_clicked();
 
-    void on_actionSave_charts_to_image_files_triggered();
+    void on_action_Save_charts_to_images_triggered();
 
 private:
 	Ui::MainWindowClass ui;

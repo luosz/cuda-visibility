@@ -348,7 +348,7 @@ void MainWindow::on_action_Clear_transfer_function_components_triggered()
 
 void MainWindow::on_spinBox_valueChanged(int arg1)
 {
-	tf_component_number = arg1 < 2 ? 2 : (arg1 > D_MAX_TF_COMPONENTS ? D_MAX_TF_COMPONENTS : arg1);
+	tf_component_number = arg1 < 1 ? 1 : (arg1 > D_MAX_TF_COMPONENTS ? D_MAX_TF_COMPONENTS : arg1);
 	hide_extra_tf_component_frames();
 }
 
@@ -496,15 +496,15 @@ void MainWindow::on_toolButton_16_clicked()
 	enter_chart_title(4);
 }
 
-void MainWindow::on_actionSave_charts_to_image_files_triggered()
+void MainWindow::on_action_Save_charts_to_images_triggered()
 {
-	save_chart_to_image(chartView_tf);
-	save_chart_to_image(chartView_relative);
-	save_chart_to_image(chartView_global);
-	save_chart_to_image(chartView_local);
-	save_chart_to_image(chartView_sum);
-	for (int i = 0; i < tf_component_number; i++)
-	{
-		save_chart_to_image(chartView_features[i]);
-	}
+    save_chart_to_image(chartView_tf);
+    save_chart_to_image(chartView_relative);
+    save_chart_to_image(chartView_global);
+    save_chart_to_image(chartView_local);
+    save_chart_to_image(chartView_sum);
+    for (int i = 0; i < tf_component_number; i++)
+    {
+        save_chart_to_image(chartView_features[i]);
+    }
 }

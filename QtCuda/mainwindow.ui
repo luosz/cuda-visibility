@@ -165,7 +165,7 @@
               </sizepolicy>
              </property>
              <property name="minimum">
-              <number>2</number>
+              <number>1</number>
              </property>
              <property name="maximum">
               <number>5</number>
@@ -298,7 +298,7 @@
           </sizepolicy>
          </property>
          <property name="currentIndex">
-          <number>2</number>
+          <number>0</number>
          </property>
          <widget class="QWidget" name="tabWidget_2Page1">
           <attribute name="title">
@@ -937,7 +937,7 @@ from region</string>
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>26</height>
+     <height>17</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
@@ -963,10 +963,10 @@ from region</string>
      <string>&amp;Options</string>
     </property>
     <addaction name="action_Refresh_transfer_functions_and_histograms"/>
+    <addaction name="action_Save_charts_to_images"/>
     <addaction name="action_Smooth_transfer_functions"/>
     <addaction name="action_Clear_transfer_function_components"/>
     <addaction name="action_Modify_region_size"/>
-    <addaction name="actionSave_charts_to_image_files"/>
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_Options"/>
@@ -1034,7 +1034,7 @@ from region</string>
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>&amp;Smooth transfer functions</string>
+    <string>Smooth &amp;transfer functions</string>
    </property>
   </action>
   <action name="action_Refresh_transfer_functions_and_histograms">
@@ -1047,9 +1047,9 @@ from region</string>
     <string>&amp;Modify region size...</string>
    </property>
   </action>
-  <action name="actionSave_charts_to_image_files">
+  <action name="action_Save_charts_to_images">
    <property name="text">
-    <string>Save charts to image files</string>
+    <string>&amp;Save charts to images</string>
    </property>
   </action>
  </widget>
