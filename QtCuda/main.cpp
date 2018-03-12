@@ -1574,7 +1574,7 @@ extern "C" void load_view(const char *file)
 		printf("load view from %s\n", file);
 		int regionSize = get_region_size();
 		cereal::XMLInputArchive archive(is);
-		archive(viewRotation.x, viewRotation.y, viewRotation.z, viewTranslation.x, viewTranslation.y, viewTranslation.z, loc.x, loc.y, regionSize);
+		archive(CEREAL_NVP(viewRotation.x), CEREAL_NVP(viewRotation.y), CEREAL_NVP(viewRotation.z), CEREAL_NVP(viewTranslation.x), CEREAL_NVP(viewTranslation.y), CEREAL_NVP(viewTranslation.z), CEREAL_NVP(loc.x), CEREAL_NVP(loc.y), CEREAL_NVP(regionSize));
 		locf.x = loc.x;
 		locf.y = loc.y;
 		loc2.x = loc.x;
