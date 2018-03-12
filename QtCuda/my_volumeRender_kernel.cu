@@ -1164,6 +1164,7 @@ d_renderVisibility(uint *d_output, uint imageW, uint imageH,
 		}
 		else
 		{
+			//if ((x - loc.x)*(x - loc.x) + (y - loc.y)*(y - loc.y) <= radius*radius)
 			if (fabsf(x - loc.x) <= radius && fabsf(y - loc.y) <= radius)
 			{
 				auto w = sum.w;

@@ -1560,9 +1560,10 @@ inline void print_info()
 extern "C" void save_view(const char *file)
 {
 	printf("save view to %s\n", file);
+	int regionSize = get_region_size();
 	std::ofstream os(file);
 	cereal::XMLOutputArchive archive(os);
-	archive(CEREAL_NVP(viewRotation.x), CEREAL_NVP(viewRotation.y), CEREAL_NVP(viewRotation.z), CEREAL_NVP(viewTranslation.x), CEREAL_NVP(viewTranslation.y), CEREAL_NVP(viewTranslation.z), CEREAL_NVP(loc.x), CEREAL_NVP(loc.y));
+	archive(CEREAL_NVP(viewRotation.x), CEREAL_NVP(viewRotation.y), CEREAL_NVP(viewRotation.z), CEREAL_NVP(viewTranslation.x), CEREAL_NVP(viewTranslation.y), CEREAL_NVP(viewTranslation.z), CEREAL_NVP(loc.x), CEREAL_NVP(loc.y), CEREAL_NVP(regionSize));
 }
 
 extern "C" void load_view(const char *file)
@@ -1571,12 +1572,14 @@ extern "C" void load_view(const char *file)
 	if (is.is_open())
 	{
 		printf("load view from %s\n", file);
+		int regionSize = get_region_size();
 		cereal::XMLInputArchive archive(is);
-		archive(viewRotation.x, viewRotation.y, viewRotation.z, viewTranslation.x, viewTranslation.y, viewTranslation.z, loc.x, loc.y);
+		archive(viewRotation.x, viewRotation.y, viewRotation.z, viewTranslation.x, viewTranslation.y, viewTranslation.z, loc.x, loc.y, regionSize);
 		locf.x = loc.x;
 		locf.y = loc.y;
 		loc2.x = loc.x;
 		loc2.y = loc.y;
+		set_region_size(regionSize);
 	}
 	else
 	{
