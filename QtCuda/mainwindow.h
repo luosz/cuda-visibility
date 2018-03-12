@@ -386,7 +386,9 @@ public:
 		QPainter painter(&p);
 		painter.fillRect(0, 0, size.width(), size.height(), Qt::white);
 		chartview.render(&painter);
-		p.save("~" + chartview.chart()->title() + ".png", "PNG");
+		QString str = "~" + chartview.chart()->title() + ".png";
+		str.replace(" ", "_");
+		p.save(str, "PNG");
 	}
 
 private slots:
