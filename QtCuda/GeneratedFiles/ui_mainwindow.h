@@ -45,12 +45,14 @@ public:
     QAction *actionOpen_transfer_function;
     QAction *actionSave_transfer_function_as;
     QAction *actionLoad_view_and_region;
-    QAction *actionSave_view_and_region_as;
     QAction *action_Clear_transfer_function_components;
     QAction *action_Smooth_transfer_functions;
     QAction *action_Refresh_transfer_functions_and_histograms;
     QAction *action_Modify_region_size;
     QAction *action_Save_charts_to_images;
+    QAction *actionLoad_TF_component_properties;
+    QAction *actionSave_view_and_region_as;
+    QAction *actionSave_TF_component_properties_as;
     QWidget *centralWidget;
     QGridLayout *gridLayout_2;
     QWidget *widget;
@@ -159,8 +161,6 @@ public:
         actionSave_transfer_function_as->setObjectName(QStringLiteral("actionSave_transfer_function_as"));
         actionLoad_view_and_region = new QAction(MainWindowClass);
         actionLoad_view_and_region->setObjectName(QStringLiteral("actionLoad_view_and_region"));
-        actionSave_view_and_region_as = new QAction(MainWindowClass);
-        actionSave_view_and_region_as->setObjectName(QStringLiteral("actionSave_view_and_region_as"));
         action_Clear_transfer_function_components = new QAction(MainWindowClass);
         action_Clear_transfer_function_components->setObjectName(QStringLiteral("action_Clear_transfer_function_components"));
         action_Smooth_transfer_functions = new QAction(MainWindowClass);
@@ -173,6 +173,12 @@ public:
         action_Modify_region_size->setObjectName(QStringLiteral("action_Modify_region_size"));
         action_Save_charts_to_images = new QAction(MainWindowClass);
         action_Save_charts_to_images->setObjectName(QStringLiteral("action_Save_charts_to_images"));
+        actionLoad_TF_component_properties = new QAction(MainWindowClass);
+        actionLoad_TF_component_properties->setObjectName(QStringLiteral("actionLoad_TF_component_properties"));
+        actionSave_view_and_region_as = new QAction(MainWindowClass);
+        actionSave_view_and_region_as->setObjectName(QStringLiteral("actionSave_view_and_region_as"));
+        actionSave_TF_component_properties_as = new QAction(MainWindowClass);
+        actionSave_TF_component_properties_as->setObjectName(QStringLiteral("actionSave_TF_component_properties_as"));
         centralWidget = new QWidget(MainWindowClass);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         gridLayout_2 = new QGridLayout(centralWidget);
@@ -691,7 +697,7 @@ public:
         MainWindowClass->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindowClass);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 800, 17));
+        menuBar->setGeometry(QRect(0, 0, 800, 26));
         menu_File = new QMenu(menuBar);
         menu_File->setObjectName(QStringLiteral("menu_File"));
         menu_Help = new QMenu(menuBar);
@@ -715,6 +721,8 @@ public:
         menu_File->addAction(actionSave_transfer_function_as);
         menu_File->addAction(actionLoad_view_and_region);
         menu_File->addAction(actionSave_view_and_region_as);
+        menu_File->addAction(actionLoad_TF_component_properties);
+        menu_File->addAction(actionSave_TF_component_properties_as);
         menu_File->addAction(action_Exit);
         menu_Help->addAction(action_About);
         menu_Options->addAction(action_Refresh_transfer_functions_and_histograms);
@@ -725,7 +733,7 @@ public:
 
         retranslateUi(MainWindowClass);
 
-        tabWidget_2->setCurrentIndex(0);
+        tabWidget_2->setCurrentIndex(2);
 
 
         QMetaObject::connectSlotsByName(MainWindowClass);
@@ -741,12 +749,14 @@ public:
         actionOpen_transfer_function->setText(QApplication::translate("MainWindowClass", "&Open transfer function...", nullptr));
         actionSave_transfer_function_as->setText(QApplication::translate("MainWindowClass", "&Save transfer function as...", nullptr));
         actionLoad_view_and_region->setText(QApplication::translate("MainWindowClass", "Load &view and region...", nullptr));
-        actionSave_view_and_region_as->setText(QApplication::translate("MainWindowClass", "Save view and region &as...", nullptr));
         action_Clear_transfer_function_components->setText(QApplication::translate("MainWindowClass", "&Clear transfer function components", nullptr));
         action_Smooth_transfer_functions->setText(QApplication::translate("MainWindowClass", "Smooth &transfer functions", nullptr));
         action_Refresh_transfer_functions_and_histograms->setText(QApplication::translate("MainWindowClass", "&Refresh transfer functions and histograms", nullptr));
         action_Modify_region_size->setText(QApplication::translate("MainWindowClass", "&Modify region size...", nullptr));
         action_Save_charts_to_images->setText(QApplication::translate("MainWindowClass", "&Save charts to images", nullptr));
+        actionLoad_TF_component_properties->setText(QApplication::translate("MainWindowClass", "Load &TF component properties...", nullptr));
+        actionSave_view_and_region_as->setText(QApplication::translate("MainWindowClass", "Save view and &region as...", nullptr));
+        actionSave_TF_component_properties_as->setText(QApplication::translate("MainWindowClass", "Save TF &component properties as...", nullptr));
         checkBox->setText(QApplication::translate("MainWindowClass", "Adjust &alpha", nullptr));
         checkBox_2->setText(QApplication::translate("MainWindowClass", "Adjust &color", nullptr));
         toolButton_4->setText(QApplication::translate("MainWindowClass", "...", nullptr));

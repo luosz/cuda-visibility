@@ -40,7 +40,7 @@ MainWindow::MainWindow(QWidget *parent)
 		chartView_features[i].chart()->setTitle(str);
 		layouts[i]->addWidget(&chartView_features[i]);
 	}
-	chartView_sum.chart()->setTitle("Transfer function");
+	chartView_sum.chart()->setTitle("Merged Transfer function");
 	ui.horizontalLayout_6->addWidget(&chartView_sum);
 
 	for (int i = 0; i < D_MAX_TF_COMPONENTS; i++)
@@ -164,19 +164,19 @@ void MainWindow::on_actionSave_transfer_function_as_triggered()
 
 void MainWindow::on_actionLoad_view_and_region_triggered()
 {
-	QString filename = QFileDialog::getOpenFileName(this, tr("Open view"), QDir::currentPath(), tr("View (*.xml);;All Files (*)"));
+	QString filename = QFileDialog::getOpenFileName(this, tr("Open view"), QDir::currentPath(), tr("View and selection (*.xml);;All Files (*)"));
 	if (!filename.isNull())
-		{
-			// extract filename from path
-			auto str = QFileInfo(filename).fileName();
-			qDebug() << str;
-			load_view(str.toStdString().c_str());
-		}
+	{
+		// extract filename from path
+		auto str = QFileInfo(filename).fileName();
+		qDebug() << str;
+		load_view(str.toStdString().c_str());
+	}
 }
 
 void MainWindow::on_actionSave_view_and_region_as_triggered()
 {
-	QString filename = QFileDialog::getSaveFileName(this, tr("Save view"), QDir::currentPath(), tr("View (*.xml);;All Files (*)"));
+	QString filename = QFileDialog::getSaveFileName(this, tr("Save view"), QDir::currentPath() + QDir::separator() + "~view.xml", tr("View and selection (*.xml);;All Files (*)"));
 	if (!filename.isNull())
 	{
 		// extract filename from path
@@ -508,4 +508,28 @@ void MainWindow::on_action_Save_charts_to_images_triggered()
     {
         save_chart_to_image(chartView_features[i]);
     }
+}
+
+void MainWindow::on_actionLoad_TF_component_properties_triggered()
+{
+	QString filename = QFileDialog::getOpenFileName(this, tr("Open view"), QDir::currentPath(), tr("Properties (*.xml);;All Files (*)"));
+	if (!filename.isNull())
+	{
+		// extract filename from path
+		auto str = QFileInfo(filename).fileName();
+		qDebug() << str;
+		load_tf_component_properties(str.toStdString().c_str());
+	}
+}
+
+void MainWindow::on_actionSave_TF_component_properties_as_triggered()
+{
+	QString filename = QFileDialog::getSaveFileName(this, tr("Save view"), QDir::currentPath() + QDir::separator() + "~properties.xml", tr("Properties (*.xml);;All Files (*)"));
+	if (!filename.isNull())
+	{
+		// extract filename from path
+		auto str = QFileInfo(filename).fileName();
+		qDebug() << str;
+		save_tf_component_properties(str.toStdString().c_str());
+	}
 }

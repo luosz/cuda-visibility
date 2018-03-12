@@ -937,7 +937,7 @@ from region</string>
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>17</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
@@ -950,6 +950,8 @@ from region</string>
     <addaction name="actionSave_transfer_function_as"/>
     <addaction name="actionLoad_view_and_region"/>
     <addaction name="actionSave_view_and_region_as"/>
+    <addaction name="actionLoad_TF_component_properties"/>
+    <addaction name="actionSave_TF_component_properties_as"/>
     <addaction name="action_Exit"/>
    </widget>
    <widget class="QMenu" name="menu_Help">
@@ -1016,11 +1018,6 @@ from region</string>
     <string>Load &amp;view and region...</string>
    </property>
   </action>
-  <action name="actionSave_view_and_region_as">
-   <property name="text">
-    <string>Save view and region &amp;as...</string>
-   </property>
-  </action>
   <action name="action_Clear_transfer_function_components">
    <property name="text">
     <string>&amp;Clear transfer function components</string>
@@ -1050,6 +1047,21 @@ from region</string>
   <action name="action_Save_charts_to_images">
    <property name="text">
     <string>&amp;Save charts to images</string>
+   </property>
+  </action>
+  <action name="actionLoad_TF_component_properties">
+   <property name="text">
+    <string>Load &amp;TF component properties...</string>
+   </property>
+  </action>
+  <action name="actionSave_view_and_region_as">
+   <property name="text">
+    <string>Save view and &amp;region as...</string>
+   </property>
+  </action>
+  <action name="actionSave_TF_component_properties_as">
+   <property name="text">
+    <string>Save TF &amp;component properties as...</string>
    </property>
   </action>
  </widget>

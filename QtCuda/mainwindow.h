@@ -22,6 +22,9 @@
 #include "ui_mainwindow.h"
 #include "def.h"
 
+// include cereal for serialization
+#include "cereal/archives/xml.hpp"
+
 #include <QtCharts/QChartView>
 #include <QtCharts/QLineSeries>
 #include <QtCharts/QAreaSeries>
@@ -435,6 +438,84 @@ public:
 		draw_transfer_function(tf, chartView_sum);
 	}
 
+	void save_tf_component_properties(const char *file)
+	{
+		printf("save TF component properties to %s\n", file);
+		std::ofstream os(file);
+		cereal::XMLOutputArchive archive(os);
+
+		QAbstractButton *buttons[D_MAX_TF_COMPONENTS] = {
+			ui.toolButton,
+			ui.toolButton_2,
+			ui.toolButton_3,
+			ui.toolButton_8,
+			ui.toolButton_9
+		};
+		float4 colors[D_MAX_TF_COMPONENTS] = { 0 };
+		for (int i = 0; i < D_MAX_TF_COMPONENTS; i++)
+		{
+			colors[i] = get_button_color(*buttons[i]);
+			archive(CEREAL_NVP(colors[i].x), CEREAL_NVP(colors[i].y), CEREAL_NVP(colors[i].z), CEREAL_NVP(colors[i].w));
+		}
+		for (int i = 0; i < D_MAX_TF_COMPONENTS; i++)
+		{
+			archive(CEREAL_NVP(tf_component_weights[i]));
+		}
+		std::string titles[D_MAX_TF_COMPONENTS];
+		for (int i = 0; i < D_MAX_TF_COMPONENTS; i++)
+		{
+			titles[i] = chartView_features[i].chart()->title().toStdString();
+			archive(CEREAL_NVP(titles[i]));
+		}
+	}
+
+	void load_tf_component_properties(const char *file)
+	{
+		QAbstractButton *buttons[D_MAX_TF_COMPONENTS] = {
+			ui.toolButton,
+			ui.toolButton_2,
+			ui.toolButton_3,
+			ui.toolButton_8,
+			ui.toolButton_9
+		};
+		float4 colors[D_MAX_TF_COMPONENTS] = { 0 };
+		std::string titles[D_MAX_TF_COMPONENTS];
+		QDoubleSpinBox *spinboxes[D_MAX_TF_COMPONENTS] = {
+			ui.doubleSpinBox,
+			ui.doubleSpinBox_2,
+			ui.doubleSpinBox_3,
+			ui.doubleSpinBox_4,
+			ui.doubleSpinBox_5
+		};
+
+		std::ifstream is(file);
+		if (is.is_open())
+		{
+			printf("load view from %s\n", file);
+			int regionSize = get_region_size();
+			cereal::XMLInputArchive archive(is);
+			for (int i = 0; i < D_MAX_TF_COMPONENTS; i++)
+			{
+				archive(CEREAL_NVP(colors[i].x), CEREAL_NVP(colors[i].y), CEREAL_NVP(colors[i].z), CEREAL_NVP(colors[i].w));
+				set_button_color(*buttons[i], float4_to_QColor(colors[i]));
+			}
+			for (int i = 0; i < D_MAX_TF_COMPONENTS; i++)
+			{
+				archive(CEREAL_NVP(tf_component_weights[i]));
+				spinboxes[i]->setValue(tf_component_weights[i]);
+			}
+			for (int i = 0; i < D_MAX_TF_COMPONENTS; i++)
+			{
+				archive(CEREAL_NVP(titles[i]));
+				chartView_features[i].chart()->setTitle(QString::fromStdString(titles[i]));
+			}
+		}
+		else
+		{
+			printf("cannot open %s\n", file);
+		}
+	}
+
 private slots:
 	void draw_transfer_functions_and_histograms()
 	{
@@ -584,6 +665,10 @@ private slots:
     void on_toolButton_16_clicked();
 
     void on_action_Save_charts_to_images_triggered();
+
+    void on_actionLoad_TF_component_properties_triggered();
+
+    void on_actionSave_TF_component_properties_as_triggered();
 
 private:
 	Ui::MainWindowClass ui;
