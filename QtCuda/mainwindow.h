@@ -391,7 +391,35 @@ public:
 		p.save(str, "PNG");
 	}
 
-private slots:
+	float4 build_color(float4 colors[], float v[], float4 tf)
+	{
+		float t = 0;
+		int max_index = 0;
+		float max_value = v[0];
+		// merge visible transfer function components
+		for (int i = 0; i < tf_component_number; i++)
+		{
+			t += v[i];
+			if (v[i] > max_value)
+			{
+				max_value = v[i];
+				max_index = i;
+			}
+		}
+		float w = t < 0 ? 0 : (t > 1 ? 1 : t);
+		float4 ans = w > 0 ? colors[max_index] : tf;
+		ans.w = w;
+		return ans;
+	}
+
+	void hide_extra_tf_component_frames()
+	{
+		QWidget *w[D_MAX_TF_COMPONENTS] = { ui.frame,ui.frame_2,ui.frame_3,ui.frame_4,ui.frame_5 };
+		for (int i = 0; i < D_MAX_TF_COMPONENTS; i++)
+		{
+			w[i]->setVisible(i < tf_component_number);
+		}
+	}
 
 	void draw_all_histograms()
 	{
@@ -407,6 +435,7 @@ private slots:
 		draw_transfer_function(tf, chartView_sum);
 	}
 
+private slots:
 	void draw_transfer_functions_and_histograms()
 	{
 		draw_transfer_functions();
@@ -462,35 +491,6 @@ private slots:
 		ui.label_2->setPixmap(p2);
 		ui.label_3->setPixmap(p3);
 		ui.label_4->setPixmap(p4);
-	}
-
-	float4 build_color(float4 colors[], float v[], float4 tf)
-	{
-		float t = 0;
-		int max_index = 0;
-		float max_value = v[0];
-		for (int i = 0; i < tf_component_number; i++)
-		{
-			t += v[i];
-			if (v[i] > max_value)
-			{
-				max_value = v[i];
-				max_index = i;
-			}
-		}
-		float w = t < 0 ? 0 : (t > 1 ? 1 : t);
-		float4 ans = w > 0 ? colors[max_index] : tf;
-		ans.w = w;
-		return ans;
-	}
-
-	void hide_extra_tf_component_frames()
-	{
-		QWidget *w[D_MAX_TF_COMPONENTS] = { ui.frame,ui.frame_2,ui.frame_3,ui.frame_4,ui.frame_5 };
-		for (int i = 0; i < D_MAX_TF_COMPONENTS; i++)
-		{
-			w[i]->setVisible(i < tf_component_number);
-		}
 	}
 
 	void on_pushButton_3_clicked();

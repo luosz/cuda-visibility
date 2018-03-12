@@ -288,14 +288,15 @@ void MainWindow::on_pushButton_clicked()
 	for (int i = 0; i < D_BIN_COUNT; i++)
 	{
 		float tmp[D_MAX_TF_COMPONENTS];
-		float t = 0;
+		//float t = 0;
 		for (int j = 0; j < D_MAX_TF_COMPONENTS; j++)
 		{
 			tmp[j]= components[j][i] * tf_component_weights[j];
-			t += tmp[j];
+			//t += tmp[j];
 		}
-		tf_sum[i] = t < 0 ? 0 : (t > 1 ? 1 : t);
+		//tf_sum[i] = t < 0 ? 0 : (t > 1 ? 1 : t);
 		sum[i] = build_color(colors, tmp, tf[i]);
+		tf_sum[i] = sum[i].w;
 	}
 	memcpy(tf, sum, sizeof(float4)*D_BIN_COUNT);
 	bind_tf_texture();
