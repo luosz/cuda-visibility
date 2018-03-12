@@ -164,7 +164,7 @@ void MainWindow::on_actionSave_transfer_function_as_triggered()
 
 void MainWindow::on_actionLoad_view_and_region_triggered()
 {
-	QString filename = QFileDialog::getOpenFileName(this, tr("Open view"), QDir::currentPath(), tr("View and selection (*.xml);;All Files (*)"));
+	QString filename = QFileDialog::getOpenFileName(this, tr("Open view"), QDir::currentPath() + QDir::separator() + "~view.xml", tr("View and selection (*.xml);;All Files (*)"));
 	if (!filename.isNull())
 	{
 		// extract filename from path
@@ -512,7 +512,7 @@ void MainWindow::on_action_Save_charts_to_images_triggered()
 
 void MainWindow::on_actionLoad_TF_component_properties_triggered()
 {
-	QString filename = QFileDialog::getOpenFileName(this, tr("Open view"), QDir::currentPath(), tr("Properties (*.xml);;All Files (*)"));
+	QString filename = QFileDialog::getOpenFileName(this, tr("Open view"), QDir::currentPath() + QDir::separator() + "~properties.xml", tr("Properties (*.xml);;All Files (*)"));
 	if (!filename.isNull())
 	{
 		// extract filename from path
