@@ -733,7 +733,7 @@ public:
 
     void retranslateUi(QMainWindow *MainWindowClass)
     {
-        MainWindowClass->setWindowTitle(QApplication::translate("MainWindowClass", "Options", nullptr));
+        MainWindowClass->setWindowTitle(QApplication::translate("MainWindowClass", "Transfer Function Designer", nullptr));
         action_Open->setText(QApplication::translate("MainWindowClass", "Open &MetaImage (MHD) file...", nullptr));
         action_Exit->setText(QApplication::translate("MainWindowClass", "&Exit", nullptr));
         action_About->setText(QApplication::translate("MainWindowClass", "&About", nullptr));
