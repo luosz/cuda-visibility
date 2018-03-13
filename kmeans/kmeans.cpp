@@ -74,6 +74,14 @@ void kmeans(array &means, array &clusters, const array in, int k, int iter = 100
 	clusters = prev_clusters;
 }
 
+inline char *extract_filename_from_path(char *fullfilename)
+{
+	char *p1 = strrchr(fullfilename, '/');
+	char *p2 = strrchr(fullfilename, '\\');
+	char *filename = p1 ? p1 + 1 : (p2 ? p2 + 1 : NULL);
+	return filename ? filename : fullfilename;
+}
+
 inline void save_png(char *str, af::array out_dbl)
 {
 	auto dot = strrchr(str, '.');
@@ -81,19 +89,16 @@ inline void save_png(char *str, af::array out_dbl)
 	{
 		sprintf(dot, ".png");
 	}
-	saveImage(str, out_dbl);
+	af::saveImage(str, out_dbl);
 }
 
 // K-Means image recoloring.
 // Shifts the hues of an image to the k mean hues.
-int kmeans_demo(int k, bool console, const char *filename)
+int kmeans_demo(int k, bool console, char *filename)
 {
 	//printf("** ArrayFire K-Means Demo (k = %d) **\n\n", k);
 	//array img = loadImage(ASSETS_DIR"/examples/images/vegetable-woman.jpg", true) / 255; // [0-255]
-	char str[_MAX_PATH];
-	//char filename[_MAX_PATH] = "~screenshot_0.ppm";
-	sprintf(str, "../QtCuda/%s", filename);
-	array img = loadImage(str, true) / 255; // [0-255]
+	array img = loadImage(filename, true) / 255; // [0-255]
 	int w = img.dims(0), h = img.dims(1), c = img.dims(2);
 	std::cout << filename << "\tw=" << w << "\th=" << h << "\tc=" << c << std::endl;
 	array vec = moddims(img, w * h, 1, c);
@@ -127,22 +132,16 @@ int kmeans_demo(int k, bool console, const char *filename)
 		//printf("Hit enter to finish\n");
 		//getchar();
 
-		//af::eval(out_full);
-		//af::eval(out_half);
-		//af::eval(out_dbl);
-		//af::sync();
-
-		sprintf(str, "%s", filename);
+		char str[_MAX_PATH];
+		char *file = extract_filename_from_path(filename);
+		sprintf(str, "%s", file);
 		save_png(str, img);
-		sprintf(str, "~full_%s", filename);
-		saveImage(str, out_full);
-		//save_png(str, out_full);
-		sprintf(str, "~half_%s", filename);
-		saveImage(str, out_half);
-		//save_png(str, out_half);
-		sprintf(str, "~dbl_%s", filename);
-		saveImage(str, out_dbl);
-		//save_png(str, out_dbl);
+		sprintf(str, "~full_%s", file);
+		af::saveImage(str, out_full);
+		sprintf(str, "~half_%s", file);
+		af::saveImage(str, out_half);
+		sprintf(str, "~dbl_%s", file);
+		af::saveImage(str, out_dbl);
 
 		af::Window wnd("K-Means Demo");
 		wnd.setPos(240, 320);
@@ -172,12 +171,10 @@ int kmeans_demo(int k, bool console, const char *filename)
 
 void show_image(const char *filename)
 {
-	char str[_MAX_PATH];
-	sprintf(str, "../QtCuda/%s", filename);
-	array img = loadImage(str, true) / 255; // [0-255]
+	array img = loadImage(filename, true) / 255; // [0-255]
 	int w = img.dims(0), h = img.dims(1), c = img.dims(2);
 	std::cout << filename << "\tw=" << w << "\th=" << h << "\tc=" << c << std::endl;
-	af::Window wnd("K-Means Demo");
+	af::Window wnd("Input");
 	wnd.setPos(240, 320);
 	wnd.grid(1, 2);
 	while (!wnd.close())
@@ -190,21 +187,29 @@ void show_image(const char *filename)
 
 int main(int argc, char** argv)
 {
-	char str[_MAX_PATH];
-
 	int device = argc > 1 ? atoi(argv[1]) : 0;
 	bool console = argc > 2 ? argv[2][0] == '-' : false;
 	int k = argc > 3 ? atoi(argv[3]) : 16;
+	char filename[_MAX_PATH];
+	if (argc > 2 && argv[2][0] != '-')
+	{
+		sprintf(filename, "%s", argv[2]);
+	}
+	else
+	{
+		sprintf(filename, "../QtCuda/~screenshot_0.ppm");
+	}
+
 	try {
 		af::setDevice(device);
 		af::info();
 		//return kmeans_demo(k, console);
-		//show_image("~screenshot_0.ppm");
-		kmeans_demo(k, console, "~screenshot_0.ppm");
+		//show_image(filename);
+		kmeans_demo(k, console, filename);
 		//for (int i = 0; i <= 3; i++)
 		//{
-		//	sprintf(str, "~screenshot_%d.ppm", i);
-		//	kmeans_demo(k, console, str);
+		//	sprintf(filename, "../QtCuda/~screenshot_%d.ppm", i);
+		//	kmeans_demo(k, console, filename);
 		//}
 	}
 	catch (af::exception &ae) {
