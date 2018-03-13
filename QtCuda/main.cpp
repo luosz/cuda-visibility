@@ -132,7 +132,7 @@ const char *sSDKsample = "CUDA 3D Volume Render";
 //const char *tfs[] = { "nucleon_naive_proportional_2.tfi","vortex_naive_proportional_2.tfi","CT-Knee_spectrum_6.tfi","E_1324_Rainbow6_even_2.tfi" };
 const char *tfs[] = { "nucleon_naive_proportional.tfi","vortex_naive_proportional.tfi","CT-Knee_spectrum_6.tfi","Rainbow3_even.tfi" };
 const char *volumes[] = { "nucleon.raw","vorts1.raw","CT-Knee.raw","E_1324.raw" };
-const int data_index = 1;
+const int data_index = 0;
 const char *tfFile = tfs[data_index];
 const char *volumeFilename = volumes[data_index];
 char volumeFilename_buffer[_MAX_PATH];
@@ -1641,6 +1641,7 @@ extern "C" void save_rendering_and_display_in_Qt()
 	update_screenshots_in_Qt();
 }
 
+extern "C" void erase_ppm_on_gpu();
 extern "C" void load_ppm_to_gpu(const char *file);
 //void load_ppm(const char *file)
 //{
@@ -1864,7 +1865,11 @@ void keyboard(unsigned char key, int x, int y)
 			break;
 
 		case 'u':
-			load_ppm_to_gpu("../kmeans/~full_~screenshot_0.ppm");
+			load_ppm_to_gpu("../kmeans/~dbl_~screenshot_0.ppm");
+			break;
+
+		case 'e':
+			erase_ppm_on_gpu();
 			break;
 
 		default:

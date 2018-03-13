@@ -132,6 +132,8 @@ int kmeans_demo(int k, bool console, const char *filename)
 		//af::eval(out_dbl);
 		//af::sync();
 
+		sprintf(str, "%s", filename);
+		save_png(str, img);
 		sprintf(str, "~full_%s", filename);
 		saveImage(str, out_full);
 		//save_png(str, out_full);
@@ -145,7 +147,7 @@ int kmeans_demo(int k, bool console, const char *filename)
 		af::Window wnd("K-Means Demo");
 		wnd.setPos(240, 320);
 		wnd.grid(1, 4);
-		//while (!wnd.close())
+		while (!wnd.close())
 		{
 			wnd(0, 0).image(img, "input");
 			wnd(0, 1).image(out_full, str_full);
@@ -167,6 +169,25 @@ int kmeans_demo(int k, bool console, const char *filename)
 	}
 	return 0;
 }
+
+void show_image(const char *filename)
+{
+	char str[_MAX_PATH];
+	sprintf(str, "../QtCuda/%s", filename);
+	array img = loadImage(str, true) / 255; // [0-255]
+	int w = img.dims(0), h = img.dims(1), c = img.dims(2);
+	std::cout << filename << "\tw=" << w << "\th=" << h << "\tc=" << c << std::endl;
+	af::Window wnd("K-Means Demo");
+	wnd.setPos(240, 320);
+	wnd.grid(1, 2);
+	while (!wnd.close())
+	{
+		wnd(0, 0).image(img, "input");
+		wnd(0, 1).image(flip(img,0), "flip");
+		wnd.show();
+	}
+}
+
 int main(int argc, char** argv)
 {
 	char str[_MAX_PATH];
@@ -178,11 +199,13 @@ int main(int argc, char** argv)
 		af::setDevice(device);
 		af::info();
 		//return kmeans_demo(k, console);
-		for (int i = 0; i <= 3; i++)
-		{
-			sprintf(str, "~screenshot_%d.ppm", i);
-			kmeans_demo(k, console, str);
-		}
+		//show_image("~screenshot_0.ppm");
+		kmeans_demo(k, console, "~screenshot_0.ppm");
+		//for (int i = 0; i <= 3; i++)
+		//{
+		//	sprintf(str, "~screenshot_%d.ppm", i);
+		//	kmeans_demo(k, console, str);
+		//}
 	}
 	catch (af::exception &ae) {
 		std::cerr << ae.what() << std::endl;

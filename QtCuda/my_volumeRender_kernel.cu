@@ -1355,6 +1355,13 @@ void compute_saliency_once()
 
 extern "C" unsigned int get_width();
 extern "C" unsigned int get_height();
+
+extern "C" void erase_ppm_on_gpu()
+{
+	checkCudaErrors(cudaFree(d_segment));
+	d_segment = NULL;
+}
+
 extern "C" void load_ppm_to_gpu(const char *file)
 {
 	unsigned int w = get_width();
