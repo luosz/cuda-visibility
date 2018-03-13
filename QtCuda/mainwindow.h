@@ -438,11 +438,18 @@ public:
 		draw_transfer_function(tf, chartView_sum);
 	}
 
+	void set_tf_component_number(int arg1)
+	{
+		tf_component_number = arg1 < 1 ? 1 : (arg1 > D_MAX_TF_COMPONENTS ? D_MAX_TF_COMPONENTS : arg1);
+		hide_extra_tf_component_frames();
+	}
+
 	void save_tf_component_properties(const char *file)
 	{
 		printf("save TF component properties to %s\n", file);
 		std::ofstream os(file);
 		cereal::XMLOutputArchive archive(os);
+		archive(CEREAL_NVP(tf_component_number));
 
 		QAbstractButton *buttons[D_MAX_TF_COMPONENTS] = {
 			ui.toolButton,
@@ -491,9 +498,13 @@ public:
 		std::ifstream is(file);
 		if (is.is_open())
 		{
-			printf("load view from %s\n", file);
+			printf("load TF component properties from %s\n", file);
 			int regionSize = get_region_size();
 			cereal::XMLInputArchive archive(is);
+			archive(CEREAL_NVP(tf_component_number));
+			set_tf_component_number(tf_component_number);
+			ui.spinBox->setValue(tf_component_number);
+
 			for (int i = 0; i < D_MAX_TF_COMPONENTS; i++)
 			{
 				archive(CEREAL_NVP(colors[i].x), CEREAL_NVP(colors[i].y), CEREAL_NVP(colors[i].z), CEREAL_NVP(colors[i].w));

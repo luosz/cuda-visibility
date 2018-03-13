@@ -349,8 +349,9 @@ void MainWindow::on_action_Clear_transfer_function_components_triggered()
 
 void MainWindow::on_spinBox_valueChanged(int arg1)
 {
-	tf_component_number = arg1 < 1 ? 1 : (arg1 > D_MAX_TF_COMPONENTS ? D_MAX_TF_COMPONENTS : arg1);
-	hide_extra_tf_component_frames();
+	//tf_component_number = arg1 < 1 ? 1 : (arg1 > D_MAX_TF_COMPONENTS ? D_MAX_TF_COMPONENTS : arg1);
+	//hide_extra_tf_component_frames();
+	set_tf_component_number(arg1);
 }
 
 void MainWindow::on_pushButton_2_clicked()
