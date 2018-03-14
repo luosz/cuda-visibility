@@ -74,22 +74,24 @@ void kmeans(array &means, array &clusters, const array in, int k, int iter = 100
 	clusters = prev_clusters;
 }
 
-inline char *extract_filename_from_path(char *fullfilename)
+inline const char *extract_filename_from_path(const char *fullfilename)
 {
-	char *p1 = strrchr(fullfilename, '/');
-	char *p2 = strrchr(fullfilename, '\\');
-	char *filename = p1 ? p1 + 1 : (p2 ? p2 + 1 : NULL);
+	auto p1 = strrchr(fullfilename, '/');
+	auto p2 = strrchr(fullfilename, '\\');
+	auto filename = p1 ? p1 + 1 : (p2 ? p2 + 1 : NULL);
 	return filename ? filename : fullfilename;
 }
 
-inline void save_png(char *str, af::array out_dbl)
+inline void save_png(const char *filename, af::array img)
 {
+	char str[_MAX_PATH];
+	strcpy(str, filename);
 	auto dot = strrchr(str, '.');
 	if (dot)
 	{
 		sprintf(dot, ".png");
 	}
-	af::saveImage(str, out_dbl);
+	af::saveImage(str, img);
 }
 
 // K-Means image recoloring.
@@ -133,27 +135,25 @@ int kmeans_demo(int k, bool console, char *filename)
 		//getchar();
 
 		char str[_MAX_PATH];
-		char *file = extract_filename_from_path(filename);
-		sprintf(str, "%s", file);
-		save_png(str, img);
-		sprintf(str, "~full_%s", file);
+		auto file = extract_filename_from_path(filename);
+		sprintf(str, "~k%02d_%s", k, file);
 		af::saveImage(str, out_full);
-		sprintf(str, "~half_%s", file);
+		sprintf(str, "~k%02d_%s", k >> 1, file);
 		af::saveImage(str, out_half);
-		sprintf(str, "~dbl_%s", file);
+		sprintf(str, "~k%02d_%s", k << 1, file);
 		af::saveImage(str, out_dbl);
 
-		af::Window wnd("K-Means Demo");
-		wnd.setPos(240, 320);
-		wnd.grid(1, 4);
-		while (!wnd.close())
-		{
-			wnd(0, 0).image(img, "input");
-			wnd(0, 1).image(out_full, str_full);
-			wnd(0, 2).image(out_half, str_half);
-			wnd(0, 3).image(out_dbl, str_dbl);
-			wnd.show();
-		}
+		//af::Window wnd("K-Means Demo");
+		//wnd.setPos(240, 320);
+		//wnd.grid(1, 4);
+		//while (!wnd.close())
+		//{
+		//	wnd(0, 0).image(img, "input");
+		//	wnd(0, 1).image(out_full, str_full);
+		//	wnd(0, 2).image(out_half, str_half);
+		//	wnd(0, 3).image(out_dbl, str_dbl);
+		//	wnd.show();
+		//}
 #else
 		printf("Graphics not implemented yet\n");
 #endif
@@ -169,20 +169,26 @@ int kmeans_demo(int k, bool console, char *filename)
 	return 0;
 }
 
-void show_image(const char *filename)
+void flip_image(const char *filename)
 {
-	array img = loadImage(filename, true) / 255; // [0-255]
+	auto img = loadImage(filename, true) / 255; // [0-255]
 	int w = img.dims(0), h = img.dims(1), c = img.dims(2);
-	std::cout << filename << "\tw=" << w << "\th=" << h << "\tc=" << c << std::endl;
-	af::Window wnd("Input");
-	wnd.setPos(240, 320);
-	wnd.grid(1, 2);
-	while (!wnd.close())
-	{
-		wnd(0, 0).image(img, "input");
-		wnd(0, 1).image(flip(img,0), "flip");
-		wnd.show();
-	}
+	//std::cout << filename << "\tw=" << w << "\th=" << h << "\tc=" << c << std::endl;
+	auto file = extract_filename_from_path(filename);
+	save_png(file, img);
+	char str[_MAX_PATH];
+	sprintf(str, "~flipped_%s", file);
+	auto img2 = flip(img, 0);
+	save_png(str, img2);
+	//af::Window wnd("Images");
+	//wnd.setPos(240, 320);
+	//wnd.grid(1, 2);
+	//while (!wnd.close())
+	//{
+	//	wnd(0, 0).image(img, "original");
+	//	wnd(0, 1).image(img2, "flipped");
+	//	wnd.show();
+	//}
 }
 
 int main(int argc, char** argv)
@@ -204,7 +210,7 @@ int main(int argc, char** argv)
 		af::setDevice(device);
 		af::info();
 		//return kmeans_demo(k, console);
-		//show_image(filename);
+		flip_image(filename);
 		kmeans_demo(k, console, filename);
 		//for (int i = 0; i <= 3; i++)
 		//{

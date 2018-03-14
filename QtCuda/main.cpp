@@ -132,7 +132,7 @@ const char *sSDKsample = "CUDA 3D Volume Render";
 //const char *tfs[] = { "nucleon_naive_proportional_2.tfi","vortex_naive_proportional_2.tfi","CT-Knee_spectrum_6.tfi","E_1324_Rainbow6_even_2.tfi" };
 const char *tfs[] = { "nucleon_naive_proportional.tfi","vortex_naive_proportional.tfi","CT-Knee_spectrum_6.tfi","Rainbow3_even.tfi" };
 const char *volumes[] = { "nucleon.raw","vorts1.raw","CT-Knee.raw","E_1324.raw" };
-const int data_index = 0;
+const int data_index = 1;
 const char *tfFile = tfs[data_index];
 const char *volumeFilename = volumes[data_index];
 char volumeFilename_buffer[_MAX_PATH];
@@ -300,6 +300,9 @@ extern "C" void copyInvViewMatrix(float *invViewMatrix, size_t sizeofMatrix);
 
 extern "C" void set_save_rendering(bool value);
 extern "C" void set_save_ppm(bool value);
+
+extern "C" void erase_ppm_on_gpu();
+extern "C" void load_ppm_to_gpu(const char *file = "../kmeans/~k32_~screenshot_0.ppm");
 
 void apply_save_rendering()
 {
@@ -1641,15 +1644,6 @@ extern "C" void save_rendering_and_display_in_Qt()
 	update_screenshots_in_Qt();
 }
 
-extern "C" void erase_ppm_on_gpu();
-extern "C" void load_ppm_to_gpu(const char *file);
-//void load_ppm(const char *file)
-//{
-//	unsigned char *h_output = (unsigned char *)malloc(width*height * 4);
-//	auto ans = sdkLoadPPM4ub(file, &h_output, &width, &height);
-//	std::cout << "sdkLoadPPM4ub " << file << (ans ? " succeeded." : " failed.") << std::endl;
-//}
-
 extern "C" const char * apply_kmeans_and_save_image(const char *filename, unsigned char *h_output, uint *d_output, int k = 32)
 {
 	af::array img = af::loadImage(filename, true) / 255; // [0-255]
@@ -1865,7 +1859,7 @@ void keyboard(unsigned char key, int x, int y)
 			break;
 
 		case 'u':
-			load_ppm_to_gpu("../kmeans/~dbl_~screenshot_0.ppm");
+			load_ppm_to_gpu();
 			break;
 
 		case 'e':
