@@ -681,6 +681,8 @@ private slots:
 
     void on_actionSave_TF_component_properties_as_triggered();
 
+    void on_action_Blend_TF_components_triggered();
+
 private:
 	Ui::MainWindowClass ui;
 	QColor color;

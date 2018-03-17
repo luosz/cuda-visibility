@@ -53,6 +53,7 @@ public:
     QAction *actionLoad_TF_component_properties;
     QAction *actionSave_view_and_region_as;
     QAction *actionSave_TF_component_properties_as;
+    QAction *action_Blend_TF_components;
     QWidget *centralWidget;
     QGridLayout *gridLayout_2;
     QWidget *widget;
@@ -179,6 +180,9 @@ public:
         actionSave_view_and_region_as->setObjectName(QStringLiteral("actionSave_view_and_region_as"));
         actionSave_TF_component_properties_as = new QAction(MainWindowClass);
         actionSave_TF_component_properties_as->setObjectName(QStringLiteral("actionSave_TF_component_properties_as"));
+        action_Blend_TF_components = new QAction(MainWindowClass);
+        action_Blend_TF_components->setObjectName(QStringLiteral("action_Blend_TF_components"));
+        action_Blend_TF_components->setCheckable(true);
         centralWidget = new QWidget(MainWindowClass);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         gridLayout_2 = new QGridLayout(centralWidget);
@@ -727,6 +731,7 @@ public:
         menu_Help->addAction(action_About);
         menu_Options->addAction(action_Refresh_transfer_functions_and_histograms);
         menu_Options->addAction(action_Save_charts_to_images);
+        menu_Options->addAction(action_Blend_TF_components);
         menu_Options->addAction(action_Smooth_transfer_functions);
         menu_Options->addAction(action_Clear_transfer_function_components);
         menu_Options->addAction(action_Modify_region_size);
@@ -757,6 +762,7 @@ public:
         actionLoad_TF_component_properties->setText(QApplication::translate("MainWindowClass", "Load &TF component properties...", nullptr));
         actionSave_view_and_region_as->setText(QApplication::translate("MainWindowClass", "Save view and &region as...", nullptr));
         actionSave_TF_component_properties_as->setText(QApplication::translate("MainWindowClass", "Save TF &component properties as...", nullptr));
+        action_Blend_TF_components->setText(QApplication::translate("MainWindowClass", "&Blend TF components", nullptr));
         checkBox->setText(QApplication::translate("MainWindowClass", "Adjust &alpha", nullptr));
         checkBox_2->setText(QApplication::translate("MainWindowClass", "Adjust &color", nullptr));
         toolButton_4->setText(QApplication::translate("MainWindowClass", "...", nullptr));

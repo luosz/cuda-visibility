@@ -966,6 +966,7 @@ from region</string>
     </property>
     <addaction name="action_Refresh_transfer_functions_and_histograms"/>
     <addaction name="action_Save_charts_to_images"/>
+    <addaction name="action_Blend_TF_components"/>
     <addaction name="action_Smooth_transfer_functions"/>
     <addaction name="action_Clear_transfer_function_components"/>
     <addaction name="action_Modify_region_size"/>
@@ -1062,6 +1063,17 @@ from region</string>
   <action name="actionSave_TF_component_properties_as">
    <property name="text">
     <string>Save TF &amp;component properties as...</string>
+   </property>
+  </action>
+  <action name="action_Blend_TF_components">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Blend TF components</string>
    </property>
   </action>
  </widget>
