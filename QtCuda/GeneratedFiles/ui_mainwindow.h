@@ -183,6 +183,7 @@ public:
         action_Blend_TF_components = new QAction(MainWindowClass);
         action_Blend_TF_components->setObjectName(QStringLiteral("action_Blend_TF_components"));
         action_Blend_TF_components->setCheckable(true);
+        action_Blend_TF_components->setChecked(true);
         centralWidget = new QWidget(MainWindowClass);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         gridLayout_2 = new QGridLayout(centralWidget);

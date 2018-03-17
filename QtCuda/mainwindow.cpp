@@ -285,19 +285,47 @@ void MainWindow::on_pushButton_clicked()
 		colors[i] = get_button_color(*buttons[i]);
 	}
 
+	qreal total = 0;
+	qreal weights[D_MAX_TF_COMPONENTS] = { 0 };
+	if (ui.action_Blend_TF_components->isChecked())
+	{
+		qreal normalized_weights[D_MAX_TF_COMPONENTS] = { 0 };
+		for (int i = 0; i < tf_component_number; i++)
+		{
+			total += tf_component_weights[i];
+		}
+		if (total > 0)
+		{
+			for (int i = 0; i < tf_component_number; i++)
+			{
+				normalized_weights[i] = tf_component_weights[i] / total;
+			}
+			memcpy(weights, normalized_weights, D_MAX_TF_COMPONENTS * sizeof(qreal));
+		}
+	}
+	if (total <= 0)
+	{
+		memcpy(weights, tf_component_weights, D_MAX_TF_COMPONENTS * sizeof(qreal));
+	}
+
+	// pick dominant color
 	for (int i = 0; i < D_BIN_COUNT; i++)
 	{
 		float tmp[D_MAX_TF_COMPONENTS];
 		//float t = 0;
 		for (int j = 0; j < D_MAX_TF_COMPONENTS; j++)
 		{
-			tmp[j]= components[j][i] * tf_component_weights[j];
+			tmp[j]= components[j][i] * weights[j];
 			//t += tmp[j];
 		}
 		//tf_sum[i] = t < 0 ? 0 : (t > 1 ? 1 : t);
 		sum[i] = build_color(colors, tmp, tf[i]);
 		tf_sum[i] = sum[i].w;
 	}
+
+	// blend colors (weighted sum)
+
+
 	memcpy(tf, sum, sizeof(float4)*D_BIN_COUNT);
 	bind_tf_texture();
 	draw_transfer_functions();
