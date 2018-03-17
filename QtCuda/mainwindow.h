@@ -415,6 +415,44 @@ public:
 		return ans;
 	}
 
+	float4 blend_colors(float4 colors[], float v[], float4 tf)
+	{
+		float t = 0;
+		int max_index = 0;
+		float max_value = v[0];
+		// merge visible transfer function components
+		for (int i = 0; i < tf_component_number; i++)
+		{
+			t += v[i];
+			if (v[i] > max_value)
+			{
+				max_value = v[i];
+				max_index = i;
+			}
+		}
+		if (t>0)
+		{
+			qreal weights[D_MAX_TF_COMPONENTS] = { 0 };
+			float4 c = make_float4(0, 0, 0, 0);
+			for (int i = 0; i < tf_component_number; i++)
+			{
+				weights[i] = v[i] / t;
+				c += weights[i] * colors[i];
+			}
+			float w = t < 0 ? 0 : (t > 1 ? 1 : t);
+			float4 ans = w > 0 ? c : tf;
+			ans.w = w;
+			return ans;
+		} 
+		else
+		{
+			float w = t < 0 ? 0 : (t > 1 ? 1 : t);
+			float4 ans = w > 0 ? colors[max_index] : tf;
+			ans.w = w;
+			return ans;
+		}
+	}
+
 	void hide_extra_tf_component_frames()
 	{
 		QWidget *w[D_MAX_TF_COMPONENTS] = { ui.frame,ui.frame_2,ui.frame_3,ui.frame_4,ui.frame_5 };
