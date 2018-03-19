@@ -443,7 +443,7 @@ public:
 			float4 ans = w > 0 ? c : tf;
 			ans.w = w;
 			return ans;
-		} 
+		}
 		else
 		{
 			float w = t < 0 ? 0 : (t > 1 ? 1 : t);
