@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cereal>
+	<viewRotation>
+		<x>0</x>
+		<y>0</y>
+		<z>0</z>
+	</viewRotation>
+	<viewTranslation>
+		<x>0</x>
+		<y>0</y>
+		<z>-3.5200004577636719</z>
+	</viewTranslation>
+	<loc>
+		<x>400</x>
+		<y>437</y>
+	</loc>
+	<regionSize>20</regionSize>
+</cereal>
+

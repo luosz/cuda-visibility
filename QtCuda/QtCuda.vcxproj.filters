@@ -120,6 +120,9 @@
     <ClInclude Include="kmeans.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="serialize.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="QtCuda.rc" />

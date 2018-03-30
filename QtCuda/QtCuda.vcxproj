@@ -141,6 +141,7 @@
     <ClInclude Include="gaussian.h" />
     <ClInclude Include="GeneratedFiles\ui_mainwindow.h" />
     <ClInclude Include="kmeans.h" />
+    <ClInclude Include="serialize.h" />
     <ClInclude Include="tinyxml2.h" />
     <ClInclude Include="util.h" />
   </ItemGroup>

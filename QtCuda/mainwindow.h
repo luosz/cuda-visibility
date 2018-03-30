@@ -23,8 +23,9 @@
 #include "def.h"
 
 // include cereal for serialization
-#include "cereal/archives/xml.hpp"
+#include <cereal/archives/xml.hpp>
 #include <cereal/archives/json.hpp>
+#include "serialize.h"
 
 #include <QtCharts/QChartView>
 #include <QtCharts/QLineSeries>
@@ -498,22 +499,19 @@ public:
 			ui.toolButton_8,
 			ui.toolButton_9
 		};
-		float4 colors[D_MAX_TF_COMPONENTS] = { 0 };
+		float4 tf_component_colors[D_MAX_TF_COMPONENTS] = { 0 };
 		for (int i = 0; i < D_MAX_TF_COMPONENTS; i++)
 		{
-			colors[i] = get_button_color(*buttons[i]);
-			archive(CEREAL_NVP(colors[i].x), CEREAL_NVP(colors[i].y), CEREAL_NVP(colors[i].z), CEREAL_NVP(colors[i].w));
+			tf_component_colors[i] = get_button_color(*buttons[i]);
 		}
+		archive(CEREAL_NVP(tf_component_colors));
+		archive(CEREAL_NVP(tf_component_weights));
+		std::string tf_component_titles[D_MAX_TF_COMPONENTS];
 		for (int i = 0; i < D_MAX_TF_COMPONENTS; i++)
 		{
-			archive(CEREAL_NVP(tf_component_weights[i]));
+			tf_component_titles[i] = chartView_features[i].chart()->title().toStdString();
 		}
-		std::string titles[D_MAX_TF_COMPONENTS];
-		for (int i = 0; i < D_MAX_TF_COMPONENTS; i++)
-		{
-			titles[i] = chartView_features[i].chart()->title().toStdString();
-			archive(CEREAL_NVP(titles[i]));
-		}
+		archive(CEREAL_NVP(tf_component_titles));
 	}
 
 	void load_tf_component_properties(const char *file)
@@ -525,8 +523,8 @@ public:
 			ui.toolButton_8,
 			ui.toolButton_9
 		};
-		float4 colors[D_MAX_TF_COMPONENTS] = { 0 };
-		std::string titles[D_MAX_TF_COMPONENTS];
+		float4 tf_component_colors[D_MAX_TF_COMPONENTS] = { 0 };
+		std::string tf_component_titles[D_MAX_TF_COMPONENTS];
 		QDoubleSpinBox *spinboxes[D_MAX_TF_COMPONENTS] = {
 			ui.doubleSpinBox,
 			ui.doubleSpinBox_2,
@@ -546,20 +544,20 @@ public:
 			set_tf_component_number(tf_component_number);
 			ui.spinBox->setValue(tf_component_number);
 
+			archive(CEREAL_NVP(tf_component_colors));
 			for (int i = 0; i < D_MAX_TF_COMPONENTS; i++)
 			{
-				archive(CEREAL_NVP(colors[i].x), CEREAL_NVP(colors[i].y), CEREAL_NVP(colors[i].z), CEREAL_NVP(colors[i].w));
-				set_button_color(*buttons[i], float4_to_QColor(colors[i]));
+				set_button_color(*buttons[i], float4_to_QColor(tf_component_colors[i]));
 			}
+			archive(CEREAL_NVP(tf_component_weights));
 			for (int i = 0; i < D_MAX_TF_COMPONENTS; i++)
 			{
-				archive(CEREAL_NVP(tf_component_weights[i]));
 				spinboxes[i]->setValue(tf_component_weights[i]);
 			}
+			archive(CEREAL_NVP(tf_component_titles));
 			for (int i = 0; i < D_MAX_TF_COMPONENTS; i++)
 			{
-				archive(CEREAL_NVP(titles[i]));
-				chartView_features[i].chart()->setTitle(QString::fromStdString(titles[i]));
+				chartView_features[i].chart()->setTitle(QString::fromStdString(tf_component_titles[i]));
 			}
 		}
 		else

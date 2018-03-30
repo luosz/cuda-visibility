@@ -1,0 +1,49 @@
+{
+    "tf_component_number": 3,
+    "tf_component_colors": {
+        "value0": {
+            "r": 0.12179750949144364,
+            "g": 1.0,
+            "b": 0.001541161211207509,
+            "a": 1.0
+        },
+        "value1": {
+            "r": 1.0,
+            "g": 0.0,
+            "b": 0.0,
+            "a": 1.0
+        },
+        "value2": {
+            "r": 0.5071183443069458,
+            "g": 0.3520256280899048,
+            "b": 0.9973906874656677,
+            "a": 1.0
+        },
+        "value3": {
+            "r": 0.35686275362968447,
+            "g": 0.8078431487083435,
+            "b": 1.0,
+            "a": 1.0
+        },
+        "value4": {
+            "r": 1.0,
+            "g": 0.7490196228027344,
+            "b": 0.49803921580314639,
+            "a": 1.0
+        }
+    },
+    "tf_component_weights": {
+        "value0": 2.0,
+        "value1": 1.0,
+        "value2": 0.2,
+        "value3": 1.0,
+        "value4": 1.0
+    },
+    "tf_component_titles": {
+        "value0": "green feature",
+        "value1": "red feature",
+        "value2": "purple feature",
+        "value3": "Component 3",
+        "value4": "Component 4"
+    }
+}
