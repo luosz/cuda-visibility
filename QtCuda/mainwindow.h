@@ -24,6 +24,7 @@
 
 // include cereal for serialization
 #include "cereal/archives/xml.hpp"
+#include <cereal/archives/json.hpp>
 
 #include <QtCharts/QChartView>
 #include <QtCharts/QLineSeries>
@@ -486,7 +487,8 @@ public:
 	{
 		printf("save TF component properties to %s\n", file);
 		std::ofstream os(file);
-		cereal::XMLOutputArchive archive(os);
+		//cereal::XMLOutputArchive archive(os);
+		cereal::JSONOutputArchive archive(os);
 		archive(CEREAL_NVP(tf_component_number));
 
 		QAbstractButton *buttons[D_MAX_TF_COMPONENTS] = {
@@ -538,7 +540,8 @@ public:
 		{
 			printf("load TF component properties from %s\n", file);
 			int regionSize = get_region_size();
-			cereal::XMLInputArchive archive(is);
+			//cereal::XMLInputArchive archive(is);
+			cereal::JSONInputArchive archive(is);
 			archive(CEREAL_NVP(tf_component_number));
 			set_tf_component_number(tf_component_number);
 			ui.spinBox->setValue(tf_component_number);

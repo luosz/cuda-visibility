@@ -525,7 +525,7 @@ void MainWindow::on_action_Save_charts_to_images_triggered()
 
 void MainWindow::on_actionLoad_TF_component_properties_triggered()
 {
-	QString filename = QFileDialog::getOpenFileName(this, tr("Open view"), QDir::currentPath() + QDir::separator() + "~properties.xml", tr("Properties (*.xml);;All Files (*)"));
+	QString filename = QFileDialog::getOpenFileName(this, tr("Open properties"), QDir::currentPath() + QDir::separator() + "~properties.json", tr("Properties (*.json);;All Files (*)"));
 	if (!filename.isNull())
 	{
 		// extract filename from path
@@ -537,7 +537,7 @@ void MainWindow::on_actionLoad_TF_component_properties_triggered()
 
 void MainWindow::on_actionSave_TF_component_properties_as_triggered()
 {
-	QString filename = QFileDialog::getSaveFileName(this, tr("Save view"), QDir::currentPath() + QDir::separator() + "~properties.xml", tr("Properties (*.xml);;All Files (*)"));
+	QString filename = QFileDialog::getSaveFileName(this, tr("Save properties"), QDir::currentPath() + QDir::separator() + "~properties.json", tr("Properties (*.json);;All Files (*)"));
 	if (!filename.isNull())
 	{
 		// extract filename from path
