@@ -48,7 +48,7 @@
 
 // CUDA utilities
 #include <helper_cuda.h>
-#include <helper_cuda_gl.h>
+//#include <helper_cuda_gl.h>
 
 // Helper functions
 #include <helper_cuda.h>
@@ -2140,22 +2140,22 @@ void *loadRawFile(const char *filename, size_t size)
     return data;
 }
 
-// General initialization call for CUDA Device
-int chooseCudaDevice(int argc, const char **argv, bool bUseOpenGL)
-{
-    int result = 0;
-
-    if (bUseOpenGL)
-    {
-        result = findCudaGLDevice(argc, argv);
-    }
-    else
-    {
-        result = findCudaDevice(argc, argv);
-    }
-
-    return result;
-}
+//// General initialization call for CUDA Device
+//int chooseCudaDevice(int argc, const char **argv, bool bUseOpenGL)
+//{
+//    int result = 0;
+//
+//    if (bUseOpenGL)
+//    {
+//        result = findCudaGLDevice(argc, argv);
+//    }
+//    else
+//    {
+//        result = findCudaDevice(argc, argv);
+//    }
+//
+//    return result;
+//}
 
 void runSingleTest(const char *ref_file, const char *exec_path)
 {
@@ -2277,20 +2277,18 @@ int init_gl_main(int argc, char **argv)
         fpsLimit = frameCheckNumber;
     }
 
-    if (ref_file)
-    {
-        // use command-line specified CUDA device, otherwise use device with highest Gflops/s
-        chooseCudaDevice(argc, (const char **)argv, false);
-    }
-    else
-    {
-        // First initialize OpenGL context, so we can properly set the GL for CUDA.
-        // This is necessary in order to achieve optimal performance with OpenGL/CUDA interop.
-        initGL(&argc, argv);
+	if (ref_file)
+	{
+		findCudaDevice(argc, (const char **)argv);
+	}
+	else
+	{
+		// First initialize OpenGL context, so we can properly set the GL for CUDA.
+		// This is necessary in order to achieve optimal performance with OpenGL/CUDA interop.
+		initGL(&argc, argv);
 
-        // use command-line specified CUDA device, otherwise use device with highest Gflops/s
-        chooseCudaDevice(argc, (const char **)argv, true);
-    }
+		findCudaDevice(argc, (const char **)argv);
+	}
 
     // parse arguments
     char *filename;
