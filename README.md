@@ -5,7 +5,7 @@ Visual Studio 2017
 
 CUDA Toolkit 9.2
 
-Qt 5.10
+Qt 5.11.1
 
 ArrayFire 3.6
 
