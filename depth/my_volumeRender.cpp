@@ -1,37 +1,37 @@
 /*
- * Copyright 1993-2015 NVIDIA Corporation.  All rights reserved.
- *
- * Please refer to the NVIDIA end user license agreement (EULA) associated
- * with this source code for terms and conditions that govern your use of
- * this software. Any use, reproduction, disclosure, or distribution of
- * this software and related documentation outside the terms of the EULA
- * is strictly prohibited.
- *
- */
+* Copyright 1993-2015 NVIDIA Corporation.  All rights reserved.
+*
+* Please refer to the NVIDIA end user license agreement (EULA) associated
+* with this source code for terms and conditions that govern your use of
+* this software. Any use, reproduction, disclosure, or distribution of
+* this software and related documentation outside the terms of the EULA
+* is strictly prohibited.
+*
+*/
 
 /*
-    Volume rendering sample
+Volume rendering sample
 
-    This sample loads a 3D volume from disk and displays it using
-    ray marching and 3D textures.
+This sample loads a 3D volume from disk and displays it using
+ray marching and 3D textures.
 
-    Note - this is intended to be an example of using 3D textures
-    in CUDA, not an optimized volume renderer.
+Note - this is intended to be an example of using 3D textures
+in CUDA, not an optimized volume renderer.
 
-    Changes
-    sgg 22/3/2010
-    - updated to use texture for display instead of glDrawPixels.
-    - changed to render from front-to-back rather than back-to-front.
+Changes
+sgg 22/3/2010
+- updated to use texture for display instead of glDrawPixels.
+- changed to render from front-to-back rather than back-to-front.
 */
 
 // OpenGL Graphics includes
 #include <helper_gl.h>
 #if defined (__APPLE__) || defined(MACOSX)
-  #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-  #include <GLUT/glut.h>
-  #ifndef glutCloseFunc
-  #define glutCloseFunc glutWMCloseFunc
-  #endif
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#include <GLUT/glut.h>
+#ifndef glutCloseFunc
+#define glutCloseFunc glutWMCloseFunc
+#endif
 #else
 #include <GL/freeglut.h>
 #endif
@@ -46,7 +46,6 @@
 
 // CUDA utilities
 #include <helper_cuda.h>
-#include <helper_cuda_gl.h>
 
 // Helper functions
 #include <helper_cuda.h>
@@ -800,22 +799,22 @@ void *loadRawFile(char *filename, size_t size)
     return data;
 }
 
-// General initialization call for CUDA Device
-int chooseCudaDevice(int argc, const char **argv, bool bUseOpenGL)
-{
-    int result = 0;
-
-    if (bUseOpenGL)
-    {
-        result = findCudaGLDevice(argc, argv);
-    }
-    else
-    {
-        result = findCudaDevice(argc, argv);
-    }
-
-    return result;
-}
+//// General initialization call for CUDA Device
+//int chooseCudaDevice(int argc, const char **argv, bool bUseOpenGL)
+//{
+//    int result = 0;
+//
+//    if (bUseOpenGL)
+//    {
+//        result = findCudaGLDevice(argc, argv);
+//    }
+//    else
+//    {
+//        result = findCudaDevice(argc, argv);
+//    }
+//
+//    return result;
+//}
 
 void runSingleTest(const char *ref_file, const char *exec_path)
 {
@@ -911,20 +910,18 @@ main(int argc, char **argv)
         fpsLimit = frameCheckNumber;
     }
 
-    if (ref_file)
-    {
-        // use command-line specified CUDA device, otherwise use device with highest Gflops/s
-        chooseCudaDevice(argc, (const char **)argv, false);
-    }
-    else
-    {
-        // First initialize OpenGL context, so we can properly set the GL for CUDA.
-        // This is necessary in order to achieve optimal performance with OpenGL/CUDA interop.
-        initGL(&argc, argv);
+	if (ref_file)
+	{
+		findCudaDevice(argc, (const char **)argv);
+	}
+	else
+	{
+		// First initialize OpenGL context, so we can properly set the GL for CUDA.
+		// This is necessary in order to achieve optimal performance with OpenGL/CUDA interop.
+		initGL(&argc, argv);
 
-        // use command-line specified CUDA device, otherwise use device with highest Gflops/s
-        chooseCudaDevice(argc, (const char **)argv, true);
-    }
+		findCudaDevice(argc, (const char **)argv);
+	}
 
     // parse arguments
     char *filename;
