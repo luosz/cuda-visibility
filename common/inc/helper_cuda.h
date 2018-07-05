@@ -1157,6 +1157,8 @@ inline int gpuGetMaxGflopsDeviceId()
     
     unsigned long long max_compute_perf = 0;
     cudaDeviceProp deviceProp;
+    cudaGetDeviceCount(&device_count);
+    
     checkCudaErrors(cudaGetDeviceCount(&device_count));
 
     if (device_count == 0)

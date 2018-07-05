@@ -18,6 +18,7 @@
 #include <QPixmap>
 #include <QLabel>
 #include <QInputDialog>
+#include <QStyle>
 #include <helper_math.h>
 #include "ui_mainwindow.h"
 #include "def.h"
