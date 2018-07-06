@@ -40,9 +40,9 @@
         "value4": 1.0
     },
     "tf_component_titles": {
-        "value0": "Component 0",
-        "value1": "Component 1",
-        "value2": "Component 2",
+        "value0": "green feature",
+        "value1": "red feature",
+        "value2": "purple feature",
         "value3": "Component 3",
         "value4": "Component 4"
     }
