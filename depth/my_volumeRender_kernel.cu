@@ -110,8 +110,8 @@ extern "C" void backup_tf()
 extern "C" void bind_tf_texture()
 {
 	cudaChannelFormatDesc channelDesc2 = cudaCreateChannelDesc<float4>();
-	cudaArray *d_transferFuncArray;
-	checkCudaErrors(cudaMallocArray(&d_transferFuncArray, &channelDesc2, sizeof(tf_array) / sizeof(float4), 1));
+	//cudaArray *d_transferFuncArray;
+	//checkCudaErrors(cudaMallocArray(&d_transferFuncArray, &channelDesc2, sizeof(tf_array) / sizeof(float4), 1));
 	checkCudaErrors(cudaMemcpyToArray(d_transferFuncArray, 0, 0, tf_array, sizeof(tf_array), cudaMemcpyHostToDevice));
 	// Bind the array to the texture
 	checkCudaErrors(cudaBindTextureToArray(transferTex, d_transferFuncArray, channelDesc2));
@@ -942,7 +942,7 @@ void initCuda(void *h_volume, cudaExtent volumeSize)
     };
 
     cudaChannelFormatDesc channelDesc2 = cudaCreateChannelDesc<float4>();
-    cudaArray *d_transferFuncArray;
+    //cudaArray *d_transferFuncArray;
     //checkCudaErrors(cudaMallocArray(&d_transferFuncArray, &channelDesc2, sizeof(transferFunc)/sizeof(float4), 1));
     //checkCudaErrors(cudaMemcpyToArray(d_transferFuncArray, 0, 0, transferFunc, sizeof(transferFunc), cudaMemcpyHostToDevice));
 	checkCudaErrors(cudaMallocArray(&d_transferFuncArray, &channelDesc2, sizeof(tf_array) / sizeof(float4), 1));
